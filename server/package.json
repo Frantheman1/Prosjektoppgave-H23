@@ -1,0 +1,22 @@
+{
+  "name": "qa-plattform",
+  "version": "1.0.0",
+  "description": "A Q&A plattform for people to get answers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "(https://github.com/Frantheman1/Prosjektoppgave-H23.git)"
+  },
+  "keywords": [
+    "javascript",
+    "q&a",
+    "react",
+    "nodejs",
+    "web"
+  ],
+  "author": "Valentin, Kine, Fran, Ali",
+  "license": "MIT"
+}
