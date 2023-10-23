@@ -1,8 +1,8 @@
 {
   "name": "qa-plattform",
   "version": "1.0.0",
-  "description": "A Q&A plattform for people to get answers",
-  "main": "index.js",
+  "description": "A Q&A plattform for people to get answers and ask questions",
+  "main": "index.tsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
