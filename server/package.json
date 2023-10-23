@@ -18,7 +18,7 @@
     "web"
   ],
   "author": "Valentin, Kine, Fran, Ali",
-  "license": "",
+  "license": "MIT",
   "browserslist": [
     "maintained node versions"
   ],
