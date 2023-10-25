@@ -1,8 +1,6 @@
 # Prosjektoppgave-H23
 
-# I denne prosjektoppgaven skal vi lage en Q&A platform. Prosjektoppgaven er en del av webtenologifaget. 
-
-# I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
+# I denne prosjektoppgaven skal vi lage en Q&A platform. Prosjektoppgaven er en del av webtenologifaget. I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
 
 # Følgende krav og betingelser gjelder for prosjektet: 
 
