@@ -3,7 +3,7 @@
 I denne prosjektoppgaven skal vi lage en Q&A platform. Prosjektoppgaven er en del av webtenologifaget. I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
 
 <p>
-<img src="klient/public/images/github2.jpeg" alt="QnA" width=500px />
+<img src="client/public/images/github2.jpeg" alt="QnA" width=500px />
 </p>
 
 - “YouKnow” 
