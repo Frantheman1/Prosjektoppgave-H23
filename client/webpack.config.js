@@ -29,6 +29,11 @@ module.exports = {
         include: path.resolve(__dirname, 'src'),
         use: ['babel-loader'],
       },
+      {
+        test: /\.css$/,
+        include: path.resolve(__dirname, 'public/styles'),
+        use: ['style-loader', 'css-loader']
+      }
     ],
   },
 };

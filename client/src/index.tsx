@@ -1,33 +1,45 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
-import { NavBar} from './widgets';
+import { NavBar, Card} from './widgets';
+import { HashRouter, Route } from 'react-router-dom';
+import "../public/styles/style.css"
 
 
-class Noe extends  Component {
-
+class Menu extends Component {
  render() {
-  return (
-   <>
-   
-
-    <div>Noe</div> 
-   </>
-    );
-
-
- 
-
- 
+   return (
+     <NavBar brand="Todo App">
+       <NavBar.Link to="/tasks">Tasks</NavBar.Link>
+     </NavBar>
+   );
  }
 }
+
+class Home extends Component {
+ render() {
+   return <Card title="Welcome">This is Todo App</Card>;
+ }
+}
+
+class TaskList extends Component {
+ render() {
+   return <Card title="Welcome">Maika vi shte eba vuv gaza</Card>;
+ }
+}
+
+
 
 
 
 let root = document.getElementById('root');
 if (root)
   createRoot(root).render(
-    <>
-    <Noe />
-    </>,
+    <HashRouter>
+      <div>
+        <Menu />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/tasks" component={TaskList} />
+      </div>
+    </HashRouter>,
   );
