@@ -4,7 +4,8 @@
   "description": "A Q&A plattform for people to get answers and ask questions",
   "main": "index.tsx",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/server.ts --exec \"npx babel-node -x .ts --require ./config\""
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "@babel/core": "^7.23.2",
     "@babel/node": "^7.22.19",
     "@babel/preset-env": "^7.23.2",
+    "@babel/preset-typescript": "^7.23.2",
     "@types/express": "^4.17.20",
     "@types/jest": "^29.5.6",
     "jest": "^29.7.0",
