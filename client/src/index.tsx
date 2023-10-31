@@ -9,9 +9,12 @@ import "../public/styles/style.css"
 class Menu extends Component {
  render() {
    return (
+    <>
      <NavBar brand="Todo App">
        <NavBar.Link to="/tasks">Tasks</NavBar.Link>
      </NavBar>
+     <Card title="Noe"></Card>
+    </>
    );
  }
 }
