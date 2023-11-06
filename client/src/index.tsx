@@ -1,19 +1,30 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
-import { NavBar, Card} from './widgets';
+import { NavBar, Card, Form} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import "../public/styles/style.css"
 
 
 class Menu extends Component {
+  value: string = ""
  render() {
+ 
    return (
     <>
-     <NavBar brand="Todo App">
-       <NavBar.Link to="/tasks">Tasks</NavBar.Link>
+     <NavBar brand="images/NewLogo4.png" brandAlt='Logo av Side'>
+      <Form.Input 
+          type="text" 
+          value={this.value} 
+          onChange={(e)=> this.value = e.currentTarget.value}
+          isSearchBar={true}
+          placeholder="Search">
+      </Form.Input>
+       <NavBar.Link to="/tasks">Questions</NavBar.Link>
+       <NavBar.Link to="/tasks">Tags</NavBar.Link>
+       <NavBar.Link to="/tasks">Users</NavBar.Link>
+       <NavBar.Link to="/tasks">About</NavBar.Link>
      </NavBar>
-     <Card title="Noe"></Card>
     </>
    );
  }
@@ -21,13 +32,13 @@ class Menu extends Component {
 
 class Home extends Component {
  render() {
-   return <Card title="Welcome">This is Todo App</Card>;
+   return <Card title=""></Card>;
  }
 }
 
 class TaskList extends Component {
  render() {
-   return <Card title="Welcome">Maika vi shte eba vuv gaza</Card>;
+   return <Card title="Noe"></Card>;
  }
 }
 

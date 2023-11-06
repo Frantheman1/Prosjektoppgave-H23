@@ -520,7 +520,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _public_styles_style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../public/styles/style.css */ "./public/styles/style.css");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _excluded = ["type", "value", "onChange"],
+var _excluded = ["type", "value", "onChange", "isSearchBar"],
   _excluded2 = ["value", "onChange"],
   _excluded3 = ["checked", "onChange"],
   _excluded4 = ["value", "onChange", "children"];
@@ -758,6 +758,14 @@ var NavBar = /*#__PURE__*/function (_Component8) {
   _createClass(NavBar, [{
     key: "render",
     value: function render() {
+      //Destructuring brand and brandAlt from props
+      var _this$props = this.props,
+        brand = _this$props.brand,
+        brandAlt = _this$props.brandAlt;
+      //default alt Text if none provided
+      var altText = typeof brandAlt === 'string' ? brandAlt : 'Default alt text for image';
+      //false if brand is not an image
+      var isImageUrl = typeof brand === 'string' && brand.endsWith('.png');
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("nav", {
         className: "navbar"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -767,7 +775,13 @@ var NavBar = /*#__PURE__*/function (_Component8) {
         activeClassName: "active",
         exact: true,
         to: "/"
-      }, this.props.brand), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, isImageUrl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+        src: brand,
+        alt: altText,
+        style: {
+          height: '100px'
+        }
+      }) : brand), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "navbar-nav"
       }, this.props.children)));
     }
@@ -811,16 +825,23 @@ var FormInput = /*#__PURE__*/function (_Component10) {
     value: function render() {
       // ...rest will contain extra passed attributes such as disabled, required, width, height, pattern
       // For further information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-      var _this$props = this.props,
-        type = _this$props.type,
-        value = _this$props.value,
-        onChange = _this$props.onChange,
-        rest = _objectWithoutProperties(_this$props, _excluded);
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", _extends({}, rest, {
+      // Destructuring props
+      var _this$props2 = this.props,
+        type = _this$props2.type,
+        value = _this$props2.value,
+        onChange = _this$props2.onChange,
+        isSearchBar = _this$props2.isSearchBar,
+        rest = _objectWithoutProperties(_this$props2, _excluded);
+      return isSearchBar ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", _extends({}, rest, {
+        className: "form-searchbar",
+        type: type,
+        value: value,
+        onChange: onChange
+      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", _extends({}, rest, {
         className: "form-control",
-        type: this.props.type,
-        value: this.props.value,
-        onChange: this.props.onChange
+        type: type,
+        value: value,
+        onChange: onChange
       }));
     }
   }]);
@@ -841,10 +862,10 @@ var FormTextarea = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       // ...rest will contain extra passed attributes such as disabled, required, rows, cols
       // For further information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-      var _this$props2 = this.props,
-        value = _this$props2.value,
-        onChange = _this$props2.onChange,
-        rest = _objectWithoutProperties(_this$props2, _excluded2);
+      var _this$props3 = this.props,
+        value = _this$props3.value,
+        onChange = _this$props3.onChange,
+        rest = _objectWithoutProperties(_this$props3, _excluded2);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("textarea", _extends({}, rest, {
         className: "form-control",
         value: value,
@@ -869,10 +890,10 @@ var FormCheckbox = /*#__PURE__*/function (_Component11) {
     value: function render() {
       // ...rest will contain extra passed attributes such as disabled, required, width, height, pattern
       // For further information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-      var _this$props3 = this.props,
-        checked = _this$props3.checked,
-        onChange = _this$props3.onChange,
-        rest = _objectWithoutProperties(_this$props3, _excluded3);
+      var _this$props4 = this.props,
+        checked = _this$props4.checked,
+        onChange = _this$props4.onChange,
+        rest = _objectWithoutProperties(_this$props4, _excluded3);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", _extends({}, rest, {
         className: "form-check-input",
         type: "checkbox",
@@ -898,11 +919,11 @@ var FormSelect = /*#__PURE__*/function (_Component12) {
     value: function render() {
       // ...rest will contain extra passed attributes such as disabled, required, size.
       // For further information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-      var _this$props4 = this.props,
-        value = _this$props4.value,
-        onChange = _this$props4.onChange,
-        children = _this$props4.children,
-        rest = _objectWithoutProperties(_this$props4, _excluded4);
+      var _this$props5 = this.props,
+        value = _this$props5.value,
+        onChange = _this$props5.onChange,
+        children = _this$props5.children,
+        rest = _objectWithoutProperties(_this$props5, _excluded4);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("select", _extends({}, rest, {
         className: "custom-select",
         value: value,
@@ -1050,12 +1071,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
 // Imports
 
 
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../images/search.png */ "./public/images/search.png"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `
+___CSS_LOADER_EXPORT___.push([module.id, `#root{ 
+  position: absolute;
+  top: 0;
+  left: 20%;
+  width: 60%;
+}
 /*.topnav {
     overflow: hidden;
     background-color: #e9e9e9;
@@ -1120,49 +1151,82 @@ ___CSS_LOADER_EXPORT___.push([module.id, `
 
 
 */
-
+ /*Hoved navbar container*/
 .navbar {
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  align-items: center; 
+  background-color: #fff; 
+  padding: 0 20px; 
   position: sticky;
+  border-bottom: #7F8CD9 2px solid;
   top: 0;
-  padding: 15px 0;
-  z-index:1000;
-  background-color: #333;
+  z-index: 1000;
 }
-
-
-.navbar .container-fluid {
+/*Wrappen for NavLinks*/
+.container-fluid {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
-
+/*Logo/brand sin style*/
 .navbar-brand {
-  color:#333;
+  color: #000000;
   margin-left: 20px;
-  text-decoration:none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding-right:50px;
+  border-right: #7F8CD9 2px solid;
+  user-select: none;
 }
-
+/*Wrappen for alle andre Navlinks etter logoen*/
 .navbar-nav {
   display: flex;
-  gap: 10px;
+  padding: 0.2rem 0;
+  user-select: none;
 }
 
+/*Knappene sin style i navbaren*/
 .nav-link {
-  color: #333;              
-  padding: 5px 10px;        
-  text-decoration: none;  
-  border-radius: 5px;       
-  transition: background-color 0.3s; 
+  color: #7F8CD9;
+  font-weight: 900;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  text-decoration: none;
+  padding:45px 10px 45px 10px;
+  transition: background-color 0.3s, color 0.3s; 
 }
 
-.nav-link:hover, 
-.nav-link.active {
-  background-color: #555;   
+.nav-link:hover {
+  background-color: #DAE5F4;
+  color: #ffffff;
 }
-`, "",{"version":3,"sources":["webpack://./public/styles/style.css"],"names":[],"mappings":";AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;CA+DC;;AAED;EACE,aAAa;EACb,mBAAmB;EACnB,WAAW;EACX,gBAAgB;EAChB,MAAM;EACN,eAAe;EACf,YAAY;EACZ,sBAAsB;AACxB;;;AAGA;EACE,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB;;AAEA;EACE,UAAU;EACV,iBAAiB;EACjB,oBAAoB;AACtB;;AAEA;EACE,aAAa;EACb,SAAS;AACX;;AAEA;EACE,WAAW;EACX,iBAAiB;EACjB,qBAAqB;EACrB,kBAAkB;EAClB,iCAAiC;AACnC;;AAEA;;EAEE,sBAAsB;AACxB","sourcesContent":["\r\n/*.topnav {\r\n    overflow: hidden;\r\n    background-color: #e9e9e9;\r\n  }\r\n  \r\n  CSS til linkene i baren \r\n  .topnav a {\r\n    float: left;\r\n    display: block;\r\n    color: black;\r\n    text-align: center;\r\n    padding: 14px 16px;\r\n    text-decoration: none;\r\n    font-size: 17px;\r\n  }\r\n  \r\n   Faregn på knappene når vi hovrer over \r\n  .topnav a:hover {\r\n    background-color: #ddd;\r\n    color: black;\r\n  }\r\n  \r\n     Aktiv link \r\n  .topnav a.active {\r\n    background-color: #2196F3;\r\n    color: white;\r\n  }\r\n  \r\n     Høyre side av baren \r\n  .topnav input[type=text] {\r\n    float: right;\r\n    padding: 6px;\r\n    border: none;\r\n    margin-top: 8px;\r\n    margin-right: 16px;\r\n    font-size: 17px;\r\n  }\r\n  \r\n \r\n  @media screen and (max-width: 600px) {\r\n    .topnav a, .topnav input[type=text] {\r\n      float: none;\r\n      display: block;\r\n      text-align: left;\r\n      width: 100%;\r\n      margin: 0;\r\n      padding: 14px;\r\n    }\r\n    .topnav input[type=text] {\r\n      border: 1px solid #ccc;\r\n    }\r\n  }\r\n  \r\n\r\n.title {\r\n    color: black;\r\n    border: 2px solid black;\r\n    margin: 20px;\r\n    padding: 20px;\r\n    position:fixed;\r\n}\r\n\r\n\r\n*/\r\n\r\n.navbar {\r\n  display: flex;\r\n  flex-direction: row;\r\n  width: 100%;\r\n  position: sticky;\r\n  top: 0;\r\n  padding: 15px 0;\r\n  z-index:1000;\r\n  background-color: #333;\r\n}\r\n\r\n\r\n.navbar .container-fluid {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n}\r\n\r\n.navbar-brand {\r\n  color:#333;\r\n  margin-left: 20px;\r\n  text-decoration:none;\r\n}\r\n\r\n.navbar-nav {\r\n  display: flex;\r\n  gap: 10px;\r\n}\r\n\r\n.nav-link {\r\n  color: #333;              \r\n  padding: 5px 10px;        \r\n  text-decoration: none;  \r\n  border-radius: 5px;       \r\n  transition: background-color 0.3s; \r\n}\r\n\r\n.nav-link:hover, \r\n.nav-link.active {\r\n  background-color: #555;   \r\n}\r\n"],"sourceRoot":""}]);
+/*Searchbar styles*/
+.form-searchbar {
+  padding: 3px 3px 3px 30px;
+  height: 30px;
+  width: 500px;
+  border: 1px solid #7F8CD9;
+  border-radius: 50px; 
+  margin-right: 40px;
+  margin-top: 33px;
+  font-size: 16px;
+  outline: none; 
+
+  background-image: url(${___CSS_LOADER_URL_REPLACEMENT_0___});
+  background-repeat: no-repeat;
+  background-position:9px center; 
+  background-size: 20px; 
+}
+
+.form-searchbar:focus {
+  border: 2px solid #7F8CD9;
+}
+
+.form-searchbar::placeholder {
+  color: #A5A5A5;
+  opacity: 1;
+}`, "",{"version":3,"sources":["webpack://./public/styles/style.css"],"names":[],"mappings":"AAAA;EACE,kBAAkB;EAClB,MAAM;EACN,SAAS;EACT,UAAU;AACZ;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;CA+DC;CACA,yBAAyB;AAC1B;EACE,aAAa;EACb,mBAAmB;EACnB,sBAAsB;EACtB,eAAe;EACf,gBAAgB;EAChB,gCAAgC;EAChC,MAAM;EACN,aAAa;AACf;AACA,uBAAuB;AACvB;EACE,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;EACnB,WAAW;AACb;AACA,uBAAuB;AACvB;EACE,cAAc;EACd,iBAAiB;EACjB,qBAAqB;EACrB,aAAa;EACb,mBAAmB;EACnB,kBAAkB;EAClB,+BAA+B;EAC/B,iBAAiB;AACnB;AACA,+CAA+C;AAC/C;EACE,aAAa;EACb,iBAAiB;EACjB,iBAAiB;AACnB;;AAEA,gCAAgC;AAChC;EACE,cAAc;EACd,gBAAgB;EAChB,qHAAqH;EACrH,qBAAqB;EACrB,2BAA2B;EAC3B,6CAA6C;AAC/C;;AAEA;EACE,yBAAyB;EACzB,cAAc;AAChB;AACA,mBAAmB;AACnB;EACE,yBAAyB;EACzB,YAAY;EACZ,YAAY;EACZ,yBAAyB;EACzB,mBAAmB;EACnB,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,aAAa;;EAEb,yDAA6C;EAC7C,4BAA4B;EAC5B,8BAA8B;EAC9B,qBAAqB;AACvB;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,cAAc;EACd,UAAU;AACZ","sourcesContent":["#root{ \r\n  position: absolute;\r\n  top: 0;\r\n  left: 20%;\r\n  width: 60%;\r\n}\r\n/*.topnav {\r\n    overflow: hidden;\r\n    background-color: #e9e9e9;\r\n  }\r\n  \r\n  CSS til linkene i baren \r\n  .topnav a {\r\n    float: left;\r\n    display: block;\r\n    color: black;\r\n    text-align: center;\r\n    padding: 14px 16px;\r\n    text-decoration: none;\r\n    font-size: 17px;\r\n  }\r\n  \r\n   Faregn på knappene når vi hovrer over \r\n  .topnav a:hover {\r\n    background-color: #ddd;\r\n    color: black;\r\n  }\r\n  \r\n     Aktiv link \r\n  .topnav a.active {\r\n    background-color: #2196F3;\r\n    color: white;\r\n  }\r\n  \r\n     Høyre side av baren \r\n  .topnav input[type=text] {\r\n    float: right;\r\n    padding: 6px;\r\n    border: none;\r\n    margin-top: 8px;\r\n    margin-right: 16px;\r\n    font-size: 17px;\r\n  }\r\n  \r\n \r\n  @media screen and (max-width: 600px) {\r\n    .topnav a, .topnav input[type=text] {\r\n      float: none;\r\n      display: block;\r\n      text-align: left;\r\n      width: 100%;\r\n      margin: 0;\r\n      padding: 14px;\r\n    }\r\n    .topnav input[type=text] {\r\n      border: 1px solid #ccc;\r\n    }\r\n  }\r\n  \r\n\r\n.title {\r\n    color: black;\r\n    border: 2px solid black;\r\n    margin: 20px;\r\n    padding: 20px;\r\n    position:fixed;\r\n}\r\n\r\n\r\n*/\r\n /*Hoved navbar container*/\r\n.navbar {\r\n  display: flex;\r\n  align-items: center; \r\n  background-color: #fff; \r\n  padding: 0 20px; \r\n  position: sticky;\r\n  border-bottom: #7F8CD9 2px solid;\r\n  top: 0;\r\n  z-index: 1000;\r\n}\r\n/*Wrappen for NavLinks*/\r\n.container-fluid {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  width: 100%;\r\n}\r\n/*Logo/brand sin style*/\r\n.navbar-brand {\r\n  color: #000000;\r\n  margin-left: 20px;\r\n  text-decoration: none;\r\n  display: flex;\r\n  align-items: center;\r\n  padding-right:50px;\r\n  border-right: #7F8CD9 2px solid;\r\n  user-select: none;\r\n}\r\n/*Wrappen for alle andre Navlinks etter logoen*/\r\n.navbar-nav {\r\n  display: flex;\r\n  padding: 0.2rem 0;\r\n  user-select: none;\r\n}\r\n\r\n/*Knappene sin style i navbaren*/\r\n.nav-link {\r\n  color: #7F8CD9;\r\n  font-weight: 900;\r\n  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\r\n  text-decoration: none;\r\n  padding:45px 10px 45px 10px;\r\n  transition: background-color 0.3s, color 0.3s; \r\n}\r\n\r\n.nav-link:hover {\r\n  background-color: #DAE5F4;\r\n  color: #ffffff;\r\n}\r\n/*Searchbar styles*/\r\n.form-searchbar {\r\n  padding: 3px 3px 3px 30px;\r\n  height: 30px;\r\n  width: 500px;\r\n  border: 1px solid #7F8CD9;\r\n  border-radius: 50px; \r\n  margin-right: 40px;\r\n  margin-top: 33px;\r\n  font-size: 16px;\r\n  outline: none; \r\n\r\n  background-image: url('../images/search.png');\r\n  background-repeat: no-repeat;\r\n  background-position:9px center; \r\n  background-size: 20px; \r\n}\r\n\r\n.form-searchbar:focus {\r\n  border: 2px solid #7F8CD9;\r\n}\r\n\r\n.form-searchbar::placeholder {\r\n  color: #A5A5A5;\r\n  opacity: 1;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1260,6 +1324,42 @@ module.exports = function (cssWithMappingToString) {
     }
   };
   return list;
+};
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/getUrl.js":
+/*!********************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/getUrl.js ***!
+  \********************************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = function (url, options) {
+  if (!options) {
+    options = {};
+  }
+  if (!url) {
+    return url;
+  }
+  url = String(url.__esModule ? url.default : url);
+
+  // If url is already wrapped in quotes, remove them
+  if (/^['"].*['"]$/.test(url)) {
+    url = url.slice(1, -1);
+  }
+  if (options.hash) {
+    url += options.hash;
+  }
+
+  // Should url be wrapped?
+  // See https://drafts.csswg.org/css-values-3/#urls
+  if (/["'() \t\n]|(%20)/.test(url) || options.needQuotes) {
+    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, "\\n"), "\"");
+  }
+  return url;
 };
 
 /***/ }),
@@ -39894,6 +39994,17 @@ function valueEqual(a, b) {
 
 /***/ }),
 
+/***/ "./public/images/search.png":
+/*!**********************************!*\
+  !*** ./public/images/search.png ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "c905e98ff0993e0b28fd.png";
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
 /*!************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
@@ -40049,6 +40160,9 @@ function invariant(condition, message) {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -40111,6 +40225,55 @@ function invariant(condition, message) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src;
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && !scriptUrl) scriptUrl = scripts[i--].src;
+/******/ 				}
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"main": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// no jsonp function
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/nonce */
 /******/ 	(() => {
 /******/ 		__webpack_require__.nc = undefined;
@@ -40137,8 +40300,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
@@ -40146,6 +40307,9 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 
 
@@ -40156,19 +40320,39 @@ var Menu = /*#__PURE__*/function (_Component) {
   _inherits(Menu, _Component);
   var _super = _createSuper(Menu);
   function Menu() {
+    var _this;
     _classCallCheck(this, Menu);
-    return _super.apply(this, arguments);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _super.call.apply(_super, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this), "value", "");
+    return _this;
   }
   _createClass(Menu, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar, {
-        brand: "Todo App"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+        brand: "images/NewLogo4.png",
+        brandAlt: "Logo av Side"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Form.Input, {
+        type: "text",
+        value: this.value,
+        onChange: function onChange(e) {
+          return _this2.value = e.currentTarget.value;
+        },
+        isSearchBar: true,
+        placeholder: "Search"
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/tasks"
-      }, "Tasks")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Card, {
-        title: "Noe"
-      }));
+      }, "Questions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+        to: "/tasks"
+      }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+        to: "/tasks"
+      }, "Users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+        to: "/tasks"
+      }, "About")));
     }
   }]);
   return Menu;
@@ -40184,8 +40368,8 @@ var Home = /*#__PURE__*/function (_Component2) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Card, {
-        title: "Welcome"
-      }, "This is Todo App");
+        title: ""
+      });
     }
   }]);
   return Home;
@@ -40201,8 +40385,8 @@ var TaskList = /*#__PURE__*/function (_Component3) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Card, {
-        title: "Welcome"
-      }, "Maika vi shte eba vuv gaza");
+        title: "Noe"
+      });
     }
   }]);
   return TaskList;

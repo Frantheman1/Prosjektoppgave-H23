@@ -172,15 +172,32 @@ class NavBarLink extends Component<{ to: string }> {
  *
  * Properties: brand
  */
-export class NavBar extends Component<{ brand: ReactNode }> {
+export class NavBar extends Component<{ 
+  brand: ReactNode; 
+  brandAlt?: string; 
+}> {
   static Link = NavBarLink;
 
   render() {
+    //Destructuring brand and brandAlt from props
+    const { brand, brandAlt } = this.props;
+    //default alt Text if none provided
+    const altText = typeof brandAlt === 'string' ? brandAlt : 'Default alt text for image';
+    //false if brand is not an image
+    const isImageUrl = typeof brand === 'string' &&  brand.endsWith('.png');
+
     return (
       <nav className="navbar">
         <div className="container-fluid">
           <NavLink className="navbar-brand" activeClassName="active" exact to="/">
-            {this.props.brand}
+            { isImageUrl ? (
+                  <img 
+                    src={brand as string} 
+                    alt={altText} 
+                    style={{ height: '100px' }}/>
+                    ):(
+                      brand
+                    )}
           </NavLink>
           <div className="navbar-nav">{this.props.children}</div>
         </div>
@@ -205,23 +222,37 @@ class FormInput extends Component<{
   type: string;
   value: string | number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  isSearchBar?: boolean;
   [prop: string]: any;
+  
 }> {
   render() {
-    // ...rest will contain extra passed attributes such as disabled, required, width, height, pattern
+      // ...rest will contain extra passed attributes such as disabled, required, width, height, pattern
     // For further information, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-    const { type, value, onChange, ...rest } = this.props;
+    // Destructuring props
+    const { type, value, onChange, isSearchBar, ...rest } = this.props;
+
     return (
-      <input
+      isSearchBar ? 
+      (<input
+        {...rest}
+        className="form-searchbar"
+        type={type}
+        value={value}
+        onChange={onChange}
+      />) 
+      : 
+      (<input
         {...rest}
         className="form-control"
-        type={this.props.type}
-        value={this.props.value}
-        onChange={this.props.onChange}
-      />
+        type={type}
+        value={value}
+        onChange={onChange}
+      />)
     );
   }
 }
+
 
 /**
  * Renders a form textarea using Bootstrap styles.
