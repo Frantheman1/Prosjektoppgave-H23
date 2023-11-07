@@ -45,23 +45,7 @@ class FavoriteService {
     });
   }
 
-  /**
-   * Hent alle favorittsvarene for en gitt bruker.
-   */
-  getFavoritesByUser(userId: number): Promise<Answer[]> {
-    return new Promise((resolve, reject) => {
-      pool.query(
-        'SELECT Answers.* FROM Answers JOIN FavoriteAnswers ON Answers.AnswerID = FavoriteAnswers.AnswerID WHERE FavoriteAnswers.UserID = ?',
-        [userId],
-        (error, results: RowDataPacket[]) => {
-          if (error) {
-            return reject(error);
-          }
-          resolve(results as Answer[]);
-        }
-      );
-    });
-  }
 }
 
-export default new FavoriteService();
+const favoriteService = new FavoriteService();
+export default favoriteService;
