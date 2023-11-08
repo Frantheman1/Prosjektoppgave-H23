@@ -48,7 +48,12 @@ class CommentService {
   /**
    * Add a new comment to a question or answer.
    */
-  addComment(userId: number, questionId: number | null, answerId: number | null, content: string): Promise<number> {
+  addComment(
+    userId: number,
+    questionId: number | null,
+    answerId: number | null,
+    content: string,
+  ): Promise<number> {
     return new Promise((resolve, reject) => {
       const fields = questionId ? 'UserID, QuestionID, Content' : 'UserID, AnswerID, Content';
       const values = questionId ? [userId, questionId, content] : [userId, answerId, content];

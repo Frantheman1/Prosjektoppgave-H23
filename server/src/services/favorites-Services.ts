@@ -19,7 +19,7 @@ class FavoriteService {
             return reject(error);
           }
           resolve();
-        }
+        },
       );
     });
   }
@@ -40,11 +40,10 @@ class FavoriteService {
             return reject(new Error('No favorite answer was removed.'));
           }
           resolve();
-        }
+        },
       );
     });
   }
-
 }
 
 const favoriteService = new FavoriteService();

@@ -176,6 +176,7 @@ export class NavBar extends Component<{
   brand: ReactNode; 
   brandAlt?: string; 
 }> {
+  
   static Link = NavBarLink;
 
   render() {
