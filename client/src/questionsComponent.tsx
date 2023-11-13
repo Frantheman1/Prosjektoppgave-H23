@@ -48,7 +48,9 @@ export class QuestionsList extends Component {
     tagServices
       .getTagsForQuestion(questionId)
       .then(tags => {
+        console.log('Current tags state:', this.tags);
         this.tags[questionId] = tags;
+        console.log('Updated tags state:', this.tags);
       })
       .catch(error => {
         Alert.danger('Error getting tags: ' + error.message);
@@ -139,7 +141,7 @@ export class QuestionEdit extends Component<
     return(
       <>
         <Card title='Edit question'>
-        <Row>
+         <Row>
             <Column width={2}>
               <Form.Label>Title:</Form.Label>
             </Column>
@@ -150,7 +152,7 @@ export class QuestionEdit extends Component<
                 onChange={(event) => (this.question.title = event.currentTarget.value)}
               />
             </Column>
-          </Row>
+           </Row>
           <Row>
             <Column width={2}>
               <Form.Label>Content:</Form.Label>
