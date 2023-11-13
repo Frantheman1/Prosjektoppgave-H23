@@ -3,8 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { NavBar, Card, Form, Alert,Row} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
-import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
-import questionService, {Question}  from './questionsServices';
 
 interface MenuState {
   questions: Question[];
@@ -43,13 +41,6 @@ class Menu extends Component {
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
-        {filteredQuestions.length > 0 && (
-          <Row>
-            {filteredQuestions.map((question, index) => (
-              <Row key={index}>{question.title}</Row>
-            ))}
-          </Row>
-        )}
       </NavBar>
     );
   }
@@ -69,10 +60,6 @@ if (root) {
     <HashRouter>
       <div>
         <Menu />
-        <Route exact path='/questions' component={QuestionsList}/>
-        <Route exact path='/questions/new' component={QuestionsNew}/>
-        <Route exact path='/questions/:id(\d+)' component={QuestionDetails}/>
-        <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>
