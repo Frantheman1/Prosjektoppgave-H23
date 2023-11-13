@@ -20,7 +20,7 @@ class Login extends Component<{}, LoginState> {
     }
 
     handleLogin = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+        e.preventDefault();
         const { username, password } = this.state;
 
         fetch('/login', {
