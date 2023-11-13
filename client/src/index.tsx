@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { NavBar, Card, Form} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
+import Login from './components/authetication/login';
+import Register from './components/authetication/register';
 
 
 
@@ -23,6 +25,8 @@ class Menu extends Component {
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
+        <NavBar.Link to="/login">Log in</NavBar.Link>
+        <NavBar.Link to="/register">Register</NavBar.Link>
       </NavBar>
     );
   }
@@ -35,6 +39,8 @@ if (root) {
     <HashRouter>
       <div>
         <Menu />
+        <Route path="/register" component={Register} />
+        <Route path="/login" component={Login} />
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>
