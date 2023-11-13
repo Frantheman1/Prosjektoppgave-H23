@@ -12,6 +12,8 @@ export type Question = {
 };
 
 class QuestionService {
+
+  
   /**
    * Get question with given id.
    */
@@ -28,6 +30,20 @@ class QuestionService {
         },
       );
     });
+  }
+
+  /**
+   * Gets all questions
+   */
+
+  getAll() {
+    return new Promise<Question[]>((resolve, reject) => {
+      pool.query ('SELECT * FROM Questions' , (error, results: RowDataPacket[]) => {
+        if (error) return reject(error);
+
+        resolve(results as Question[])
+      })
+    })
   }
 
   /**
@@ -86,8 +102,6 @@ class QuestionService {
 
   /**
    * Search for questions by text.
-   * 
-   * 
    */
   searchByText(searchTerm: string) {
     return new Promise<Array<Question & { matchIn?: 'title' | 'content' }>>((resolve, reject) => {
@@ -140,7 +154,7 @@ class QuestionService {
 
   /**
    * Get a list of questions sorted by a specified criterion.
-   */
+   
   getQuestionsSorted(sortBy: 'views' | 'answers' | 'date') {
     // Chooses one of the cases based on input
     let orderBy: string;
@@ -164,13 +178,13 @@ class QuestionService {
       `SELECT 
         Questions.*
         COUNT(Answers.AnswerID) AS AnswerCount
-        FROM 
+       FROM 
         Questions
-        LEFT JOIN 
+       LEFT JOIN 
         Answers ON Questions.QuestionID = Answers.QuestionID
-        GROUP BY 
+       GROUP BY 
         Questions.QuestionID
-        ORDER BY 
+       ORDER BY 
         ${orderBy}`,
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
@@ -179,15 +193,16 @@ class QuestionService {
       );
     });
   }
-
+  */
+/*
   getUnansweredQuestions() {
     return new Promise<Question[]>((resolve, reject) => {
       pool.query(
         `SELECT *
-        FROM Questions
-        WHERE NOT EXISTS (
-          SELECT 1 FROM Answers WHERE Answers.QuestionID = Questions.QuestionID
-        )`,
+         FROM Questions
+         WHERE NOT EXISTS (
+           SELECT 1 FROM Answers WHERE Answers.QuestionID = Questions.QuestionID
+         )`,
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
           resolve(results as Question[]);
@@ -195,6 +210,7 @@ class QuestionService {
       );
     });
   }
+  */
 }
 
 const questionService = new QuestionService();

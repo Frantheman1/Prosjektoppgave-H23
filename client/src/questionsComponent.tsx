@@ -1,227 +1,258 @@
-import React, { ChangeEvent } from 'react';
+import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
-import questionService, { Question } from './questionsServices'
+import questionService, { Question } from './questionsServices';
+import tagServices, { Tag } from './tagsServices'
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
 
+
 /**
- * Renders question list.
+ * Renders Questions list.
  */
-export class QuestionList extends Component {
-  questions: Question[] = [];
+
+export class QuestionsList extends Component {
+  questions: Question[] = []
+  tags:{ [key: number]: Tag[] }  = {}
 
   render() {
     return (
       <>
-        <Card title="Questions">
+       <Button.Success onClick={() => history.push('/questions/new')}>New question</Button.Success>
+        <Card title='Questions'>
           {this.questions.map((question) => (
             <Row key={question.questionId}>
-              <Column>
-                <NavLink to={'/questions/' + question.questionId}>{question.title}</NavLink>
-              </Column>
+              <NavLink to={'/questions/' + question.questionId}>
+                <Column>
+                  <Row>{question.title}-</Row>
+                  <Row>{question.content}</Row>
+                  <Row>
+                  {this.tags[question.questionId]?.map((tag, index) => (
+                    <Row key={index}>{tag.name}</Row>
+                  ))}
+                    </Row>
+                 </Column>
+              </NavLink>
+              
             </Row>
           ))}
+
         </Card>
-        <Button.Success onClick={() => history.push('/questions/new')}>New question</Button.Success>
       </>
-    );
+    )
   }
+
+  getTagsForQuestions(questionId: number) {
+    tagServices
+      .getTagsForQuestion(questionId)
+      .then(tags => {
+        this.tags[questionId] = tags;
+      })
+      .catch(error => {
+        Alert.danger('Error getting tags: ' + error.message);
+      });
+  }
+
 
   mounted() {
     questionService
-      .getQuestionsSorted() // You may want to specify the sort or fetch all questions
-      .then((questions) => (this.questions = questions))
-      .catch((error) => Alert.danger('Error getting questions: ' + error.message));
+      .getAll()
+      .then((questions) => {
+        this.questions = questions
+        questions.forEach(question => {
+          this.getTagsForQuestions(question.questionId);
+        });})
+      .catch((error) => Alert.danger('Error getting questions: ' + error.message))
+
   }
+
 }
 
-/**
- * Renders a specific question.
- */
-export class QuestionDetails extends Component<{ match: { params: { id: string } } }> {
- question: Question | null = null;
-
- render() {
-   // Check if this.question is not null before rendering
-   if (!this.question) { // If this.question is null, render a placeholder or message
-     return <div>Loading question details or question not found...</div>;
-   }
-
-   // The non-null assertion operator '!' is used after this.question below because we've
-   // already checked that it's not null above in this render method.
-   return (
-     <>
-       <Card title="Question">
-         <Row>
-           <Column width={2}>Title:</Column>
-           <Column>{this.question.title}</Column>
-         </Row>
-         <Row>
-           <Column width={2}>Content:</Column>
-           <Column>{this.question.content}</Column>
-         </Row>
-         {/* Add other question details here */}
-       </Card>
-       <Button.Success onClick={() => history.push('/questions/' + this.question!.questionId + '/edit')}>
-         Edit
-       </Button.Success>
-     </>
-   );
- }
-
- mounted() {
-   questionService
-     .get(Number(this.props.match.params.id))
-     .then((question) => (this.question = question))
-     .catch((error) => {
-       console.error(error);
-       Alert.danger('Error getting question: ' + error.message);
-     });
- }
-}
-
-/**
- * Renders form to edit a specific question.
- */
-export class QuestionEdit extends Component<{ match: { params: { id: string } } }> {
-  question: Question | null = null;
-
-  handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (this.question) {
-      this.question.title = event.target.value;
-      this.forceUpdate(); // Since we're directly mutating the state, we need to force a re-render
-    }
-  };
-
-  handleContentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    if (this.question) {
-      this.question.content = event.target.value;
-      this.forceUpdate(); // Same as above
-    }
-  };
-
+export class QuestionDetails extends Component<{ match: { params: { id: number } } }> {
+  question: Question = {
+                questionId:0,
+                userId: 1, 
+                title:'',
+                content:'', 
+                createdAt: new Date(), 
+                modifiedAt:new Date(), 
+                viewCount: 0
+              }  
   render() {
-    if (!this.question) {
-      return;
-    }
-
     return (
-      <div>
-        <h2>Edit Question</h2>
-        <form>
-          <Form.Label>Title</Form.Label>
-          <Form.Input
-            type="text"
-            value={this.question.title}
-            onChange={this.handleTitleChange}
-          />
-
-          <Form.Label>Content</Form.Label>
-          <Form.Textarea
-            value={this.question.content}
-            onChange={this.handleContentChange}
-          />
-
-          <Button.Success onClick={this.save}>Save</Button.Success>
-          <Button.Danger onClick={this.delete}>Delete</Button.Danger>
-        </form>
-      </div>
-    );
+      <>
+        <Card title='Question'>
+          <Row>
+            <Column width={2}>Title:</Column>
+            <Column>{this.question.title}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Content:</Column>
+            <Column>{this.question.content}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>User:</Column>
+            <Column>{this.question.userId}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Created at:</Column>
+            <Column>{this.question.createdAt.toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Last modified:</Column>
+            <Column>{this.question.modifiedAt.toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>ViewCount:</Column>
+            <Column>{this.question.viewCount}</Column>
+          </Row>
+        </Card>
+        <Button.Success
+          onClick={() => history.push('/questions/' + this.props.match.params.id + '/edit')}
+        >
+          Edit
+        </Button.Success>
+      </>
+    )
   }
-
-  save() {
-    if (this.question) {
-      // Assuming you have the updated question title and content from your form
-      const updatedTitle = this.question.title; // Should be bound to form input
-      const updatedContent = this.question.content; // Should be bound to form textarea
-
-      questionService
-        .update(this.question.questionId, updatedTitle, updatedContent)
-        .then(() => {
-          Alert.success('Question updated successfully');
-          // Possibly redirect or perform further actions upon success
-        })
-        .catch((error) => {
-          Alert.danger('Error updating question: ' + error.message);
-        });
-    } else {
-      Alert.danger('No question to save');
-    }
-  }
-
-  delete() {
-    if (this.question) {
-      questionService
-        .delete(this.question.questionId)
-        .then(() => {
-          Alert.success('Question deleted successfully');
-          // Possibly redirect or perform further actions upon success
-        })
-        .catch((error) => {
-          Alert.danger('Error deleting question: ' + error.message);
-        });
-    } else {
-      Alert.danger('No question to delete');
-    }
-  }
-
   mounted() {
     questionService
-      .get(Number(this.props.match.params.id))
-      .then((question) => (this.question = question))
+      .get(this.props.match.params.id)
+      .then((question) => {
+        question.createdAt = new Date(question.createdAt);
+        question.modifiedAt = new Date(question.modifiedAt);
+        this.question = question;
+      })
       .catch((error) => Alert.danger('Error getting question: ' + error.message));
   }
 }
-/**
- * Renders form to create new question.
- */
-export class QuestionNew extends Component {
-  state = {
-    title: '',
-    content: '',
-    userId: 1, // Assuming you have a logged-in user ID
-  };
 
-  render() {
-    return (
+export class QuestionEdit extends Component<
+{ match: { params: { id: number } } },
+{ question: Partial<Question> }
+> 
+{
+  question = {questionId: 0, title:'', content: '', userId:1}
+  render(){
+    return(
       <>
-        <Card title="New Question">
-          <form onSubmit={this.handleSubmit}>
-            <Form.Label>Title</Form.Label>
-            <Form.Input
-              type="text"
-              value={this.state.title}
-              onChange={(event) => this.setState({ title: event.target.value })}
-            />
-
-            <Form.Label>Content</Form.Label>
-            <Form.Textarea
-              value={this.state.content}
-              onChange={(event) => this.setState({ content: event.target.value })}
-            />
-
-            <Button.Success type="submit">Create</Button.Success>
-          </form>
+        <Card title='Edit question'>
+        <Row>
+            <Column width={2}>
+              <Form.Label>Title:</Form.Label>
+            </Column>
+            <Column>
+              <Form.Input
+                type="text"
+                value={this.question.title}
+                onChange={(event) => (this.question.title = event.currentTarget.value)}
+              />
+            </Column>
+          </Row>
+          <Row>
+            <Column width={2}>
+              <Form.Label>Content:</Form.Label>
+            </Column>
+            <Column>
+              <Form.Textarea 
+              value={this.question.content} 
+              onChange={(event) => (this.question.content = event.currentTarget.value)} 
+              rows={10}/>
+            </Column>
+          </Row>
         </Card>
+        <Row>
+          <Column>
+            <Button.Success onClick={this.save}>Save</Button.Success>
+          </Column>
+          <Column right>
+            <Button.Danger onClick={this.delete}>Delete</Button.Danger>
+          </Column>
+        </Row>
       </>
-    );
+    )
   }
 
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submit action
-    const { title, content, userId } = this.state;
-
-    if (!title.trim() || !content.trim()) {
-      Alert.danger('Title and content are required.');
-      return;
-    }
+  save = () => {
+    const { questionId, title, content } = this.question;
 
     questionService
-      .create(title, content, userId)
-      .then((questionId) => history.push('/questions/' + questionId))
-      .catch((error) => Alert.danger('Error creating question: ' + error.message));
+      .update(questionId, title, content)
+      .then(() => history.push('/questions/' + questionId))
+      .catch((error) => Alert.danger('Error saving question: ' + error.message));
   };
+
+  delete = () => {
+    questionService
+      .delete(this.question.questionId)
+      .then(() => history.push('/questions/'))
+      .catch((error) => Alert.danger('Error deleting a question: ' + error.message));
+  };
+
+  mounted() {
+    questionService
+      .get(this.props.match.params.id)
+      .then((question) => (this.question = question))
+      .catch((error) => Alert.danger('Error getting task: ' + error.message));
+      console.log(this.question)
+  }
+
+}
+
+
+export class QuestionsNew extends Component {
+  title: string = ''
+  content: string = ''
+  userId: number = 1
+
+  render(){
+    return (
+      <>
+        <Card title='New Question'>
+          <Row>
+            <Column width={2}>
+              <Form.Label>Title:</Form.Label>
+            </Column>
+            <Column>
+              <Form.Input
+                type="text"
+                value={this.title}
+                onChange={(event) => (this.title = event.currentTarget.value)}
+              />
+            </Column>
+          </Row>
+          <Row>
+            <Column width={2}>
+              <Form.Label>Content:</Form.Label>
+            </Column>
+            <Column>
+              <Form.Textarea 
+              type="text"
+              value={this.content} 
+              onChange={(event) => {this.content = event.currentTarget.value}} 
+              rows={10}/>
+            </Column>
+          </Row>
+        </Card>
+        <Button.Success
+          onClick={this.create}
+        >
+          Create
+        </Button.Success>
+      </>
+    )
+  }
+
+  create() {
+    questionService
+      .create(this.title,this.content, this.userId)
+      .then((id) => history.push('/questions/' + id))
+      .catch((error) => {
+        console.error("Detailed error:", error);
+        console.log(this.title, this.content, this.userId)
+        Alert.danger('Error creating task: ' + error.message)
+      })
+  }
 }

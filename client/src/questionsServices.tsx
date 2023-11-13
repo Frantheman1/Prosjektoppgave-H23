@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000/api';
+axios.defaults.baseURL = 'http://localhost:3000/api/v1';
 
 export type Question = {
   questionId: number;
@@ -21,11 +21,21 @@ class QuestionService {
   }
 
   /**
+   * Get all questions.
+   */
+  getAll() {
+    return axios.get<Question[]>('/questions').then((response) => response.data);
+  }
+
+  /**
    * Create a new question.
    */
   create(title: string, content: string, userId: number) {
     return axios
-      .post<{ id: number }>('/questions', { title, content, userId })
+      .post<{ id: number }>('/questions', { 
+        title: title, 
+        content: content, 
+        userId: userId })
       .then((response) => response.data.id);
   }
 
@@ -45,31 +55,6 @@ class QuestionService {
     return axios
       .delete<void>(`/questions/${questionId}`)
       .then((response) => response.data);
-  }
-
-  /**
-   * Search for questions by text.
-   */
-  searchByText(searchTerm: string) {
-    return axios
-      .get<Question[]>('/questions/search', { params: { searchTerm } })
-      .then((response) => response.data);
-  }
-
-  /**
-   * Get a list of questions sorted by a specified criterion.
-   */
-  getQuestionsSorted(sortBy: 'views' | 'answers' | 'date' = 'date') {
-    return axios
-      .get<Question[]>('/questions/sorted', { params: { sortBy } })
-      .then((response) => response.data);
-  }
-
-  /**
-   * Get unanswered questions.
-   */
-  getUnansweredQuestions() {
-    return axios.get<Question[]>('/questions/unanswered').then((response) => response.data);
   }
 }
 

@@ -1,21 +1,41 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
-import { NavBar, Card, Form} from './widgets';
+import { NavBar, Card, Form, Alert,Row} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
+import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
+import questionService, {Question}  from './questionsServices';
 
-
+interface MenuState {
+  questions: Question[];
+  searchValue: string;
+}
 
 class Menu extends Component {
-  value: string = "";
+  state: MenuState = {
+    questions: [],
+    searchValue: '',
+  };
 
   render() {
+    const { questions, searchValue } = this.state;
+    let filteredQuestions: Question[] = [];
+
+    if (searchValue) {
+      filteredQuestions = questions.filter(question =>
+       question.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        question.content.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    }
     return (
       <NavBar brand="images/NewLogo4.png" brandAlt='Logo of the Site'>
         <Form.Input
           type="text"
-          value={this.value}
-          onChange={(e) => (this.value = e.currentTarget.value)}
+          value={this.state.searchValue}
+          onChange={(e) => {
+            this.setState({ searchValue: e.target.value });
+            console.log(filteredQuestions)
+          }}
           isSearchBar={true}
           placeholder="Search"
         />
@@ -23,9 +43,23 @@ class Menu extends Component {
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
+        {filteredQuestions.length > 0 && (
+          <Row>
+            {filteredQuestions.map((question, index) => (
+              <Row key={index}>{question.title}</Row>
+            ))}
+          </Row>
+        )}
       </NavBar>
     );
   }
+
+  mounted() {
+    questionService
+    .getAll()
+    .then(questions => this.setState({ questions }))
+    .catch(error => Alert.danger('Error getting questions: ' + error.message));
+}
 }
 
 
@@ -35,6 +69,10 @@ if (root) {
     <HashRouter>
       <div>
         <Menu />
+        <Route exact path='/questions' component={QuestionsList}/>
+        <Route exact path='/questions/new' component={QuestionsNew}/>
+        <Route exact path='/questions/:id(\d+)' component={QuestionDetails}/>
+        <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

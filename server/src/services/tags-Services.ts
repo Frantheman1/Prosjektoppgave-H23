@@ -25,7 +25,7 @@ class TagService {
   getTagsForQuestion(questionId: number): Promise<Tag[]> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'SELECT Tags.* FROM Tags JOIN Question_Tags ON Tags.tagId = Question_Tags.TagID WHERE Question_Tags.QuestionID = ?',
+        'SELECT T.* FROM Tags T JOIN Question_Tags Q ON T.tagId = Q.TagID WHERE Q.QuestionID = ?',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
