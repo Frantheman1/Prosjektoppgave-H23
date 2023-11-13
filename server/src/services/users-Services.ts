@@ -14,7 +14,7 @@ class User {
     }
 }
   
-  function executeQuery(query: string, params: any[], callback: (err: Error | null, user: User | null) => void) {
+function executeQuery(query: string, params: any[], callback: (err: Error | null, user: User | null) => void) {
     pool.query(query, params, (err, results) => {
         if (err) return callback(err, null);
   
@@ -27,5 +27,7 @@ class User {
         return callback(null, null);
     });
 }
+
+{/*TO DO : Gjøre det likt som andre services hehe*/}
 
 export default User;
