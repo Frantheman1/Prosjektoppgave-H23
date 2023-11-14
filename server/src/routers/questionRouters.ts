@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import questionService from '../services/questions-Services';
 
 const routerQuestions = express.Router();
@@ -52,6 +52,19 @@ routerQuestions.put('/questions/:id', (request, response) => {
   } else {
     response.status(400).send('Invalid input for updating question');
   }
+});
+
+routerQuestions.put('/updateViewCount', (request, response) => {
+  const { questionId } = request.body;
+
+  if(!questionId) {
+    return response.status(400).send('Question ID is required');
+  }
+
+  questionService
+    .updateViewCount(Number(questionId))
+    .then(() => response.send())
+    .catch((error) => response.status(500).send(error));
 });
 
 routerQuestions.delete('/questions/:id', (request, response) => {

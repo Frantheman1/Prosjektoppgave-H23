@@ -13,13 +13,33 @@ export type Answer = {
 };
 
 class AnswerService {
+
+  /**
+   * Get an answers.
+   */
+
+  getAnswer(id: number) {
+    return new Promise<Answer>((resolve, reject) => {
+      pool.query(
+        'SELECT * FROM Answers WHERE answerId = ?',
+        [id],
+        (error, results: RowDataPacket[]) => {
+          if (error) return reject(error);
+          
+          resolve(results[0] as Answer);
+        },
+      );
+    });
+  }
+
+ 
   /**
    * Get all answers for a given question.
    */
-  getAnswersForQuestion(questionId: number): Promise<Answer[]> {
-    return new Promise((resolve, reject) => {
+  getAnswersForQuestion(questionId: number)  {
+    return new Promise<Answer[]>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Answers WHERE QuestionID = ?',
+        'SELECT * FROM Answers WHERE questionId = ?',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) reject(error);
@@ -32,8 +52,8 @@ class AnswerService {
   /**
    * Add a new answer to a question.
    */
-  addAnswer(questionId: number, userId: number, content: string): Promise<number> {
-    return new Promise((resolve, reject) => {
+  addAnswer(questionId: number, userId: number, content: string) {
+    return new Promise<number>((resolve, reject) => {
       pool.query(
         'INSERT INTO Answers (QuestionID, UserID, Content) VALUES (?, ?, ?)',
         [questionId, userId, content],
@@ -48,8 +68,8 @@ class AnswerService {
   /**
    * Update an existing answer.
    */
-  updateAnswer(answerId: number, content: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+  updateAnswer(answerId: number, content: string) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
         'UPDATE Answers SET Content = ? WHERE AnswerID = ?',
         [content, answerId],
@@ -65,8 +85,8 @@ class AnswerService {
   /**
    * Delete an answer.
    */
-  deleteAnswer(answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  deleteAnswer(answerId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
         'DELETE FROM Answers WHERE AnswerID = ?',
         [answerId],
@@ -82,8 +102,8 @@ class AnswerService {
   /**
    * Toggles the accepted state of an answer.
    */
-  markAnswerAsAccepted(answerId: number, isAccepted: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  markAnswerAsAccepted(answerId: number, isAccepted: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
         'UPDATE Answers SET IsAccepted = ? WHERE AnswerID = ?',
         [isAccepted, answerId],
@@ -96,6 +116,21 @@ class AnswerService {
           }
           resolve();
         },
+      );
+    });
+  }
+
+  /**
+   * Get the Count of answers a Question with an id has 
+   */
+  getAnswerCounts() {
+    return new Promise<{ questionId: number, count: number }[]>((resolve, reject) => {
+      pool.query(
+        'SELECT questionId, COUNT(*) as count FROM Answers GROUP BY questionId',
+        (error, results: RowDataPacket[]) => {
+          if (error) reject(error);
+          else resolve(results as { questionId: number, count: number }[]);
+        }
       );
     });
   }

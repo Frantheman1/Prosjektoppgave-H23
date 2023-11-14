@@ -4,6 +4,7 @@ import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
 import questionService, { Question } from './questionsServices';
 import tagServices, { Tag } from './tagsServices'
+import answerService, { Answer, AnswerCountMap } from './answersServices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
@@ -16,15 +17,25 @@ const history = createHashHistory();
 export class QuestionsList extends Component {
   questions: Question[] = []
   tags:{ [key: number]: Tag[] }  = {}
+  answerCounts: AnswerCountMap = {};
+  displayedQuestions: Question[] = [];
 
   render() {
     return (
       <>
        <Button.Success onClick={() => history.push('/questions/new')}>New question</Button.Success>
+       <Button.Success onClick={() => this.sortByProperty('viewCount')}>Sort by View Count</Button.Success>
+       <Button.Success onClick={() => this.sortByProperty('answerCount')}>Sort by Answer Count</Button.Success>
+       <Button.Success onClick={() => this.sortByProperty('createdAt')}>Sort by Date</Button.Success>
+       <Button.Success onClick={() => this.showUnanswered()}>Show Unanswered Questions</Button.Success>
         <Card title='Questions'>
-          {this.questions.map((question) => (
+          
+          {this.displayedQuestions.map((question) => (
             <Row key={question.questionId}>
-              <NavLink to={'/questions/' + question.questionId}>
+              <NavLink  
+                to={'/questions/' + question.questionId} 
+                onClick={() => this.updateView(question.questionId)}
+                >
                 <Column>
                   <Row>{question.title}-</Row>
                   <Row>{question.content}</Row>
@@ -44,13 +55,51 @@ export class QuestionsList extends Component {
     )
   }
 
-  getTagsForQuestions(questionId: number) {
+  showUnanswered() {
+    const unansweredQuestions = this.questions.filter(question => {
+      const hasAnswer = this.answerCounts.hasOwnProperty(question.questionId);
+      return !hasAnswer;
+    });
+  
+    this.displayedQuestions = unansweredQuestions;
+  }
+
+  sortByProperty = (propertyName: keyof Question | 'answerCount') => {
+    this.displayedQuestions = [...this.questions].sort((a, b) => {
+
+      if (propertyName === 'answerCount') {
+        const countA = this.answerCounts[a.questionId] || 0;
+        const countB = this.answerCounts[b.questionId] || 0;
+        return countB - countA;
+      }
+
+      if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
+        return (b[propertyName] as number)  - (a[propertyName] as number) ;
+      }
+      if (a[propertyName] instanceof Date && b[propertyName] instanceof Date) {
+        return (b[propertyName] as Date).getTime() - (a[propertyName] as Date).getTime();
+      }
+      return String(a[propertyName]).localeCompare(String(b[propertyName]));
+    });
+};
+
+  updateView(questionId: number) {
+    questionService
+      .updateViewCount(questionId)
+      .then(response => {
+        console.log('View count updated:', response);
+      })
+      .catch(error => {
+        console.error('Error updating view count:', error);
+      });
+
+  }
+
+  getTagsForQuestions(questionId: number ) {
     tagServices
       .getTagsForQuestion(questionId)
       .then(tags => {
-        console.log('Current tags state:', this.tags);
         this.tags[questionId] = tags;
-        console.log('Updated tags state:', this.tags);
       })
       .catch(error => {
         Alert.danger('Error getting tags: ' + error.message);
@@ -59,14 +108,27 @@ export class QuestionsList extends Component {
 
 
   mounted() {
-    questionService
-      .getAll()
+    questionService.getAll()
       .then((questions) => {
-        this.questions = questions
+        this.displayedQuestions = questions;
+        this.questions = questions;        
         questions.forEach(question => {
           this.getTagsForQuestions(question.questionId);
         });})
       .catch((error) => Alert.danger('Error getting questions: ' + error.message))
+    
+    answerService.getAnswerCounts()
+    .then((answersCount) => {
+      this.answerCounts = answersCount.reduce((acc: AnswerCountMap, curr) => {
+        if (curr.questionId !== undefined && curr.count !== undefined) {
+          acc[curr.questionId] = curr.count;
+        } else {
+          console.log('Invalid data:', curr);
+        }
+        return acc;
+      }, {});
+      
+    })
 
   }
 
@@ -81,7 +143,10 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
                 createdAt: new Date(), 
                 modifiedAt:new Date(), 
                 viewCount: 0
-              }  
+              } 
+  answer: Answer[] = []
+  
+
   render() {
     return (
       <>
@@ -116,6 +181,51 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Edit
         </Button.Success>
+        <Button.Success
+          onClick={() => history.push(`/answers/new/` + this.props.match.params.id)}
+        >
+          Answer
+        </Button.Success>
+
+        <Card title='Answers'>
+          {this.answer.map((answer)=> (
+            <Row>
+               <Row>
+            <Column width={2}>Content:</Column>
+            <Column>{answer.content}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Created at:</Column>
+            <Column>{new Date(answer.createdAt).toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Last modified:</Column>
+            <Column>{new Date(answer.modifiedAt).toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>isAccepted:</Column>
+            <Column>{answer.isAccepted ? "Yes" : "No"}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Score:</Column>
+            <Column>{answer.score}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>User:</Column>
+            <Column>{answer.userId}</Column>
+          </Row>
+          <Button.Success
+          onClick={() => history.push(`/answers/${answer.answerId}/edit`)}
+        >
+          Edit
+        </Button.Success>
+        </Row>
+
+        
+          )        
+          )}
+        </Card>
+        
       </>
     )
   }
@@ -126,6 +236,16 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         question.createdAt = new Date(question.createdAt);
         question.modifiedAt = new Date(question.modifiedAt);
         this.question = question;
+      })
+      .catch((error) => Alert.danger('Error getting question: ' + error.message));
+
+    answerService
+      .getAnswersForQuestion(this.props.match.params.id)
+      .then((answer) => {
+        console.log("answer:",answer)
+        this.answer = answer;
+        console.log("answer:",this.answer)
+        
       })
       .catch((error) => Alert.danger('Error getting question: ' + error.message));
   }

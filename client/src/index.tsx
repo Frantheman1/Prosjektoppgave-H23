@@ -4,6 +4,7 @@ import { Component } from 'react-simplified';
 import { NavBar, Card, Form, Alert,Row} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
+import { AnswerEdit, AnswerNew } from './answerComponent';
 import questionService, {Question}  from './questionsServices';
 
 interface MenuState {
@@ -73,6 +74,8 @@ if (root) {
         <Route exact path='/questions/new' component={QuestionsNew}/>
         <Route exact path='/questions/:id(\d+)' component={QuestionDetails}/>
         <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
+        <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
+        <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

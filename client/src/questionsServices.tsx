@@ -56,6 +56,15 @@ class QuestionService {
       .delete<void>(`/questions/${questionId}`)
       .then((response) => response.data);
   }
+
+   /**
+   * Update view count of a question.
+   */
+   updateViewCount(questionId: number) {
+    return axios
+      .put('/updateViewCount', { questionId })
+      .then(response => response.data);
+  }
 }
 
 const questionService = new QuestionService();

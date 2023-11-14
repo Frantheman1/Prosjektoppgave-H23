@@ -101,116 +101,23 @@ class QuestionService {
   }
 
   /**
-   * Search for questions by text.
+   * Updates the viewCount of a question
    */
-  searchByText(searchTerm: string) {
-    return new Promise<Array<Question & { matchIn?: 'title' | 'content' }>>((resolve, reject) => {
-      const searchQuery = `%${searchTerm}%`;
-
+  updateViewCount(questionId: number) {
+    return new Promise<void>((resolve,reject) => {
       pool.query(
-        `SELECT Questions.*, 
-        CASE 
-          WHEN Title LIKE ? THEN 'title'
-          WHEN Content LIKE ? THEN 'content'
-        END AS matchIn 
-      FROM Questions 
-      WHERE Title LIKE ? OR Content LIKE ?`,
-        [searchQuery, searchQuery, searchQuery, searchQuery],
-        (error, results: RowDataPacket[]) => {
+        'UPDATE Questions SET viewCount = viewCount + 1 WHERE questionID = ?',
+        [questionId],
+        (error,results: ResultSetHeader) => {
           if (error) return reject(error);
-
-          // If the array is empty, no matches were found
-          if (results.length === 0) {
-            // Handle no matches found
-            resolve([]);
-          } else {
-            // Otherwise, resolve with the matched questions
-            resolve(results as Array<Question & { matchIn?: 'title' | 'content' }>);
-            /**Example code results
-             *  [
-                  {
-                    "id": 1,
-                    "title": "Hvordan lage et søkefunksjon?",
-                    "content": "Jeg lurer på det grunnleggende om å lage en søkefunksjon for en database.",
-                    "createdAt": "2023-01-01T00:00:00.000Z",
-                    "updatedAt": "2023-01-02T00:00:00.000Z",
-                    "matchIn": "title"
-                  },
-                  {
-                    "id": 2,
-                    "title": "Spørsmål om database ytelse",
-                    "content": "Er det noen som kan forklare hvordan man optimaliserer søk i store datamengder?",
-                    "createdAt": "2023-01-05T00:00:00.000Z",
-                    "updatedAt": "2023-01-06T00:00:00.000Z",
-                    "matchIn": "content"
-                  }
-                ]
-             */
+          if(results.affectedRows === 0) {
+            return reject(new Error('No question view count was updated.'));
           }
-        },
-      );
-    });
+          resolve()
+        }
+      )
+    })
   }
-
-  /**
-   * Get a list of questions sorted by a specified criterion.
-   
-  getQuestionsSorted(sortBy: 'views' | 'answers' | 'date') {
-    // Chooses one of the cases based on input
-    let orderBy: string;
-    switch (sortBy) {
-      case 'views':
-        orderBy = 'Questions.ViewCount DESC, AnswerCount DESC';
-        break;
-      case 'answers':
-        orderBy = 'AnswerCount DESC, Questions.ViewCount DESC';
-        break;
-      case 'date':
-        orderBy = 'Questions.CreatedAt DESC, Questions.ViewCount DESC';
-        break;
-      //can add more sorting orders here
-      default:
-        orderBy = 'Questions.CreatedAt DESC'; // default sorting order
-    }
-
-    return new Promise<Question[]>((resolve, reject) => {
-      pool.query(
-      `SELECT 
-        Questions.*
-        COUNT(Answers.AnswerID) AS AnswerCount
-       FROM 
-        Questions
-       LEFT JOIN 
-        Answers ON Questions.QuestionID = Answers.QuestionID
-       GROUP BY 
-        Questions.QuestionID
-       ORDER BY 
-        ${orderBy}`,
-        (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Question[]);
-        },
-      );
-    });
-  }
-  */
-/*
-  getUnansweredQuestions() {
-    return new Promise<Question[]>((resolve, reject) => {
-      pool.query(
-        `SELECT *
-         FROM Questions
-         WHERE NOT EXISTS (
-           SELECT 1 FROM Answers WHERE Answers.QuestionID = Questions.QuestionID
-         )`,
-        (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Question[]);
-        },
-      );
-    });
-  }
-  */
 }
 
 const questionService = new QuestionService();
