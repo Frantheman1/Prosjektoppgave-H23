@@ -21,7 +21,7 @@ class QuestionService {
   get(id: number) {
     return new Promise<Question>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Questions WHERE QuestionID = ?',
+        'SELECT * FROM Questions WHERE questionId = ?',
         [id],
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
@@ -52,7 +52,7 @@ class QuestionService {
   create(title: string, content: string, userId: number)  {
     return new Promise<number>((resolve, reject) => {
       pool.query(
-        'INSERT INTO Questions (Title, Content, UserID) VALUES (?, ?, ?)',
+        'INSERT INTO Questions (title, content, userId) VALUES (?, ?, ?)',
         [title, content, userId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -68,7 +68,7 @@ class QuestionService {
   update(id: number, title: string, content: string) {
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Questions SET Title = ?, Content = ? WHERE QuestionID = ?',
+        'UPDATE Questions SET title = ?, content = ? WHERE questionId = ?',
         [title, content, id],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -87,7 +87,7 @@ class QuestionService {
   delete(id: number) {
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM Questions WHERE QuestionID = ?',
+        'DELETE FROM Questions WHERE questionId = ?',
         [id],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -106,7 +106,7 @@ class QuestionService {
   updateViewCount(questionId: number) {
     return new Promise<void>((resolve,reject) => {
       pool.query(
-        'UPDATE Questions SET viewCount = viewCount + 1 WHERE questionID = ?',
+        'UPDATE Questions SET viewCount = viewCount + 1 WHERE questionId = ?',
         [questionId],
         (error,results: ResultSetHeader) => {
           if (error) return reject(error);

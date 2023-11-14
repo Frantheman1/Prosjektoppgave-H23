@@ -1,4 +1,3 @@
-// CommentService.ts
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -14,32 +13,33 @@ export type Comment = {
 
 class CommentService {
   /**
-   * Get comments by question ID.
+   * Get comments by question Id.
    */
-  getCommentsByQuestion(questionId: number): Promise<Comment[]> {
-    return new Promise((resolve, reject) => {
+  getCommentsForQuestion(questionId: number) {
+    console.log("🐸🐸🐸🐸"+questionId)
+    return new Promise<Comment[]>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Comments WHERE QuestionID = ? ORDER BY CreatedAt',
+        'SELECT * FROM Comments WHERE questionId = ? ORDER BY createdAt',
         [questionId],
         (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Comment[]);
+          if (error) reject(error);
+          else resolve(results as Comment[]);
         },
       );
     });
   }
 
   /**
-   * Get comments by answer ID.
+   * Get comments by answer Id.
    */
-  getCommentsByAnswer(answerId: number): Promise<Comment[]> {
-    return new Promise((resolve, reject) => {
+  getCommentsForAnswer(answerId: number) {
+    return new Promise<Comment[]>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Comments WHERE AnswerID = ? ORDER BY CreatedAt',
+        'SELECT * FROM Comments WHERE answerId = ? ORDER BY createdAt',
         [answerId],
         (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Comment[]);
+          if (error) reject(error);
+          else resolve(results as Comment[]);
         },
       );
     });
@@ -55,7 +55,7 @@ class CommentService {
     content: string,
   ): Promise<number> {
     return new Promise((resolve, reject) => {
-      const fields = questionId ? 'UserID, QuestionID, Content' : 'UserID, AnswerID, Content';
+      const fields = questionId ? 'userId, questionId, content' : 'userId, answerId, content';
       const values = questionId ? [userId, questionId, content] : [userId, answerId, content];
       pool.query(
         `INSERT INTO Comments (${fields}) VALUES (?, ?, ?)`,
@@ -74,7 +74,7 @@ class CommentService {
   updateComment(commentId: number, content: string): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'UPDATE Comments SET Content = ?, ModifiedAt = NOW() WHERE CommentID = ?',
+        'UPDATE Comments SET content = ?, modifiedAt = NOW() WHERE commentId = ?',
         [content, commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -91,13 +91,28 @@ class CommentService {
   deleteComment(commentId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'DELETE FROM Comments WHERE CommentID = ?',
+        'DELETE FROM Comments WHERE commentId = ?',
         [commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
           if (results.affectedRows === 0) return reject(new Error('No comment was deleted.'));
           resolve();
         },
+      );
+    });
+  }
+
+  /**
+     * Get the Count of comments a Question with an id has 
+  */
+  getCommentCounts() {
+    return new Promise<{ questionId: number, count: number }[]>((resolve, reject) => {
+      pool.query(
+        'SELECT questionId, COUNT(*) as count FROM Comments GROUP BY questionId',
+        (error, results: RowDataPacket[]) => {
+          if (error) reject(error);
+          else resolve(results as { questionId: number, count: number }[]);
+        }
       );
     });
   }

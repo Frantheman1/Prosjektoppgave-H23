@@ -5,10 +5,15 @@ import { NavLink } from 'react-router-dom';
 import questionService, { Question } from './questionsServices';
 import tagServices, { Tag } from './tagsServices'
 import answerService, { Answer, AnswerCountMap } from './answersServices';
+import commentService, { Comment, CommentCountMap } from './commentsServices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
 
+enum CommentType {
+  Question = 'question',
+  Answer = 'answer',
+}
 
 /**
  * Renders Questions list.
@@ -18,6 +23,7 @@ export class QuestionsList extends Component {
   questions: Question[] = []
   tags:{ [key: number]: Tag[] }  = {}
   answerCounts: AnswerCountMap = {};
+  commentCounts: CommentCountMap = {};
   displayedQuestions: Question[] = [];
 
   render() {
@@ -130,8 +136,18 @@ export class QuestionsList extends Component {
       
     })
 
+    commentService.getCommentCounts()
+    .then((commentsCount) => {
+      this.commentCounts = commentsCount.reduce((acc: CommentCountMap, curr) => {
+        if (curr.questionId !== undefined && curr.count !== undefined) {
+          acc[curr.questionId] = curr.count;
+        } else {
+          console.log('Invalid data:', curr);
+        }
+        return acc;
+      }, {});      
+    })
   }
-
 }
 
 export class QuestionDetails extends Component<{ match: { params: { id: number } } }> {
@@ -143,10 +159,11 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
                 createdAt: new Date(), 
                 modifiedAt:new Date(), 
                 viewCount: 0
-              } 
+              }
   answer: Answer[] = []
+  commentAnswer: Comment[] = []
+  comment: Comment[] = [];
   
-
   render() {
     return (
       <>
@@ -186,6 +203,11 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Answer
         </Button.Success>
+        <Button.Success
+          onClick={() => history.push(`/comments/new/` + this.props.match.params.id)}
+        >
+          Comment
+        </Button.Success>
 
         <Card title='Answers'>
           {this.answer.map((answer)=> (
@@ -219,16 +241,71 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Edit
         </Button.Success>
-        </Row>
-
+        <Button.Success
+          onClick={() => history.push(`/comments/new/` + this.props.match.params.id)} //?????
+        >
+          Comment
+        </Button.Success>
         
-          )        
-          )}
+          <Card title='Comments'>
+            {answer.comment?.map((comment)=> {
+                return (
+                <Row><Row>
+                  <Column width={2}>Content:</Column>
+                  <Column>{comment.content}</Column>
+                </Row>
+                <Row>
+                  <Column width={2}>Created at:</Column>
+                  <Column>{new Date(comment.createdAt).toDateString()}</Column>
+                </Row>
+                <Row>
+                  <Column width={2}>Last modified:</Column>
+                  <Column>{new Date(comment.modifiedAt).toDateString()}</Column>
+                </Row>
+                <Row>
+                  <Column width={2}>User:</Column>
+                  <Column>{comment.userId}</Column>
+                </Row>
+                <Button.Success onClick={() => history.push(`/comments/${comment.commentId}/edit`)}>
+                  Edit
+                </Button.Success>
+              </Row>)    
+            })}
+          </Card>
+        
+        </Row>
+          ))}
+        </Card>
+        <Card title='Comments'>
+          {this.comment.map((comment)=> {
+              return (
+              <Row><Row>
+                <Column width={2}>Content:</Column>
+                <Column>{comment.content}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>Created at:</Column>
+                <Column>{new Date(comment.createdAt).toDateString()}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>Last modified:</Column>
+                <Column>{new Date(comment.modifiedAt).toDateString()}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>User:</Column>
+                <Column>{comment.userId}</Column>
+              </Row>
+              <Button.Success onClick={() => history.push(`/comments/${comment.commentId}/edit`)}>
+                Edit
+              </Button.Success>
+            </Row>)    
+          })}
         </Card>
         
       </>
     )
   }
+
   mounted() {
     questionService
       .get(this.props.match.params.id)
@@ -244,12 +321,35 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
       .then((answer) => {
         console.log("answer:",answer)
         this.answer = answer;
+
+        for (let index = 0; index < this.answer.length; index++) {
+          commentService    
+          .getComments(this.answer[index].answerId, CommentType.Answer)
+          .then((commentAnswer) => {
+            console.log("answer comment:",commentAnswer)
+            this.answer[index].comment = commentAnswer
+            console.log("answer comment:",this.comment)
+          })
+          .catch((error) => Alert.danger('Error getting question: ' + error.message));
         console.log("answer:",this.answer)
+        console.log(this.answer.length)
         
+      }})
+      .catch((error) => Alert.danger('Error getting question: ' + error.message));
+    
+    commentService    
+      .getComments(this.props.match.params.id, CommentType.Question)
+      .then((commentQuestion) => {
+        console.log("comment:",commentQuestion)
+        this.comment = commentQuestion;
+        console.log("comment:",this.comment)
       })
       .catch((error) => Alert.danger('Error getting question: ' + error.message));
+     
+
+      }
   }
-}
+
 
 export class QuestionEdit extends Component<
 { match: { params: { id: number } } },

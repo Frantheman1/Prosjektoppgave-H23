@@ -6,6 +6,7 @@ import { HashRouter, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
 import { AnswerEdit, AnswerNew } from './answerComponent';
 import questionService, {Question}  from './questionsServices';
+import { CommentEdit, CommentNew } from './commentsComponent';
 
 interface MenuState {
   questions: Question[];
@@ -76,6 +77,8 @@ if (root) {
         <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
         <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
+        <Route exact path='/comments/:id(\d+)/edit' component={CommentEdit}/>
+        <Route path="/comments/new/:id(\d+)" component={CommentNew} />
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

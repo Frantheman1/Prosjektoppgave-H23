@@ -58,7 +58,7 @@ routerQuestions.put('/updateViewCount', (request, response) => {
   const { questionId } = request.body;
 
   if(!questionId) {
-    return response.status(400).send('Question ID is required');
+    return response.status(400).send('Question Id is required');
   }
 
   questionService

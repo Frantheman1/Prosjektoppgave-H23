@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Comment } from './commentsServices';
+
 
 // Assuming the baseURL is the same as for the QuestionService
 axios.defaults.baseURL = 'http://localhost:3000/api/v1';
@@ -12,6 +14,7 @@ export type Answer = {
  createdAt: Date;
  modifiedAt: Date;
  score: number;
+ comment: Comment[];
 };
 
 export type AnswerCountMap = {

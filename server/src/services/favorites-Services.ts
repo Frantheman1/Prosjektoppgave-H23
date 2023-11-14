@@ -8,7 +8,7 @@ class FavoriteService {
   addFavorite(userId: number, answerId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'INSERT INTO FavoriteAnswers (UserID, AnswerID) VALUES (?, ?)',
+        'INSERT INTO FavoriteAnswers (userId, answerId) VALUES (?, ?)',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
@@ -30,7 +30,7 @@ class FavoriteService {
   removeFavorite(userId: number, answerId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'DELETE FROM FavoriteAnswers WHERE UserID = ? AND AnswerID = ?',
+        'DELETE FROM FavoriteAnswers WHERE userId = ? AND answerId = ?',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {

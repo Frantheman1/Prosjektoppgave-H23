@@ -10,16 +10,16 @@ class VoteService {
     return new Promise<void>((resolve, reject) => {
       // Check if the user has already voted on this answer
       pool.query(
-        'SELECT VoteID FROM Votes WHERE AnswerID = ? AND UserID = ?',
+        'SELECT voteId FROM Votes WHERE answerId = ? AND userId = ?',
         [answerId, userId],
         (error, results: RowDataPacket[]) => {
           if (error) {
             return reject(error);
           }
           if (results.length > 0) {
-            const voteId = results[0].VoteID;
+            const voteId = results[0].voteId;
             pool.query(
-              'UPDATE Votes SET VoteType = ? WHERE VoteID = ?',
+              'UPDATE Votes SET voteType = ? WHERE voteId = ?',
               [voteValue, voteId],
               (error, updateResults: ResultSetHeader) => {
                 if (error) return reject(error);
@@ -32,7 +32,7 @@ class VoteService {
           } else {
             // If not, insert a new vote
             pool.query(
-              'INSERT INTO Votes (AnswerID, UserID, VoteType) VALUES (?, ?, ?)',
+              'INSERT INTO Votes (answerId, userId, voteType) VALUES (?, ?, ?)',
               [answerId, userId, voteValue],
               (error, insertResults: ResultSetHeader) => {
                 if (error) return reject(error);
