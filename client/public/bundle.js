@@ -817,7 +817,6 @@ var CommentNew = /*#__PURE__*/function (_ref) {
     key: "create",
     value: function create() {
       var _this6 = this;
-      console.log("yo", this.userId, this.questionId, this.answerId, this.content);
       _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__["default"].addComment(this.userId, this.questionId, this.answerId, this.content).then(function () {
         return history.push('/questions/' + (_this6.backPath ? _this6.backPath : _this6.questionId));
       })["catch"](function (error) {
@@ -997,7 +996,6 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 
 
 var history = (0,history__WEBPACK_IMPORTED_MODULE_9__.createHashHistory)();
-
 /**
  * Renders Questions list.
  */
@@ -1916,12 +1914,12 @@ var TagsServices = /*#__PURE__*/function () {
     _classCallCheck(this, TagsServices);
   }
   _createClass(TagsServices, [{
-    key: "getAll",
+    key: "getAllTags",
     value:
     /**
       * Get all tags.
       */
-    function getAll() {
+    function getAllTags() {
       return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get('/tags').then(function (response) {
         return response.data;
       });
@@ -1948,6 +1946,13 @@ var TagsServices = /*#__PURE__*/function () {
         questionId: questionId,
         tagId: tagId
       }).then(function (response) {
+        return response.data;
+      });
+    }
+  }, {
+    key: "getAllTagsWithQuestionCount",
+    value: function getAllTagsWithQuestionCount() {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get('/tags/count').then(function (response) {
         return response.data;
       });
     }
@@ -2006,6 +2011,111 @@ var VoteService = /*#__PURE__*/function () {
 }();
 var voteService = new VoteService();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (voteService);
+
+/***/ }),
+
+/***/ "./src/tagsComponent.tsx":
+/*!*******************************!*\
+  !*** ./src/tagsComponent.tsx ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TagsList: () => (/* binding */ TagsList)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
+/* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
+/* harmony import */ var _services_tagsServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/tagsServices */ "./src/services/tagsServices.tsx");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+
+var history = (0,history__WEBPACK_IMPORTED_MODULE_4__.createHashHistory)();
+var TagsList = /*#__PURE__*/function (_Component) {
+  _inherits(TagsList, _Component);
+  var _super = _createSuper(TagsList);
+  function TagsList() {
+    var _this;
+    _classCallCheck(this, TagsList);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _super.call.apply(_super, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this), "tags", []);
+    _defineProperty(_assertThisInitialized(_this), "displayedTags", []);
+    _defineProperty(_assertThisInitialized(_this), "userId", 1);
+    _defineProperty(_assertThisInitialized(_this), "sortByProperty", function (propertyName) {
+      _this.displayedTags = _toConsumableArray(_this.tags).sort(function (a, b) {
+        if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
+          return b[propertyName] - a[propertyName];
+        }
+        return String(a[propertyName]).localeCompare(String(b[propertyName]));
+      });
+    });
+    return _this;
+  }
+  _createClass(TagsList, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Tags"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.sortByProperty('name');
+        }
+      }, "Sort by Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.sortByProperty('questionCount');
+        }
+      }, "Sort by questionCount"), this.displayedTags.map(function (tag) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
+          key: tag.name
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "TagName:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, tag.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, tag.questionCount)));
+      })));
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this3 = this;
+      _services_tagsServices__WEBPACK_IMPORTED_MODULE_3__["default"].getAllTagsWithQuestionCount().then(function (tags) {
+        _this3.displayedTags = tags;
+        _this3.tags = tags;
+      })["catch"](function (error) {
+        return console.error('Error fetching tags:', error);
+      });
+    }
+  }]);
+  return TagsList;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
 
 /***/ }),
 
@@ -45912,13 +46022,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
 /* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _questionsComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./questionsComponent */ "./src/questionsComponent.tsx");
 /* harmony import */ var _answerComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./answerComponent */ "./src/answerComponent.tsx");
 /* harmony import */ var _favoriteComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./favoriteComponent */ "./src/favoriteComponent.tsx");
 /* harmony import */ var _commentComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./commentComponent */ "./src/commentComponent.tsx");
-/* harmony import */ var _services_questionsServices__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./services/questionsServices */ "./src/services/questionsServices.tsx");
+/* harmony import */ var _tagsComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tagsComponent */ "./src/tagsComponent.tsx");
+/* harmony import */ var _services_questionsServices__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./services/questionsServices */ "./src/services/questionsServices.tsx");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -45933,6 +46044,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
 
 
 
@@ -46006,7 +46118,7 @@ var Menu = /*#__PURE__*/function (_Component) {
     key: "mounted",
     value: function mounted() {
       var _this3 = this;
-      _services_questionsServices__WEBPACK_IMPORTED_MODULE_8__["default"].getAll().then(function (questions) {
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_9__["default"].getAll().then(function (questions) {
         return _this3.setState({
           questions: questions
         });
@@ -46019,39 +46131,42 @@ var Menu = /*#__PURE__*/function (_Component) {
 }(react_simplified__WEBPACK_IMPORTED_MODULE_2__.Component);
 var root = document.getElementById('root');
 if (root) {
-  (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(root).render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.HashRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Menu, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(root).render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.HashRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Menu, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     exact: true,
     path: "/questions",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionsList
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     exact: true,
     path: "/questions/new",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionsNew
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     exact: true,
     path: "/questions/:id(\\d+)",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionDetails
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     exact: true,
     path: "/questions/:id(\\d+)/edit",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionEdit
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     exact: true,
     path: "/answers/:id(\\d+)/edit",
     component: _answerComponent__WEBPACK_IMPORTED_MODULE_5__.AnswerEdit
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     path: "/answers/new/:id(\\d+)",
     component: _answerComponent__WEBPACK_IMPORTED_MODULE_5__.AnswerNew
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     path: "/favorites",
     component: _favoriteComponent__WEBPACK_IMPORTED_MODULE_6__.FavoritesList
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
+    path: "/tags",
+    component: _tagsComponent__WEBPACK_IMPORTED_MODULE_8__.TagsList
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     path: "/comment/:id(\\d+)/edit/:backId(\\d+)",
     component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentEdit
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     path: "/comments/answer/:id(\\d+)/new/:backId(\\d+)",
     component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentNew
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.Route, {
     path: "/comments/question/:id(\\d+)/new/",
     component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentNew
   }))));

@@ -12,7 +12,8 @@ class TagService {
    */
   getAllTags() {
     return new Promise<Tag[]>((resolve, reject) => {
-      pool.query('SELECT * FROM Tags', (error, results: RowDataPacket[]) => {
+      pool.query('SELECT * FROM Tags', 
+      (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
         resolve(results as Tag[]);
       });
@@ -74,6 +75,23 @@ class TagService {
           if (error) return reject(error);
           resolve(results as Array<Tag & { questionCount: number }>);
         },
+      );
+    });
+  }
+
+  getAllTagsWithQuestionCount() {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        'SELECT Tags.name, COUNT(Question_Tags.questionId) as questionCount ' +
+        'FROM Tags ' +
+        'LEFT JOIN Question_Tags ON Tags.tagId = Question_Tags.tagId ' +
+        'GROUP BY Tags.name',
+        (error, results) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(results);
+        }
       );
     });
   }

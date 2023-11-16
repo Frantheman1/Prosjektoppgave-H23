@@ -7,7 +7,9 @@ import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './qu
 import { AnswerEdit, AnswerNew } from './answerComponent';
 import { FavoritesList } from './favoriteComponent';
 import { CommentNew, CommentEdit } from './commentComponent';
+import { TagsList } from './tagsComponent';
 import questionService, {Question}  from './services/questionsServices';
+
 
 
 interface MenuState {
@@ -81,6 +83,7 @@ if (root) {
         <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
         <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
         <Route path="/favorites" component={FavoritesList} />
+        <Route path="/tags" component={TagsList} />
         <Route path='/comment/:id(\d+)/edit/:backId(\d+)' component={CommentEdit}/>
         <Route path="/comments/answer/:id(\d+)/new/:backId(\d+)" component={CommentNew} />
         <Route path="/comments/question/:id(\d+)/new/" component={CommentNew} />

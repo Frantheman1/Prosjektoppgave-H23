@@ -41,6 +41,16 @@ routerTags.post('/tags/question', (request,response) => {
  }
 });
 
+/**
+ * Get all tags with question count
+ */
+routerTags.get('/tags/count', (_request, response) => {
+  tagService
+    .getAllTagsWithQuestionCount()
+    .then((tags) => response.send(tags))
+    .catch((error) => response.status(500).send(error));
+});
+
 
 
 export default routerTags

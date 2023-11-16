@@ -7,11 +7,18 @@ export type Tag = {
  name: string;
 };
 
+export type TagWithCount = {
+  name: string;
+  questionCount: number;
+};
+
+
 class TagsServices {
+
  /**
    * Get all tags.
    */
- getAll() {
+ getAllTags() {
   return axios.get<Tag[]>('/tags').then(response => response.data);
 }
 
@@ -29,6 +36,11 @@ addTagToQuestion(questionId: number, tagId: number) {
  return axios.post('/tags/associate', { questionId, tagId })
    .then(response => response.data);
 }
+
+getAllTagsWithQuestionCount() {
+  return axios.get<TagWithCount[]>('/tags/count').then(response => response.data);
+}
+
 }
 
 

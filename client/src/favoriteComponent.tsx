@@ -63,3 +63,4 @@ export class FavoritesList extends Component {
    .catch(error => console.error('Error fetching favorites:', error))
  }
 }
+

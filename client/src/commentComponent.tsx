@@ -112,7 +112,6 @@ export class CommentNew extends Component <
  }
 
  create() {
-  console.log("yo",this.userId, this.questionId, this.answerId , this.content)
   commentService
     .addComment(this.userId, this.questionId, this.answerId , this.content )
     .then(() => history.push( '/questions/' + (this.backPath? this.backPath : this.questionId)))

@@ -66,10 +66,5 @@ routerComments.delete('/comments/:commentId', (request, response) => {
     .catch(error => response.status(500).send(error));
 });
 
-routerComments.get('/commentCounts', (_request, response) => {
- commentService.getCommentCounts()
-   .then(counts => response.send(counts))
-   .catch(error => response.status(500).send(error));
-});
 
 export default routerComments;
