@@ -2,9 +2,12 @@ import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
-import questionService, { Question } from './questionsServices';
-import tagServices, { Tag } from './tagsServices'
-import answerService, { Answer, AnswerCountMap } from './answersServices';
+import questionService, { Question } from './services/questionsServices';
+import tagServices, { Tag } from './services/tagsServices'
+import answerService, { Answer, AnswerCountMap } from './services/answersServices';
+import voteService from './services/votesServices';
+import favoriteService from './services/favoritesServices';
+import commentService, { Comment } from './services/commentsSevrvices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
@@ -134,7 +137,11 @@ export class QuestionsList extends Component {
 
 }
 
-export class QuestionDetails extends Component<{ match: { params: { id: number } } }> {
+export class QuestionDetails extends Component<
+{ match: {
+  params: { id: number };
+  path: string;
+}; }> {
   question: Question = {
                 questionId:0,
                 userId: 1, 
@@ -145,6 +152,8 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
                 viewCount: 0
               } 
   answer: Answer[] = []
+  displayedAnswer: Answer[] = []
+  comment: Comment[] = []
   
 
   render() {
@@ -176,6 +185,7 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
             <Column>{this.question.viewCount}</Column>
           </Row>
         </Card>
+        
         <Button.Success
           onClick={() => history.push('/questions/' + this.props.match.params.id + '/edit')}
         >
@@ -186,10 +196,40 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Answer
         </Button.Success>
+        <Button.Success
+          onClick={() => history.push(`/comments/question/${this.question.questionId}/new/`)}
+        >
+          Comment
+        </Button.Success>
+        <Card title="Comments for Question">
+          {this.comment.map((comment)=> {
+            if(comment.questionId == this.question.questionId) {
+              return(
+              <Row>
+                <Column>{comment.content}</Column>
+                <Column>{new Date(comment.createdAt).toDateString()}</Column>
+                <Column>{new Date(comment.modifiedAt).toDateString()}</Column>
+                <Column>{comment.userId}</Column>
+                <Button.Success
+                  onClick={() => history.push(`/comment/${comment.commentId}/edit/${this.question.questionId}`)}
+                >
+                 Edit
+                </Button.Success>
+              </Row>
+              )
+            }
+          })}
+
+        </Card>
+
 
         <Card title='Answers'>
-          {this.answer.map((answer)=> (
+          <Button.Success onClick={() => this.sortByProperty('score')}>Sort by Answer Count</Button.Success>
+          <Button.Success onClick={() => this.sortByProperty('modifiedAt')}>Sort by Date</Button.Success>
+          {this.displayedAnswer.map((answer)=> (
+          
             <Row>
+              {console.log("yo",this.comment)}
                <Row>
             <Column width={2}>Content:</Column>
             <Column>{answer.content}</Column>
@@ -219,9 +259,46 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Edit
         </Button.Success>
-        </Row>
+          <Row>
+            <Button.Success onClick={() => this.voteForAnswer(answer.answerId,answer.userId, 1)}>
+              Upvote
+            </Button.Success>
+            <Button.Danger onClick={() => this.voteForAnswer(answer.answerId,answer.userId, 0)}>
+              Downvote
+            </Button.Danger>
+            <Form.Checkbox 
+              checked={answer.isAccepted} 
+              onChange={(e) => this.toggleAcceptance(answer.answerId, e.target.checked)}></Form.Checkbox>
+            <Button.Success onClick={() => this.addToFavorites(answer.userId,answer.answerId)}>
+              Add to Favorites
+            </Button.Success>  
+            <Button.Success
+              onClick={() => history.push(`/comments/answer/${answer.answerId}/new/${answer.questionId}`)}
+            >
+              Comment
+            </Button.Success>          
+          </Row>
+          <Card title="Comments for Answers">
+          {this.comment.map((comment)=> {
+            if(comment.answerId == answer.answerId) {
+              return(
+              <Row>
+                <Column>{comment.content}</Column>
+                <Column>{new Date(comment.createdAt).toDateString()}</Column>
+                <Column>{new Date(comment.modifiedAt).toDateString()}</Column>
+                <Column>{comment.userId}</Column>
+                <Button.Success
+                  onClick={() => history.push(`/comment/${comment.commentId}/edit/${answer.questionId}`)}
+                >
+                 Edit
+                </Button.Success>
+              </Row>
+              )
+            }
+          })}
 
-        
+        </Card>
+        </Row> 
           )        
           )}
         </Card>
@@ -229,6 +306,67 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
       </>
     )
   }
+
+  sortByProperty = (propertyName: keyof Answer ) => {
+    this.displayedAnswer = [...this.answer].sort((a, b) => {
+
+      if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
+        return (b[propertyName] as number)  - (a[propertyName] as number) ;
+      }
+      if (a[propertyName] instanceof Date && b[propertyName] instanceof Date) {
+        return (b[propertyName] as Date).getTime() - (a[propertyName] as Date).getTime();
+      }
+      return String(a[propertyName]).localeCompare(String(b[propertyName]));
+    });
+  };
+
+  addToFavorites(userId:number,answerId: number) {
+    favoriteService
+      .addFavorite(userId, answerId)
+      .then(() => console.log('Succesfully added a answer to favorite'))
+      .catch(error => Alert.danger('Error adding to favorites: ' + error.message));
+  }
+
+  toggleAcceptance(answerId: number, isAccepted: boolean) {
+    const previouslyAcceptedAnswer = this.displayedAnswer.find(answer => answer.isAccepted);
+
+    const updatedAnswers = this.displayedAnswer.map(answer => ({
+      ...answer,
+      isAccepted: answer.answerId === answerId ? isAccepted : false
+    }));
+  
+    this.displayedAnswer = updatedAnswers;
+  
+    answerService
+      .markAnswerAsAccepted(answerId, isAccepted)
+      .then(() => {
+        console.log('Answer acceptance updated');
+        
+        if (previouslyAcceptedAnswer) {
+          answerService
+            .markAnswerAsAccepted(previouslyAcceptedAnswer.answerId, false)
+            .then(() => console.log('Previously accepted answer unaccepted on the server'))
+            .catch(error => console.error('Error updating previously accepted answer on the server: ' + error.message));
+        }
+      })
+      .catch(error => Alert.danger('Error updating answer acceptance: ' + error.message));
+  }
+
+  voteForAnswer(answerId: number, userId: number, voteType: number) {
+    voteService
+      .voteOnAnswer(answerId, userId, voteType)
+      .then(() => {
+        answerService
+          .getAnswersForQuestion(this.props.match.params.id)
+          .then(updatedAnswers => {
+            this.displayedAnswer = updatedAnswers;
+           console.log('Vote updated and answers refreshed for answer:', answerId);
+         })
+          .catch(error => Alert.danger('Error fetching updated answers: ' + error.message));
+      })
+      .catch(error => Alert.danger('Error voting on answer: ' + error.message));
+  }
+
   mounted() {
     questionService
       .get(this.props.match.params.id)
@@ -242,12 +380,15 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
     answerService
       .getAnswersForQuestion(this.props.match.params.id)
       .then((answer) => {
-        console.log("answer:",answer)
+        this.displayedAnswer = answer
         this.answer = answer;
-        console.log("answer:",this.answer)
-        
       })
-      .catch((error) => Alert.danger('Error getting question: ' + error.message));
+      .catch((error) => Alert.danger('Error getting answers: ' + error.message));
+
+    commentService
+      .getComments()
+      .then((comment) => this.comment = comment)
+      .catch((error) => Alert.danger('Error getting comments: ' + error.message));
   }
 }
 

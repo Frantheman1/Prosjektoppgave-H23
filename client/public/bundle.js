@@ -513,7 +513,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
 /* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
-/* harmony import */ var _answersServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./answersServices */ "./src/answersServices.tsx");
+/* harmony import */ var _services_answersServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/answersServices */ "./src/services/answersServices.tsx");
 /* harmony import */ var history__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -556,7 +556,7 @@ var AnswerEdit = /*#__PURE__*/function (_Component) {
         answerId = _this$answer.answerId,
         content = _this$answer.content,
         questionId = _this$answer.questionId;
-      _answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].updateAnswer(answerId, content).then(function () {
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].updateAnswer(answerId, content).then(function () {
         return history.push('/questions/' + questionId);
       })["catch"](function (error) {
         return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error saving question: ' + error.message);
@@ -566,7 +566,7 @@ var AnswerEdit = /*#__PURE__*/function (_Component) {
       var _this$answer2 = _this.answer,
         answerId = _this$answer2.answerId,
         questionId = _this$answer2.questionId;
-      _answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].deleteAnswer(answerId).then(function () {
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].deleteAnswer(answerId).then(function () {
         return history.push('/questions/' + questionId);
       })["catch"](function (error) {
         return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error deleting a question: ' + error.message);
@@ -600,7 +600,7 @@ var AnswerEdit = /*#__PURE__*/function (_Component) {
     key: "mounted",
     value: function mounted() {
       var _this3 = this;
-      _answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].getAnswer(this.props.match.params.id).then(function (answer) {
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].getAnswer(this.props.match.params.id).then(function (answer) {
         _this3.answer = answer;
       })["catch"](function (error) {
         return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting task: ' + error.message);
@@ -648,7 +648,7 @@ var AnswerNew = /*#__PURE__*/function (_Component2) {
     key: "create",
     value: function create() {
       var _this6 = this;
-      _answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].addAnswer(this.questionId, this.userId, this.content).then(function (id) {
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_3__["default"].addAnswer(this.questionId, this.userId, this.content).then(function (id) {
         return history.push('/questions/' + _this6.questionId);
       })["catch"](function (error) {
         console.error("Detailed error:", error);
@@ -666,10 +666,827 @@ var AnswerNew = /*#__PURE__*/function (_Component2) {
 
 /***/ }),
 
-/***/ "./src/answersServices.tsx":
-/*!*********************************!*\
-  !*** ./src/answersServices.tsx ***!
-  \*********************************/
+/***/ "./src/commentComponent.tsx":
+/*!**********************************!*\
+  !*** ./src/commentComponent.tsx ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CommentEdit: () => (/* binding */ CommentEdit),
+/* harmony export */   CommentNew: () => (/* binding */ CommentNew)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
+/* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
+/* harmony import */ var _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/commentsSevrvices */ "./src/services/commentsSevrvices.tsx");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+
+var history = (0,history__WEBPACK_IMPORTED_MODULE_4__.createHashHistory)();
+var CommentEdit = /*#__PURE__*/function (_Component) {
+  _inherits(CommentEdit, _Component);
+  var _super = _createSuper(CommentEdit);
+  function CommentEdit() {
+    var _this;
+    _classCallCheck(this, CommentEdit);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _super.call.apply(_super, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this), "comment", {
+      commentId: 0,
+      content: '',
+      userId: 1
+    });
+    _defineProperty(_assertThisInitialized(_this), "backPath", 0);
+    _defineProperty(_assertThisInitialized(_this), "save", function () {
+      var _this$comment = _this.comment,
+        commentId = _this$comment.commentId,
+        content = _this$comment.content;
+      _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__["default"].updateComment(commentId, content).then(function () {
+        return history.push('/questions/' + _this.backPath);
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error saving question: ' + error.message);
+      });
+    });
+    _defineProperty(_assertThisInitialized(_this), "delete", function () {
+      var commentId = _this.comment.commentId;
+      _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__["default"].deleteComment(commentId).then(function () {
+        return history.push('/questions/' + _this.backPath);
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error deleting a question: ' + error.message);
+      });
+    });
+    return _this;
+  }
+  _createClass(CommentEdit, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Edit answer"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
+        value: this.comment.content,
+        onChange: function onChange(event) {
+          return _this2.comment.content = event.currentTarget.value;
+        },
+        rows: 10
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: this.save
+      }, "Save")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        right: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Danger, {
+        onClick: this["delete"]
+      }, "Delete"))));
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this3 = this;
+      _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__["default"].getComment(this.props.match.params.id).then(function (comment) {
+        _this3.comment = comment;
+        _this3.backPath = _this3.props.match.params.backId;
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting task: ' + error.message);
+      });
+      console.log('Answer>>>>', this.comment);
+    }
+  }]);
+  return CommentEdit;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+var CommentNew = /*#__PURE__*/function (_ref) {
+  _inherits(CommentNew, _ref);
+  var _super2 = _createSuper(CommentNew);
+  function CommentNew() {
+    var _this4;
+    _classCallCheck(this, CommentNew);
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+    _this4 = _super2.call.apply(_super2, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this4), "content", '');
+    _defineProperty(_assertThisInitialized(_this4), "userId", 1);
+    _defineProperty(_assertThisInitialized(_this4), "questionId", 0);
+    _defineProperty(_assertThisInitialized(_this4), "answerId", 0);
+    _defineProperty(_assertThisInitialized(_this4), "backPath", 0);
+    return _this4;
+  }
+  _createClass(CommentNew, [{
+    key: "render",
+    value: function render() {
+      var _this5 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "New Comment"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
+        type: "text",
+        value: this.content,
+        onChange: function onChange(event) {
+          _this5.content = event.currentTarget.value;
+        },
+        rows: 10
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: this.create
+      }, "Create"));
+    }
+  }, {
+    key: "create",
+    value: function create() {
+      var _this6 = this;
+      console.log("yo", this.userId, this.questionId, this.answerId, this.content);
+      _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_3__["default"].addComment(this.userId, this.questionId, this.answerId, this.content).then(function () {
+        return history.push('/questions/' + (_this6.backPath ? _this6.backPath : _this6.questionId));
+      })["catch"](function (error) {
+        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating comment: ' + error.message);
+      });
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var pathname = this.props.match.path;
+      var pathSegments = pathname.split('/');
+      console.log('hehe', pathSegments);
+      if (pathSegments.includes('answer')) {
+        this.answerId = Number(this.props.match.params.id);
+        this.backPath = Number(this.props.match.params.backId);
+      } else if (pathSegments.includes('question')) {
+        this.questionId = Number(this.props.match.params.id);
+      }
+    }
+  }]);
+  return CommentNew;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+
+/***/ }),
+
+/***/ "./src/favoriteComponent.tsx":
+/*!***********************************!*\
+  !*** ./src/favoriteComponent.tsx ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FavoritesList: () => (/* binding */ FavoritesList)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
+/* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _services_favoritesServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/favoritesServices */ "./src/services/favoritesServices.tsx");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+
+
+var history = (0,history__WEBPACK_IMPORTED_MODULE_4__.createHashHistory)();
+var FavoritesList = /*#__PURE__*/function (_Component) {
+  _inherits(FavoritesList, _Component);
+  var _super = _createSuper(FavoritesList);
+  function FavoritesList() {
+    var _this;
+    _classCallCheck(this, FavoritesList);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _super.call.apply(_super, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this), "favorites", []);
+    _defineProperty(_assertThisInitialized(_this), "userId", 1);
+    return _this;
+  }
+  _createClass(FavoritesList, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Favorites"
+      }, this.favorites.map(function (favAnswer) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.NavLink, {
+          to: '/questions/' + favAnswer.questionId
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
+          key: favAnswer.answerId
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Content:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, favAnswer.content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Created at:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(favAnswer.createdAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Last modified:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(favAnswer.modifiedAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "isAccepted:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, favAnswer.isAccepted ? "Yes" : "No")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Score:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, favAnswer.score)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "User:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, favAnswer.userId))));
+      })));
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this2 = this;
+      _services_favoritesServices__WEBPACK_IMPORTED_MODULE_3__["default"].getFavorites(this.userId).then(function (favorites) {
+        _this2.favorites = favorites;
+      })["catch"](function (error) {
+        return console.error('Error fetching favorites:', error);
+      });
+    }
+  }]);
+  return FavoritesList;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+
+/***/ }),
+
+/***/ "./src/questionsComponent.tsx":
+/*!************************************!*\
+  !*** ./src/questionsComponent.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   QuestionDetails: () => (/* binding */ QuestionDetails),
+/* harmony export */   QuestionEdit: () => (/* binding */ QuestionEdit),
+/* harmony export */   QuestionsList: () => (/* binding */ QuestionsList),
+/* harmony export */   QuestionsNew: () => (/* binding */ QuestionsNew)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
+/* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/questionsServices */ "./src/services/questionsServices.tsx");
+/* harmony import */ var _services_tagsServices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./services/tagsServices */ "./src/services/tagsServices.tsx");
+/* harmony import */ var _services_answersServices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./services/answersServices */ "./src/services/answersServices.tsx");
+/* harmony import */ var _services_votesServices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./services/votesServices */ "./src/services/votesServices.tsx");
+/* harmony import */ var _services_favoritesServices__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./services/favoritesServices */ "./src/services/favoritesServices.tsx");
+/* harmony import */ var _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./services/commentsSevrvices */ "./src/services/commentsSevrvices.tsx");
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
+
+
+
+
+
+
+
+
+
+var history = (0,history__WEBPACK_IMPORTED_MODULE_9__.createHashHistory)();
+
+/**
+ * Renders Questions list.
+ */
+
+var QuestionsList = /*#__PURE__*/function (_Component) {
+  _inherits(QuestionsList, _Component);
+  var _super = _createSuper(QuestionsList);
+  function QuestionsList() {
+    var _this;
+    _classCallCheck(this, QuestionsList);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _super.call.apply(_super, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this), "questions", []);
+    _defineProperty(_assertThisInitialized(_this), "tags", {});
+    _defineProperty(_assertThisInitialized(_this), "answerCounts", {});
+    _defineProperty(_assertThisInitialized(_this), "displayedQuestions", []);
+    _defineProperty(_assertThisInitialized(_this), "sortByProperty", function (propertyName) {
+      _this.displayedQuestions = _toConsumableArray(_this.questions).sort(function (a, b) {
+        if (propertyName === 'answerCount') {
+          var countA = _this.answerCounts[a.questionId] || 0;
+          var countB = _this.answerCounts[b.questionId] || 0;
+          return countB - countA;
+        }
+        if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
+          return b[propertyName] - a[propertyName];
+        }
+        if (a[propertyName] instanceof Date && b[propertyName] instanceof Date) {
+          return b[propertyName].getTime() - a[propertyName].getTime();
+        }
+        return String(a[propertyName]).localeCompare(String(b[propertyName]));
+      });
+    });
+    return _this;
+  }
+  _createClass(QuestionsList, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return history.push('/questions/new');
+        }
+      }, "New question"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.sortByProperty('viewCount');
+        }
+      }, "Sort by View Count"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.sortByProperty('answerCount');
+        }
+      }, "Sort by Answer Count"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.sortByProperty('createdAt');
+        }
+      }, "Sort by Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this2.showUnanswered();
+        }
+      }, "Show Unanswered Questions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Questions"
+      }, this.displayedQuestions.map(function (question) {
+        var _this2$tags$question$;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
+          key: question.questionId
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.NavLink, {
+          to: '/questions/' + question.questionId,
+          onClick: function onClick() {
+            return _this2.updateView(question.questionId);
+          }
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, question.title, "-"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, question.content), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, (_this2$tags$question$ = _this2.tags[question.questionId]) === null || _this2$tags$question$ === void 0 ? void 0 : _this2$tags$question$.map(function (tag, index) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
+            key: index
+          }, tag.name);
+        })))));
+      })));
+    }
+  }, {
+    key: "showUnanswered",
+    value: function showUnanswered() {
+      var _this3 = this;
+      var unansweredQuestions = this.questions.filter(function (question) {
+        var hasAnswer = _this3.answerCounts.hasOwnProperty(question.questionId);
+        return !hasAnswer;
+      });
+      this.displayedQuestions = unansweredQuestions;
+    }
+  }, {
+    key: "updateView",
+    value: function updateView(questionId) {
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].updateViewCount(questionId).then(function (response) {
+        console.log('View count updated:', response);
+      })["catch"](function (error) {
+        console.error('Error updating view count:', error);
+      });
+    }
+  }, {
+    key: "getTagsForQuestions",
+    value: function getTagsForQuestions(questionId) {
+      var _this4 = this;
+      _services_tagsServices__WEBPACK_IMPORTED_MODULE_4__["default"].getTagsForQuestion(questionId).then(function (tags) {
+        _this4.tags[questionId] = tags;
+      })["catch"](function (error) {
+        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting tags: ' + error.message);
+      });
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this5 = this;
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].getAll().then(function (questions) {
+        _this5.displayedQuestions = questions;
+        _this5.questions = questions;
+        questions.forEach(function (question) {
+          _this5.getTagsForQuestions(question.questionId);
+        });
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting questions: ' + error.message);
+      });
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].getAnswerCounts().then(function (answersCount) {
+        _this5.answerCounts = answersCount.reduce(function (acc, curr) {
+          if (curr.questionId !== undefined && curr.count !== undefined) {
+            acc[curr.questionId] = curr.count;
+          } else {
+            console.log('Invalid data:', curr);
+          }
+          return acc;
+        }, {});
+      });
+    }
+  }]);
+  return QuestionsList;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+var QuestionDetails = /*#__PURE__*/function (_Component2) {
+  _inherits(QuestionDetails, _Component2);
+  var _super2 = _createSuper(QuestionDetails);
+  function QuestionDetails() {
+    var _this6;
+    _classCallCheck(this, QuestionDetails);
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+    _this6 = _super2.call.apply(_super2, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this6), "question", {
+      questionId: 0,
+      userId: 1,
+      title: '',
+      content: '',
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      viewCount: 0
+    });
+    _defineProperty(_assertThisInitialized(_this6), "answer", []);
+    _defineProperty(_assertThisInitialized(_this6), "displayedAnswer", []);
+    _defineProperty(_assertThisInitialized(_this6), "comment", []);
+    _defineProperty(_assertThisInitialized(_this6), "sortByProperty", function (propertyName) {
+      _this6.displayedAnswer = _toConsumableArray(_this6.answer).sort(function (a, b) {
+        if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
+          return b[propertyName] - a[propertyName];
+        }
+        if (a[propertyName] instanceof Date && b[propertyName] instanceof Date) {
+          return b[propertyName].getTime() - a[propertyName].getTime();
+        }
+        return String(a[propertyName]).localeCompare(String(b[propertyName]));
+      });
+    });
+    return _this6;
+  }
+  _createClass(QuestionDetails, [{
+    key: "render",
+    value: function render() {
+      var _this7 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Question"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "Title:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "Content:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "User:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.userId)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "Created at:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.createdAt.toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "Last modified:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.modifiedAt.toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, "ViewCount:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.viewCount))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return history.push('/questions/' + _this7.props.match.params.id + '/edit');
+        }
+      }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return history.push("/answers/new/" + _this7.props.match.params.id);
+        }
+      }, "Answer"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return history.push("/comments/question/".concat(_this7.question.questionId, "/new/"));
+        }
+      }, "Comment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Comments for Question"
+      }, this.comment.map(function (comment) {
+        if (comment.questionId == _this7.question.questionId) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, comment.content), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(comment.createdAt).toDateString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(comment.modifiedAt).toDateString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, comment.userId), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+            onClick: function onClick() {
+              return history.push("/comment/".concat(comment.commentId, "/edit/").concat(_this7.question.questionId));
+            }
+          }, "Edit"));
+        }
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Answers"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this7.sortByProperty('score');
+        }
+      }, "Sort by Answer Count"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: function onClick() {
+          return _this7.sortByProperty('modifiedAt');
+        }
+      }, "Sort by Date"), this.displayedAnswer.map(function (answer) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, console.log("yo", _this7.comment), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Content:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Created at:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(answer.createdAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Last modified:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(answer.modifiedAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "isAccepted:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.isAccepted ? "Yes" : "No")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "Score:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.score)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+          width: 2
+        }, "User:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.userId)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+          onClick: function onClick() {
+            return history.push("/answers/".concat(answer.answerId, "/edit"));
+          }
+        }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+          onClick: function onClick() {
+            return _this7.voteForAnswer(answer.answerId, answer.userId, 1);
+          }
+        }, "Upvote"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Danger, {
+          onClick: function onClick() {
+            return _this7.voteForAnswer(answer.answerId, answer.userId, 0);
+          }
+        }, "Downvote"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Checkbox, {
+          checked: answer.isAccepted,
+          onChange: function onChange(e) {
+            return _this7.toggleAcceptance(answer.answerId, e.target.checked);
+          }
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+          onClick: function onClick() {
+            return _this7.addToFavorites(answer.userId, answer.answerId);
+          }
+        }, "Add to Favorites"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+          onClick: function onClick() {
+            return history.push("/comments/answer/".concat(answer.answerId, "/new/").concat(answer.questionId));
+          }
+        }, "Comment")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+          title: "Comments for Answers"
+        }, _this7.comment.map(function (comment) {
+          if (comment.answerId == answer.answerId) {
+            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, comment.content), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(comment.createdAt).toDateString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(comment.modifiedAt).toDateString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, comment.userId), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+              onClick: function onClick() {
+                return history.push("/comment/".concat(comment.commentId, "/edit/").concat(answer.questionId));
+              }
+            }, "Edit"));
+          }
+        })));
+      })));
+    }
+  }, {
+    key: "addToFavorites",
+    value: function addToFavorites(userId, answerId) {
+      _services_favoritesServices__WEBPACK_IMPORTED_MODULE_7__["default"].addFavorite(userId, answerId).then(function () {
+        return console.log('Succesfully added a answer to favorite');
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error adding to favorites: ' + error.message);
+      });
+    }
+  }, {
+    key: "toggleAcceptance",
+    value: function toggleAcceptance(answerId, isAccepted) {
+      var previouslyAcceptedAnswer = this.displayedAnswer.find(function (answer) {
+        return answer.isAccepted;
+      });
+      var updatedAnswers = this.displayedAnswer.map(function (answer) {
+        return _objectSpread(_objectSpread({}, answer), {}, {
+          isAccepted: answer.answerId === answerId ? isAccepted : false
+        });
+      });
+      this.displayedAnswer = updatedAnswers;
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].markAnswerAsAccepted(answerId, isAccepted).then(function () {
+        console.log('Answer acceptance updated');
+        if (previouslyAcceptedAnswer) {
+          _services_answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].markAnswerAsAccepted(previouslyAcceptedAnswer.answerId, false).then(function () {
+            return console.log('Previously accepted answer unaccepted on the server');
+          })["catch"](function (error) {
+            return console.error('Error updating previously accepted answer on the server: ' + error.message);
+          });
+        }
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error updating answer acceptance: ' + error.message);
+      });
+    }
+  }, {
+    key: "voteForAnswer",
+    value: function voteForAnswer(answerId, userId, voteType) {
+      var _this8 = this;
+      _services_votesServices__WEBPACK_IMPORTED_MODULE_6__["default"].voteOnAnswer(answerId, userId, voteType).then(function () {
+        _services_answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].getAnswersForQuestion(_this8.props.match.params.id).then(function (updatedAnswers) {
+          _this8.displayedAnswer = updatedAnswers;
+          console.log('Vote updated and answers refreshed for answer:', answerId);
+        })["catch"](function (error) {
+          return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error fetching updated answers: ' + error.message);
+        });
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error voting on answer: ' + error.message);
+      });
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this9 = this;
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].get(this.props.match.params.id).then(function (question) {
+        question.createdAt = new Date(question.createdAt);
+        question.modifiedAt = new Date(question.modifiedAt);
+        _this9.question = question;
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting question: ' + error.message);
+      });
+      _services_answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].getAnswersForQuestion(this.props.match.params.id).then(function (answer) {
+        _this9.displayedAnswer = answer;
+        _this9.answer = answer;
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting answers: ' + error.message);
+      });
+      _services_commentsSevrvices__WEBPACK_IMPORTED_MODULE_8__["default"].getComments().then(function (comment) {
+        return _this9.comment = comment;
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting comments: ' + error.message);
+      });
+    }
+  }]);
+  return QuestionDetails;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+var QuestionEdit = /*#__PURE__*/function (_ref) {
+  _inherits(QuestionEdit, _ref);
+  var _super3 = _createSuper(QuestionEdit);
+  function QuestionEdit() {
+    var _this10;
+    _classCallCheck(this, QuestionEdit);
+    for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
+    _this10 = _super3.call.apply(_super3, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this10), "question", {
+      questionId: 0,
+      title: '',
+      content: '',
+      userId: 1
+    });
+    _defineProperty(_assertThisInitialized(_this10), "save", function () {
+      var _this10$question = _this10.question,
+        questionId = _this10$question.questionId,
+        title = _this10$question.title,
+        content = _this10$question.content;
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].update(questionId, title, content).then(function () {
+        return history.push('/questions/' + questionId);
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error saving question: ' + error.message);
+      });
+    });
+    _defineProperty(_assertThisInitialized(_this10), "delete", function () {
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"]["delete"](_this10.question.questionId).then(function () {
+        return history.push('/questions/');
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error deleting a question: ' + error.message);
+      });
+    });
+    return _this10;
+  }
+  _createClass(QuestionEdit, [{
+    key: "render",
+    value: function render() {
+      var _this11 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "Edit question"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Title:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Input, {
+        type: "text",
+        value: this.question.title,
+        onChange: function onChange(event) {
+          return _this11.question.title = event.currentTarget.value;
+        }
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
+        value: this.question.content,
+        onChange: function onChange(event) {
+          return _this11.question.content = event.currentTarget.value;
+        },
+        rows: 10
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: this.save
+      }, "Save")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        right: true
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Danger, {
+        onClick: this["delete"]
+      }, "Delete"))));
+    }
+  }, {
+    key: "mounted",
+    value: function mounted() {
+      var _this12 = this;
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].get(this.props.match.params.id).then(function (question) {
+        return _this12.question = question;
+      })["catch"](function (error) {
+        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting task: ' + error.message);
+      });
+      console.log(this.question);
+    }
+  }]);
+  return QuestionEdit;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+var QuestionsNew = /*#__PURE__*/function (_Component3) {
+  _inherits(QuestionsNew, _Component3);
+  var _super4 = _createSuper(QuestionsNew);
+  function QuestionsNew() {
+    var _this13;
+    _classCallCheck(this, QuestionsNew);
+    for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      args[_key4] = arguments[_key4];
+    }
+    _this13 = _super4.call.apply(_super4, [this].concat(args));
+    _defineProperty(_assertThisInitialized(_this13), "title", '');
+    _defineProperty(_assertThisInitialized(_this13), "content", '');
+    _defineProperty(_assertThisInitialized(_this13), "userId", 1);
+    return _this13;
+  }
+  _createClass(QuestionsNew, [{
+    key: "render",
+    value: function render() {
+      var _this14 = this;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
+        title: "New Question"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Title:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Input, {
+        type: "text",
+        value: this.title,
+        onChange: function onChange(event) {
+          return _this14.title = event.currentTarget.value;
+        }
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
+        type: "text",
+        value: this.content,
+        onChange: function onChange(event) {
+          _this14.content = event.currentTarget.value;
+        },
+        rows: 10
+      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
+        onClick: this.create
+      }, "Create"));
+    }
+  }, {
+    key: "create",
+    value: function create() {
+      var _this15 = this;
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].create(this.title, this.content, this.userId).then(function (id) {
+        return history.push('/questions/' + id);
+      })["catch"](function (error) {
+        console.error("Detailed error:", error);
+        console.log(_this15.title, _this15.content, _this15.userId);
+        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating task: ' + error.message);
+      });
+    }
+  }]);
+  return QuestionsNew;
+}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+
+/***/ }),
+
+/***/ "./src/services/answersServices.tsx":
+/*!******************************************!*\
+  !*** ./src/services/answersServices.tsx ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -685,8 +1502,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
-
-// Assuming the baseURL is the same as for the QuestionService
 axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.baseURL = 'http://localhost:3000/api/v1';
 var AnswerService = /*#__PURE__*/function () {
   function AnswerService() {
@@ -777,6 +1592,19 @@ var AnswerService = /*#__PURE__*/function () {
         return response.data;
       });
     }
+
+    /**
+      * Vote on an answer. Vote can be 1 for upvote and -1 for downvote.
+      */
+  }, {
+    key: "voteOnAnswer",
+    value: function voteOnAnswer(answerId, vote) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("/answers/".concat(answerId, "/vote"), {
+        vote: vote
+      }).then(function (response) {
+        return response.data;
+      });
+    }
   }]);
   return AnswerService;
 }();
@@ -785,429 +1613,181 @@ var answerService = new AnswerService();
 
 /***/ }),
 
-/***/ "./src/questionsComponent.tsx":
-/*!************************************!*\
-  !*** ./src/questionsComponent.tsx ***!
-  \************************************/
+/***/ "./src/services/commentsSevrvices.tsx":
+/*!********************************************!*\
+  !*** ./src/services/commentsSevrvices.tsx ***!
+  \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   QuestionDetails: () => (/* binding */ QuestionDetails),
-/* harmony export */   QuestionEdit: () => (/* binding */ QuestionEdit),
-/* harmony export */   QuestionsList: () => (/* binding */ QuestionsList),
-/* harmony export */   QuestionsNew: () => (/* binding */ QuestionsNew)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
-/* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _questionsServices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./questionsServices */ "./src/questionsServices.tsx");
-/* harmony import */ var _tagsServices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./tagsServices */ "./src/tagsServices.tsx");
-/* harmony import */ var _answersServices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./answersServices */ "./src/answersServices.tsx");
-/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 
-
-
-
-
-
-
-var history = (0,history__WEBPACK_IMPORTED_MODULE_6__.createHashHistory)();
-
-/**
- * Renders Questions list.
- */
-
-var QuestionsList = /*#__PURE__*/function (_Component) {
-  _inherits(QuestionsList, _Component);
-  var _super = _createSuper(QuestionsList);
-  function QuestionsList() {
-    var _this;
-    _classCallCheck(this, QuestionsList);
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    _this = _super.call.apply(_super, [this].concat(args));
-    _defineProperty(_assertThisInitialized(_this), "questions", []);
-    _defineProperty(_assertThisInitialized(_this), "tags", {});
-    _defineProperty(_assertThisInitialized(_this), "answerCounts", {});
-    _defineProperty(_assertThisInitialized(_this), "displayedQuestions", []);
-    _defineProperty(_assertThisInitialized(_this), "sortByProperty", function (propertyName) {
-      _this.displayedQuestions = _toConsumableArray(_this.questions).sort(function (a, b) {
-        if (propertyName === 'answerCount') {
-          var countA = _this.answerCounts[a.questionId] || 0;
-          var countB = _this.answerCounts[b.questionId] || 0;
-          return countB - countA;
-        }
-        if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
-          return b[propertyName] - a[propertyName];
-        }
-        if (a[propertyName] instanceof Date && b[propertyName] instanceof Date) {
-          return b[propertyName].getTime() - a[propertyName].getTime();
-        }
-        return String(a[propertyName]).localeCompare(String(b[propertyName]));
-      });
-    });
-    return _this;
+// Assuming the baseURL is the same as for the QuestionService
+axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.baseURL = 'http://localhost:3000/api/v1';
+var CommentService = /*#__PURE__*/function () {
+  function CommentService() {
+    _classCallCheck(this, CommentService);
   }
-  _createClass(QuestionsList, [{
-    key: "render",
-    value: function render() {
-      var _this2 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return history.push('/questions/new');
-        }
-      }, "New question"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return _this2.sortByProperty('viewCount');
-        }
-      }, "Sort by View Count"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return _this2.sortByProperty('answerCount');
-        }
-      }, "Sort by Answer Count"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return _this2.sortByProperty('createdAt');
-        }
-      }, "Sort by Date"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return _this2.showUnanswered();
-        }
-      }, "Show Unanswered Questions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
-        title: "Questions"
-      }, this.displayedQuestions.map(function (question) {
-        var _this2$tags$question$;
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
-          key: question.questionId
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.NavLink, {
-          to: '/questions/' + question.questionId,
-          onClick: function onClick() {
-            return _this2.updateView(question.questionId);
-          }
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, question.title, "-"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, question.content), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, (_this2$tags$question$ = _this2.tags[question.questionId]) === null || _this2$tags$question$ === void 0 ? void 0 : _this2$tags$question$.map(function (tag, index) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, {
-            key: index
-          }, tag.name);
-        })))));
-      })));
-    }
-  }, {
-    key: "showUnanswered",
-    value: function showUnanswered() {
-      var _this3 = this;
-      var unansweredQuestions = this.questions.filter(function (question) {
-        var hasAnswer = _this3.answerCounts.hasOwnProperty(question.questionId);
-        return !hasAnswer;
-      });
-      this.displayedQuestions = unansweredQuestions;
-    }
-  }, {
-    key: "updateView",
-    value: function updateView(questionId) {
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].updateViewCount(questionId).then(function (response) {
-        console.log('View count updated:', response);
-      })["catch"](function (error) {
-        console.error('Error updating view count:', error);
+  _createClass(CommentService, [{
+    key: "getComments",
+    value:
+    /**
+     * Get all comments.
+     */
+
+    function getComments() {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("/comments").then(function (response) {
+        return response.data;
       });
     }
+
+    /**
+     * Get a single comment by its ID.
+     */
   }, {
-    key: "getTagsForQuestions",
-    value: function getTagsForQuestions(questionId) {
-      var _this4 = this;
-      _tagsServices__WEBPACK_IMPORTED_MODULE_4__["default"].getTagsForQuestion(questionId).then(function (tags) {
-        _this4.tags[questionId] = tags;
-      })["catch"](function (error) {
-        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting tags: ' + error.message);
+    key: "getComment",
+    value: function getComment(commentId) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("/comments/".concat(commentId)).then(function (response) {
+        return response.data;
       });
     }
+
+    /**
+     * Add a new comment to a question.
+     */
   }, {
-    key: "mounted",
-    value: function mounted() {
-      var _this5 = this;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].getAll().then(function (questions) {
-        _this5.displayedQuestions = questions;
-        _this5.questions = questions;
-        questions.forEach(function (question) {
-          _this5.getTagsForQuestions(question.questionId);
-        });
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting questions: ' + error.message);
+    key: "addComment",
+    value: function addComment(userId, questionId, answerId, content) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/comments', {
+        answerId: answerId,
+        questionId: questionId,
+        userId: userId,
+        content: content
+      }).then(function (response) {
+        return response.data.id;
       });
-      _answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].getAnswerCounts().then(function (answersCount) {
-        _this5.answerCounts = answersCount.reduce(function (acc, curr) {
-          if (curr.questionId !== undefined && curr.count !== undefined) {
-            acc[curr.questionId] = curr.count;
-          } else {
-            console.log('Invalid data:', curr);
-          }
-          return acc;
-        }, {});
+    }
+
+    /**
+     * Update an existing comment.
+     */
+  }, {
+    key: "updateComment",
+    value: function updateComment(commentId, content) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].put("/comments/".concat(commentId), {
+        content: content
+      }).then(function (response) {
+        return response.data;
+      });
+    }
+
+    /**
+     * Delete a comment.
+     */
+  }, {
+    key: "deleteComment",
+    value: function deleteComment(commentId) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/comments/".concat(commentId)).then(function (response) {
+        return response.data;
       });
     }
   }]);
-  return QuestionsList;
-}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
-var QuestionDetails = /*#__PURE__*/function (_Component2) {
-  _inherits(QuestionDetails, _Component2);
-  var _super2 = _createSuper(QuestionDetails);
-  function QuestionDetails() {
-    var _this6;
-    _classCallCheck(this, QuestionDetails);
-    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-    _this6 = _super2.call.apply(_super2, [this].concat(args));
-    _defineProperty(_assertThisInitialized(_this6), "question", {
-      questionId: 0,
-      userId: 1,
-      title: '',
-      content: '',
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      viewCount: 0
-    });
-    _defineProperty(_assertThisInitialized(_this6), "answer", []);
-    return _this6;
-  }
-  _createClass(QuestionDetails, [{
-    key: "render",
-    value: function render() {
-      var _this7 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
-        title: "Question"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "Title:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "Content:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "User:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.userId)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "Created at:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.createdAt.toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "Last modified:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.modifiedAt.toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, "ViewCount:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, this.question.viewCount))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return history.push('/questions/' + _this7.props.match.params.id + '/edit');
-        }
-      }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: function onClick() {
-          return history.push("/answers/new/" + _this7.props.match.params.id);
-        }
-      }, "Answer"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
-        title: "Answers"
-      }, this.answer.map(function (answer) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "Content:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "Created at:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(answer.createdAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "Last modified:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, new Date(answer.modifiedAt).toDateString())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "isAccepted:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.isAccepted ? "Yes" : "No")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "Score:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.score)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-          width: 2
-        }, "User:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, answer.userId)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-          onClick: function onClick() {
-            return history.push("/answers/".concat(answer.answerId, "/edit"));
-          }
-        }, "Edit"));
-      })));
-    }
-  }, {
-    key: "mounted",
-    value: function mounted() {
-      var _this8 = this;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].get(this.props.match.params.id).then(function (question) {
-        question.createdAt = new Date(question.createdAt);
-        question.modifiedAt = new Date(question.modifiedAt);
-        _this8.question = question;
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting question: ' + error.message);
-      });
-      _answersServices__WEBPACK_IMPORTED_MODULE_5__["default"].getAnswersForQuestion(this.props.match.params.id).then(function (answer) {
-        console.log("answer:", answer);
-        _this8.answer = answer;
-        console.log("answer:", _this8.answer);
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting question: ' + error.message);
-      });
-    }
-  }]);
-  return QuestionDetails;
-}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
-var QuestionEdit = /*#__PURE__*/function (_ref) {
-  _inherits(QuestionEdit, _ref);
-  var _super3 = _createSuper(QuestionEdit);
-  function QuestionEdit() {
-    var _this9;
-    _classCallCheck(this, QuestionEdit);
-    for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-      args[_key3] = arguments[_key3];
-    }
-    _this9 = _super3.call.apply(_super3, [this].concat(args));
-    _defineProperty(_assertThisInitialized(_this9), "question", {
-      questionId: 0,
-      title: '',
-      content: '',
-      userId: 1
-    });
-    _defineProperty(_assertThisInitialized(_this9), "save", function () {
-      var _this9$question = _this9.question,
-        questionId = _this9$question.questionId,
-        title = _this9$question.title,
-        content = _this9$question.content;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].update(questionId, title, content).then(function () {
-        return history.push('/questions/' + questionId);
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error saving question: ' + error.message);
-      });
-    });
-    _defineProperty(_assertThisInitialized(_this9), "delete", function () {
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"]["delete"](_this9.question.questionId).then(function () {
-        return history.push('/questions/');
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error deleting a question: ' + error.message);
-      });
-    });
-    return _this9;
-  }
-  _createClass(QuestionEdit, [{
-    key: "render",
-    value: function render() {
-      var _this10 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
-        title: "Edit question"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Title:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Input, {
-        type: "text",
-        value: this.question.title,
-        onChange: function onChange(event) {
-          return _this10.question.title = event.currentTarget.value;
-        }
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
-        value: this.question.content,
-        onChange: function onChange(event) {
-          return _this10.question.content = event.currentTarget.value;
-        },
-        rows: 10
-      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: this.save
-      }, "Save")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        right: true
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Danger, {
-        onClick: this["delete"]
-      }, "Delete"))));
-    }
-  }, {
-    key: "mounted",
-    value: function mounted() {
-      var _this11 = this;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].get(this.props.match.params.id).then(function (question) {
-        return _this11.question = question;
-      })["catch"](function (error) {
-        return _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error getting task: ' + error.message);
-      });
-      console.log(this.question);
-    }
-  }]);
-  return QuestionEdit;
-}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
-var QuestionsNew = /*#__PURE__*/function (_Component3) {
-  _inherits(QuestionsNew, _Component3);
-  var _super4 = _createSuper(QuestionsNew);
-  function QuestionsNew() {
-    var _this12;
-    _classCallCheck(this, QuestionsNew);
-    for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-      args[_key4] = arguments[_key4];
-    }
-    _this12 = _super4.call.apply(_super4, [this].concat(args));
-    _defineProperty(_assertThisInitialized(_this12), "title", '');
-    _defineProperty(_assertThisInitialized(_this12), "content", '');
-    _defineProperty(_assertThisInitialized(_this12), "userId", 1);
-    return _this12;
-  }
-  _createClass(QuestionsNew, [{
-    key: "render",
-    value: function render() {
-      var _this13 = this;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Card, {
-        title: "New Question"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Title:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Input, {
-        type: "text",
-        value: this.title,
-        onChange: function onChange(event) {
-          return _this13.title = event.currentTarget.value;
-        }
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
-        width: 2
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Content:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Textarea, {
-        type: "text",
-        value: this.content,
-        onChange: function onChange(event) {
-          _this13.content = event.currentTarget.value;
-        },
-        rows: 10
-      })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
-        onClick: this.create
-      }, "Create"));
-    }
-  }, {
-    key: "create",
-    value: function create() {
-      var _this14 = this;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].create(this.title, this.content, this.userId).then(function (id) {
-        return history.push('/questions/' + id);
-      })["catch"](function (error) {
-        console.error("Detailed error:", error);
-        console.log(_this14.title, _this14.content, _this14.userId);
-        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating task: ' + error.message);
-      });
-    }
-  }]);
-  return QuestionsNew;
-}(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
+  return CommentService;
+}();
+var commentService = new CommentService();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (commentService);
 
 /***/ }),
 
-/***/ "./src/questionsServices.tsx":
-/*!***********************************!*\
-  !*** ./src/questionsServices.tsx ***!
-  \***********************************/
+/***/ "./src/services/favoritesServices.tsx":
+/*!********************************************!*\
+  !*** ./src/services/favoritesServices.tsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.baseURL = 'http://localhost:3000/api/v1';
+var FavoriteService = /*#__PURE__*/function () {
+  function FavoriteService() {
+    _classCallCheck(this, FavoriteService);
+  }
+  _createClass(FavoriteService, [{
+    key: "getFavorites",
+    value:
+    /**
+     * Get all favorite answers for a given user.
+     */
+    function getFavorites(userId) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("/favorites/".concat(userId)).then(function (response) {
+        return response.data;
+      });
+    }
+
+    /**
+     * Add a favorite answer for a user.
+     */
+  }, {
+    key: "addFavorite",
+    value: function addFavorite(userId, answerId) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/favorites', {
+        userId: userId,
+        answerId: answerId
+      }).then(function (response) {
+        return response.data;
+      });
+    }
+
+    /**
+     * Remove a favorite answer for a user.
+     */
+  }, {
+    key: "removeFavorite",
+    value: function removeFavorite(userId, answerId) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]('/favorites', {
+        data: {
+          userId: userId,
+          answerId: answerId
+        }
+      }) // Axios DELETE with body requires using 'data' field
+      .then(function (response) {
+        return response.data;
+      });
+    }
+  }]);
+  return FavoriteService;
+}();
+var favoriteService = new FavoriteService();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (favoriteService);
+
+/***/ }),
+
+/***/ "./src/services/questionsServices.tsx":
+/*!********************************************!*\
+  !*** ./src/services/questionsServices.tsx ***!
+  \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1311,10 +1891,10 @@ var questionService = new QuestionService();
 
 /***/ }),
 
-/***/ "./src/tagsServices.tsx":
-/*!******************************!*\
-  !*** ./src/tagsServices.tsx ***!
-  \******************************/
+/***/ "./src/services/tagsServices.tsx":
+/*!***************************************!*\
+  !*** ./src/services/tagsServices.tsx ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1376,6 +1956,56 @@ var TagsServices = /*#__PURE__*/function () {
 }();
 var tagService = new TagsServices();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (tagService);
+
+/***/ }),
+
+/***/ "./src/services/votesServices.tsx":
+/*!****************************************!*\
+  !*** ./src/services/votesServices.tsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.baseURL = 'http://localhost:3000/api/v1';
+var VoteService = /*#__PURE__*/function () {
+  function VoteService() {
+    _classCallCheck(this, VoteService);
+  }
+  _createClass(VoteService, [{
+    key: "voteOnAnswer",
+    value:
+    /**
+    * Cast a vote on an answer.
+    * @param {number} answerId - The ID of the answer being voted on.
+    * @param {number} userId - The ID of the user casting the vote.
+    * @param {number} voteType - The type of vote (1 for upvote, 0 for downvote).
+    * @return {Promise} A promise that resolves with the server response.
+    */
+    function voteOnAnswer(answerId, userId, voteType) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("/votes/".concat(answerId), {
+        userId: userId,
+        voteType: voteType
+      }).then(function (response) {
+        return response.data;
+      });
+    }
+  }]);
+  return VoteService;
+}();
+var voteService = new VoteService();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (voteService);
 
 /***/ }),
 
@@ -45282,11 +45912,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var react_simplified__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-simplified */ "./node_modules/react-simplified/lib/index.js");
 /* harmony import */ var _widgets__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./widgets */ "./src/widgets.tsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _questionsComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./questionsComponent */ "./src/questionsComponent.tsx");
 /* harmony import */ var _answerComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./answerComponent */ "./src/answerComponent.tsx");
-/* harmony import */ var _questionsServices__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./questionsServices */ "./src/questionsServices.tsx");
+/* harmony import */ var _favoriteComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./favoriteComponent */ "./src/favoriteComponent.tsx");
+/* harmony import */ var _commentComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./commentComponent */ "./src/commentComponent.tsx");
+/* harmony import */ var _services_questionsServices__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./services/questionsServices */ "./src/services/questionsServices.tsx");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
@@ -45301,6 +45933,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
 
 
 
@@ -45359,6 +45993,8 @@ var Menu = /*#__PURE__*/function (_Component) {
       }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/users"
       }, "Users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+        to: "/favorites"
+      }, "Favorites"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/about"
       }, "About"), filteredQuestions.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, null, filteredQuestions.map(function (question, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, {
@@ -45370,7 +46006,7 @@ var Menu = /*#__PURE__*/function (_Component) {
     key: "mounted",
     value: function mounted() {
       var _this3 = this;
-      _questionsServices__WEBPACK_IMPORTED_MODULE_6__["default"].getAll().then(function (questions) {
+      _services_questionsServices__WEBPACK_IMPORTED_MODULE_8__["default"].getAll().then(function (questions) {
         return _this3.setState({
           questions: questions
         });
@@ -45383,29 +46019,41 @@ var Menu = /*#__PURE__*/function (_Component) {
 }(react_simplified__WEBPACK_IMPORTED_MODULE_2__.Component);
 var root = document.getElementById('root');
 if (root) {
-  (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(root).render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.HashRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Menu, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(root).render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.HashRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Menu, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     exact: true,
     path: "/questions",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionsList
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     exact: true,
     path: "/questions/new",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionsNew
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     exact: true,
     path: "/questions/:id(\\d+)",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionDetails
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     exact: true,
     path: "/questions/:id(\\d+)/edit",
     component: _questionsComponent__WEBPACK_IMPORTED_MODULE_4__.QuestionEdit
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     exact: true,
     path: "/answers/:id(\\d+)/edit",
     component: _answerComponent__WEBPACK_IMPORTED_MODULE_5__.AnswerEdit
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Route, {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
     path: "/answers/new/:id(\\d+)",
     component: _answerComponent__WEBPACK_IMPORTED_MODULE_5__.AnswerNew
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    path: "/favorites",
+    component: _favoriteComponent__WEBPACK_IMPORTED_MODULE_6__.FavoritesList
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    path: "/comment/:id(\\d+)/edit/:backId(\\d+)",
+    component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentEdit
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    path: "/comments/answer/:id(\\d+)/new/:backId(\\d+)",
+    component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentNew
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
+    path: "/comments/question/:id(\\d+)/new/",
+    component: _commentComponent__WEBPACK_IMPORTED_MODULE_7__.CommentNew
   }))));
 }
 })();

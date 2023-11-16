@@ -15,7 +15,7 @@ export type Answer = {
 class AnswerService {
 
   /**
-   * Get an answers.
+   * Get answer with id.
    */
 
   getAnswer(id: number) {
@@ -102,10 +102,11 @@ class AnswerService {
   /**
    * Toggles the accepted state of an answer.
    */
-  markAnswerAsAccepted(answerId: number, isAccepted: number) {
+  markAnswerAsAccepted(answerId: number, isAccepted: boolean) {
+    console.log("yo2:" ,answerId, isAccepted)
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Answers SET IsAccepted = ? WHERE AnswerID = ?',
+        'UPDATE Answers SET isAccepted = ? WHERE answerId = ?',
         [isAccepted, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
@@ -129,6 +130,7 @@ class AnswerService {
         'SELECT questionId, COUNT(*) as count FROM Answers GROUP BY questionId',
         (error, results: RowDataPacket[]) => {
           if (error) reject(error);
+          
           else resolve(results as { questionId: number, count: number }[]);
         }
       );

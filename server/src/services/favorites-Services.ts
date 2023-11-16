@@ -1,14 +1,32 @@
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { Answer } from './answers-Services';
+
 
 class FavoriteService {
   /**
+   * Get all favorite answers for a given user.
+   */
+  getFavorites(userId: number) {
+    return new Promise<Answer[]>((resolve, reject) => {
+      pool.query(
+        'SELECT a.* FROM Answers a JOIN Favorites f ON a.answerId = f.answerId WHERE f.userId = ?', 
+        [userId], (error, results: RowDataPacket[]) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results as Answer[]);
+      });
+    });
+  }
+
+  /**
    * Legg til et svar som favoritt for en gitt bruker.
    */
-  addFavorite(userId: number, answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  addFavorite(userId: number, answerId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'INSERT INTO FavoriteAnswers (UserID, AnswerID) VALUES (?, ?)',
+        'INSERT INTO Favorites (userId, answerId) VALUES (?, ?)',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
@@ -27,10 +45,10 @@ class FavoriteService {
   /**
    * Fjern et svar fra favorittlisten til en gitt bruker.
    */
-  removeFavorite(userId: number, answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  removeFavorite(userId: number, answerId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM FavoriteAnswers WHERE UserID = ? AND AnswerID = ?',
+        'DELETE FROM Favorites WHERE userId = ? AND answerId = ?',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {

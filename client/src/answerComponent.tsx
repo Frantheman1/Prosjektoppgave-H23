@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
-import answerService, { Answer, AnswerCountMap } from './answersServices';
+import answerService, { Answer, AnswerCountMap } from './services/answersServices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();

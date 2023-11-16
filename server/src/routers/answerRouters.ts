@@ -16,8 +16,7 @@ routerAnswers.get('/answers/:answerId', (request, response) => {
 // Get answers for a specific question
 routerAnswers.get('/answers/question/:questionId', (request, response) => {
   const questionId = Number(request.params.questionId);
-  
-  console.log(questionId)
+
   answerService.getAnswersForQuestion(questionId)
     .then(answers => answers.length ? response.send(answers) : response.status(404).send('No answers found for this question'))
     .catch(error => response.status(500).send(error));
@@ -60,7 +59,7 @@ routerAnswers.delete('/answers/:answerId', (request, response) => {
 routerAnswers.put('/answers/:answerId/accept', (request, response) => {
   const answerId = Number(request.params.answerId);
   const { isAccepted } = request.body;
-  if (typeof isAccepted === 'number') {
+  if (typeof isAccepted === 'boolean') {
     answerService.markAnswerAsAccepted(answerId, isAccepted)
       .then(() => response.send())
       .catch(error => response.status(500).send(error));
@@ -75,5 +74,6 @@ routerAnswers.get('/answerCounts', (_request, response) => {
    .then(counts => response.send(counts))
    .catch(error => response.status(500).send(error));
 });
+
 
 export default routerAnswers;

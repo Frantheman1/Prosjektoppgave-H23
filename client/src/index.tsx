@@ -5,7 +5,10 @@ import { NavBar, Card, Form, Alert,Row} from './widgets';
 import { HashRouter, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
 import { AnswerEdit, AnswerNew } from './answerComponent';
-import questionService, {Question}  from './questionsServices';
+import { FavoritesList } from './favoriteComponent';
+import { CommentNew, CommentEdit } from './commentComponent';
+import questionService, {Question}  from './services/questionsServices';
+
 
 interface MenuState {
   questions: Question[];
@@ -43,6 +46,7 @@ class Menu extends Component {
         <NavBar.Link to="/questions">Questions</NavBar.Link>
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
+        <NavBar.Link to="/favorites">Favorites</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
         {filteredQuestions.length > 0 && (
           <Row>
@@ -76,6 +80,10 @@ if (root) {
         <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
         <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
+        <Route path="/favorites" component={FavoritesList} />
+        <Route path='/comment/:id(\d+)/edit/:backId(\d+)' component={CommentEdit}/>
+        <Route path="/comments/answer/:id(\d+)/new/:backId(\d+)" component={CommentNew} />
+        <Route path="/comments/question/:id(\d+)/new/" component={CommentNew} />
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

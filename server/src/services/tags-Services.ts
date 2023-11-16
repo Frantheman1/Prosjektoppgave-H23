@@ -10,8 +10,8 @@ class TagService {
   /**
    * Get all tags.
    */
-  getAllTags(): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
+  getAllTags() {
+    return new Promise<Tag[]>((resolve, reject) => {
       pool.query('SELECT * FROM Tags', (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
         resolve(results as Tag[]);
@@ -22,8 +22,8 @@ class TagService {
   /**
    * Get tags for a specific question.
    */
-  getTagsForQuestion(questionId: number): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
+  getTagsForQuestion(questionId: number) {
+    return new Promise<Tag[]>((resolve, reject) => {
       pool.query(
         'SELECT T.* FROM Tags T JOIN Question_Tags Q ON T.tagId = Q.TagID WHERE Q.QuestionID = ?',
         [questionId],
