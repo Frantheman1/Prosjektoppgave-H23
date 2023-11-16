@@ -3,7 +3,7 @@ import answerService from '../services/answers-Services';
 
 const routerAnswers = express.Router();
 
-// Get a specific answer by its ID
+// Get a specific answer by its Id
 routerAnswers.get('/answers/:answerId', (request, response) => {
  const answerId = Number(request.params.answerId);
 

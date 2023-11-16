@@ -11,8 +11,6 @@ import commentService, { Comment } from './services/commentsSevrvices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
-
-
 /**
  * Renders Questions list.
  */
@@ -133,8 +131,7 @@ export class QuestionsList extends Component {
       
     })
 
-  }
-
+}
 }
 
 export class QuestionDetails extends Component<
@@ -150,7 +147,7 @@ export class QuestionDetails extends Component<
                 createdAt: new Date(), 
                 modifiedAt:new Date(), 
                 viewCount: 0
-              } 
+              }
   answer: Answer[] = []
   displayedAnswer: Answer[] = []
   comment: Comment[] = []
@@ -385,12 +382,13 @@ export class QuestionDetails extends Component<
       })
       .catch((error) => Alert.danger('Error getting answers: ' + error.message));
 
-    commentService
-      .getComments()
-      .then((comment) => this.comment = comment)
-      .catch((error) => Alert.danger('Error getting comments: ' + error.message));
-  }
+      commentService
+        .getComments()
+        .then((comment) => this.comment = comment)
+        .catch((error) => Alert.danger('Error getting comments: ' + error.message));
+    }
 }
+
 
 export class QuestionEdit extends Component<
 { match: { params: { id: number } } },

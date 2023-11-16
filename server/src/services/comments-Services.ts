@@ -93,7 +93,7 @@ class CommentService {
   deleteComment(commentId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'DELETE FROM Comments WHERE commentId = ?',
+        'DELETE FROM Comments WHERE commentId = ?'
         [commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -104,20 +104,6 @@ class CommentService {
     });
   }
 
-  /**
-     * Get the Count of comments a Question with an id has 
-  */
-  getCommentCounts() {
-    return new Promise<{ questionId: number, count: number }[]>((resolve, reject) => {
-      pool.query(
-        'SELECT questionId, COUNT(*) as count FROM Comments GROUP BY questionId',
-        (error, results: RowDataPacket[]) => {
-          if (error) reject(error);
-          else resolve(results as { questionId: number, count: number }[]);
-        }
-      );
-    });
-  }
 }
 
 const commentService = new CommentService();
