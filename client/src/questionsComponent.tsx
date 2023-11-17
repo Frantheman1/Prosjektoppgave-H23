@@ -27,6 +27,7 @@ export class QuestionsList extends Component {
        <Button.Success onClick={() => this.sortByProperty('viewCount')}>Sort by View Count</Button.Success>
        <Button.Success onClick={() => this.sortByProperty('answerCount')}>Sort by Answer Count</Button.Success>
        <Button.Success onClick={() => this.sortByProperty('createdAt')}>Sort by Date</Button.Success>
+       <Button.Success onClick={() => this.sortByProperty("score")}>Sort by Score</Button.Success>
        <Button.Success onClick={() => this.showUnanswered()}>Show Unanswered Questions</Button.Success>
         <Card title='Questions'>
           
@@ -55,6 +56,7 @@ export class QuestionsList extends Component {
     )
   }
 
+  
   showUnanswered() {
     const unansweredQuestions = this.questions.filter(question => {
       const hasAnswer = this.answerCounts.hasOwnProperty(question.questionId);
@@ -64,13 +66,16 @@ export class QuestionsList extends Component {
     this.displayedQuestions = unansweredQuestions;
   }
 
-  sortByProperty = (propertyName: keyof Question | 'answerCount') => {
+  sortByProperty = (propertyName: keyof Question | 'answerCount' | 'score') => {
     this.displayedQuestions = [...this.questions].sort((a, b) => {
-
       if (propertyName === 'answerCount') {
         const countA = this.answerCounts[a.questionId] || 0;
         const countB = this.answerCounts[b.questionId] || 0;
         return countB - countA;
+      }
+      if (propertyName === 'score') {
+        // Assuming each question has a 'score' property
+        return (b.score || 0) - (a.score || 0);
       }
 
       if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
@@ -136,16 +141,20 @@ export class QuestionsList extends Component {
 
 export class QuestionDetails extends Component<{ match: { params: { id: number } } }> {
   question: Question = {
-                questionId:0,
-                userId: 1, 
-                title:'',
-                content:'', 
-                createdAt: new Date(), 
-                modifiedAt:new Date(), 
-                viewCount: 0
-              } 
+    questionId: 0,
+    userId: 1,
+    title: '',
+    content: '',
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    viewCount: 0,
+    score: 0,
+  }
   answer: Answer[] = []
   
+  
+
+
 
   render() {
     return (
@@ -175,6 +184,14 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
             <Column width={2}>ViewCount:</Column>
             <Column>{this.question.viewCount}</Column>
           </Row>
+          <Row>
+          <Row>
+          <Column width={2}>Score:</Column> {/* SCORE TIL SPØRSMÅL */}
+         <Column>{this.question.score}</Column>
+          </Row>
+         <Button.Success onClick={() => this.voteQuestion(true)}>Upvote Question</Button.Success> {/* UPVOTE QUESTIONS */}
+          <Button.Danger onClick={() => this.voteQuestion(false)}>Downvote Question</Button.Danger>{/* DOWNVOTE QUESTIONS */}
+        </Row>
         </Card>
         <Button.Success
           onClick={() => history.push('/questions/' + this.props.match.params.id + '/edit')}
@@ -188,47 +205,66 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         </Button.Success>
 
         <Card title='Answers'>
-          {this.answer.map((answer)=> (
-            <Row>
-               <Row>
-            <Column width={2}>Content:</Column>
-            <Column>{answer.content}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Created at:</Column>
-            <Column>{new Date(answer.createdAt).toDateString()}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Last modified:</Column>
-            <Column>{new Date(answer.modifiedAt).toDateString()}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>isAccepted:</Column>
-            <Column>{answer.isAccepted ? "Yes" : "No"}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Score:</Column>
-            <Column>{answer.score}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>User:</Column>
-            <Column>{answer.userId}</Column>
-          </Row>
-          <Button.Success
-          onClick={() => history.push(`/answers/${answer.answerId}/edit`)}
-        >
-          Edit
-        </Button.Success>
-        </Row>
-
-        
-          )        
-          )}
+          {this.answer.map((answer) => (
+            <Row key={answer.answerId}>
+              <Row>
+                <Column width={2}>Content:</Column>
+                <Column>{answer.content}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>Created at:</Column>
+                <Column>{new Date(answer.createdAt).toDateString()}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>Last modified:</Column>
+                <Column>{new Date(answer.modifiedAt).toDateString()}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>isAccepted:</Column>
+                <Column>{answer.isAccepted ? "Yes" : "No"}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>Score:</Column>{/* VOTES TIL ANSWERS */}
+                <Column>{answer.score}</Column>
+              </Row>
+              <Row>
+                <Column width={2}>User:</Column>
+                <Column>{answer.userId}</Column>
+              </Row>
+              <Button.Success onClick={() => this.vote(answer.answerId, true)}>Upvote</Button.Success> {/* UPVOTE ANSWERS */}
+              <Button.Danger onClick={() => this.vote(answer.answerId, false)}>Downvote</Button.Danger>{/* DOWNVOTE ANSWERS */}
+              <Button.Success
+                onClick={() => history.push(`/answers/${answer.answerId}/edit`)}
+              >
+                Edit
+              </Button.Success>
+            </Row>
+          ))}
         </Card>
-        
       </>
     )
   }
+
+  voteQuestion(isUpvote: boolean) {
+    if (typeof this.question.score !== 'number') {
+      this.question.score = 0;  // Initialize score if it's not a number
+    }
+    this.question.score += isUpvote ? 1 : -1;
+    this.forceUpdate(); // Trigger a re-render
+  }
+  
+
+  vote(answerId: number, isUpvote: boolean) {
+    const answer = this.answer.find(a => a.answerId === answerId);
+    if (answer) {
+      answer.score += isUpvote ? 1 : -1;
+      this.forceUpdate(); // Trigger a re-render
+    }
+  }
+
+  // ... other methods (like mounted, etc.) ...
+
+
   mounted() {
     questionService
       .get(this.props.match.params.id)

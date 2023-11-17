@@ -10,6 +10,7 @@ export type Question = {
   createdAt: Date;
   modifiedAt: Date;
   viewCount: number;
+  score: number;
 };
 
 class QuestionService {
@@ -63,6 +64,13 @@ class QuestionService {
    updateViewCount(questionId: number) {
     return axios
       .put('/updateViewCount', { questionId })
+      .then(response => response.data);
+  }
+  
+
+  updateQuestionScore(questionId: number, score: number) {
+    return axios
+      .put(`/questions/${questionId}/score`, { score })
       .then(response => response.data);
   }
 }

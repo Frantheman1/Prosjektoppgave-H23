@@ -65,9 +65,120 @@
     padding: 20px;
     position:fixed;
 }
-
-
 */
+
+
+/* TAGS CSS */
+
+/* Container for the tags section */
+.tags-container {
+  padding: 20px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+/* Header styles */
+.tags-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tags-header h2 {
+  color: #333;
+  font-size: 24px;
+}
+
+/* Search input styling */
+.tags-search-input {
+  width: 100%;  
+  padding: 10px;  
+  margin-bottom: 20px;  
+  border: 2px solid #ccc;  
+  border-radius: 20px; 
+  box-sizing: border-box;  
+  transition: border-color 0.3s, box-shadow 0.3s;  
+  outline: none; 
+  font-size: 16px; 
+  background-color: #fafafa;  
+}
+
+.tags-search-input:hover {
+  border-color: #bbb; 
+}
+
+.tags-search-input:focus {
+  border-color: #000000;  
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);  
+}
+
+/* Button styles */
+.tags-sort-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.tags-sort-buttons button {
+  padding: 8px 16px;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tags-sort-buttons button:hover {
+  background-color: #3f51b5;
+}
+
+.tags-sort-buttons button.active {
+  background-color: #303f9f;
+}
+
+/* Individual tag item styling */
+.tags-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.tag-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tag-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.tag-item h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.tag-item p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.tag-item span {
+  font-size: 12px;
+  color: #999;
+  display: block;
+  margin-top: 10px;
+}
+
+
  /*Hoved navbar container*/
 .navbar {
   display: flex;

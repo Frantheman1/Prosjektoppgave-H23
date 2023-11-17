@@ -5,6 +5,8 @@ axios.defaults.baseURL = 'http://localhost:3000/api/v1';
 export type Tag = {
  tagId: number;
  name: string;
+ questionCount?: number; // La til denne linjen, gjør den valgfri
+ description?: string; // La til denne linjen, gjør den valgfri
 };
 
 class TagsServices {

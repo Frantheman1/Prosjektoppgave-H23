@@ -6,6 +6,7 @@ import { HashRouter, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
 import { AnswerEdit, AnswerNew } from './answerComponent';
 import questionService, {Question}  from './questionsServices';
+import TagsList from './tagsComponents'; {/* TAGS */} 
 
 interface MenuState {
   questions: Question[];
@@ -28,6 +29,7 @@ class Menu extends Component {
         question.content.toLowerCase().includes(searchValue.toLowerCase())
       );
     }
+    
     return (
       <NavBar brand="images/NewLogo4.png" brandAlt='Logo of the Site'>
         <Form.Input
@@ -76,6 +78,7 @@ if (root) {
         <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
         <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
+        <Route path="/tags" component={TagsList} /> {/* TAGS ROUTE*/}
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>
