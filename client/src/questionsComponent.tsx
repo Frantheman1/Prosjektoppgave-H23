@@ -2,14 +2,15 @@ import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
-import questionService, { Question } from './questionsServices';
-import tagServices, { Tag } from './tagsServices'
-import answerService, { Answer, AnswerCountMap } from './answersServices';
+import questionService, { Question } from './services/questionsServices';
+import tagServices, { Tag } from './services/tagsServices'
+import answerService, { Answer, AnswerCountMap } from './services/answersServices';
+import voteService from './services/votesServices';
+import favoriteService from './services/favoritesServices';
+import commentService, { Comment } from './services/commentsSevrvices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
-
-
 /**
  * Renders Questions list.
  */
@@ -135,26 +136,25 @@ export class QuestionsList extends Component {
       
     })
 
-  }
-
+}
 }
 
-export class QuestionDetails extends Component<{ match: { params: { id: number } } }> {
+export class QuestionDetails extends Component<
+{ match: {
+  params: { id: number };
+  path: string;
+}; }> {
   question: Question = {
-    questionId: 0,
-    userId: 1,
-    title: '',
-    content: '',
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-    viewCount: 0,
-    score: 0,
-  }
+                questionId:0,
+                userId: 1, 
+                title:'',
+                content:'', 
+                createdAt: new Date(), 
+                modifiedAt:new Date(), 
+                viewCount: 0
+              } 
   answer: Answer[] = []
   
-  
-
-
 
   render() {
     return (
@@ -193,6 +193,7 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
           <Button.Danger onClick={() => this.voteQuestion(false)}>Downvote Question</Button.Danger>{/* DOWNVOTE QUESTIONS */}
         </Row>
         </Card>
+        
         <Button.Success
           onClick={() => history.push('/questions/' + this.props.match.params.id + '/edit')}
         >
@@ -203,68 +204,74 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
         >
           Answer
         </Button.Success>
+        <Button.Success
+          onClick={() => history.push(`/comments/question/${this.question.questionId}/new/`)}
+        >
+          Comment
+        </Button.Success>
+        <Card title="Comments for Question">
+          {this.comment.map((comment)=> {
+            if(comment.questionId == this.question.questionId) {
+              return(
+              <Row>
+                <Column>{comment.content}</Column>
+                <Column>{new Date(comment.createdAt).toDateString()}</Column>
+                <Column>{new Date(comment.modifiedAt).toDateString()}</Column>
+                <Column>{comment.userId}</Column>
+                <Button.Success
+                  onClick={() => history.push(`/comment/${comment.commentId}/edit/${this.question.questionId}`)}
+                >
+                 Edit
+                </Button.Success>
+              </Row>
+              )
+            }
+          })}
+
+        </Card>
+
 
         <Card title='Answers'>
-          {this.answer.map((answer) => (
-            <Row key={answer.answerId}>
-              <Row>
-                <Column width={2}>Content:</Column>
-                <Column>{answer.content}</Column>
-              </Row>
-              <Row>
-                <Column width={2}>Created at:</Column>
-                <Column>{new Date(answer.createdAt).toDateString()}</Column>
-              </Row>
-              <Row>
-                <Column width={2}>Last modified:</Column>
-                <Column>{new Date(answer.modifiedAt).toDateString()}</Column>
-              </Row>
-              <Row>
-                <Column width={2}>isAccepted:</Column>
-                <Column>{answer.isAccepted ? "Yes" : "No"}</Column>
-              </Row>
-              <Row>
-                <Column width={2}>Score:</Column>{/* VOTES TIL ANSWERS */}
-                <Column>{answer.score}</Column>
-              </Row>
-              <Row>
-                <Column width={2}>User:</Column>
-                <Column>{answer.userId}</Column>
-              </Row>
-              <Button.Success onClick={() => this.vote(answer.answerId, true)}>Upvote</Button.Success> {/* UPVOTE ANSWERS */}
-              <Button.Danger onClick={() => this.vote(answer.answerId, false)}>Downvote</Button.Danger>{/* DOWNVOTE ANSWERS */}
-              <Button.Success
-                onClick={() => history.push(`/answers/${answer.answerId}/edit`)}
-              >
-                Edit
-              </Button.Success>
-            </Row>
-          ))}
+          {this.answer.map((answer)=> (
+            <Row>
+               <Row>
+            <Column width={2}>Content:</Column>
+            <Column>{answer.content}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Created at:</Column>
+            <Column>{new Date(answer.createdAt).toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Last modified:</Column>
+            <Column>{new Date(answer.modifiedAt).toDateString()}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>isAccepted:</Column>
+            <Column>{answer.isAccepted ? "Yes" : "No"}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>Score:</Column>
+            <Column>{answer.score}</Column>
+          </Row>
+          <Row>
+            <Column width={2}>User:</Column>
+            <Column>{answer.userId}</Column>
+          </Row>
+          <Button.Success
+          onClick={() => history.push(`/answers/${answer.answerId}/edit`)}
+        >
+          Edit
+        </Button.Success>
+        </Row>
+
+        
+          )        
+          )}
         </Card>
       </>
     )
   }
-
-  voteQuestion(isUpvote: boolean) {
-    if (typeof this.question.score !== 'number') {
-      this.question.score = 0;  // Initialize score if it's not a number
-    }
-    this.question.score += isUpvote ? 1 : -1;
-    this.forceUpdate(); // Trigger a re-render
-  }
-  
-
-  vote(answerId: number, isUpvote: boolean) {
-    const answer = this.answer.find(a => a.answerId === answerId);
-    if (answer) {
-      answer.score += isUpvote ? 1 : -1;
-      this.forceUpdate(); // Trigger a re-render
-    }
-  }
-
-  // ... other methods (like mounted, etc.) ...
-
-
   mounted() {
     questionService
       .get(this.props.match.params.id)
@@ -278,14 +285,18 @@ export class QuestionDetails extends Component<{ match: { params: { id: number }
     answerService
       .getAnswersForQuestion(this.props.match.params.id)
       .then((answer) => {
-        console.log("answer:",answer)
+        this.displayedAnswer = answer
         this.answer = answer;
-        console.log("answer:",this.answer)
-        
       })
-      .catch((error) => Alert.danger('Error getting question: ' + error.message));
-  }
+      .catch((error) => Alert.danger('Error getting answers: ' + error.message));
+
+      commentService
+        .getComments()
+        .then((comment) => this.comment = comment)
+        .catch((error) => Alert.danger('Error getting comments: ' + error.message));
+    }
 }
+
 
 export class QuestionEdit extends Component<
 { match: { params: { id: number } } },

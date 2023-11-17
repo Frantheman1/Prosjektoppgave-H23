@@ -10,9 +10,10 @@ class TagService {
   /**
    * Get all tags.
    */
-  getAllTags(): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM Tags', (error, results: RowDataPacket[]) => {
+  getAllTags() {
+    return new Promise<Tag[]>((resolve, reject) => {
+      pool.query('SELECT * FROM Tags', 
+      (error, results: RowDataPacket[]) => {
         if (error) return reject(error);
         resolve(results as Tag[]);
       });
@@ -22,10 +23,10 @@ class TagService {
   /**
    * Get tags for a specific question.
    */
-  getTagsForQuestion(questionId: number): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
+  getTagsForQuestion(questionId: number) {
+    return new Promise<Tag[]>((resolve, reject) => {
       pool.query(
-        'SELECT T.* FROM Tags T JOIN Question_Tags Q ON T.tagId = Q.TagID WHERE Q.QuestionID = ?',
+        'SELECT T.* FROM Tags T JOIN Question_Tags Q ON T.tagId = Q.tagId WHERE Q.questionId = ?',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
@@ -41,7 +42,7 @@ class TagService {
   addTagToQuestion(tagId: number, questionId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'INSERT INTO Question_Tags (QuestionID, TagID) VALUES (?, ?)',
+        'INSERT INTO Question_Tags (questionId, tagId) VALUES (?, ?)',
         [questionId, tagId],
         (error, results) => {
           if (error) return reject(error);
@@ -62,11 +63,11 @@ class TagService {
 
     return new Promise<Array<Tag & { questionCount: number }>>((resolve, reject) => {
       pool.query(
-        `SELECT t.TagID, t.Name, COUNT(qt.QuestionID) AS questionCount
+        `SELECT t.tagId, t.Name, COUNT(qt.questionId) AS questionCount
         FROM Tags t
-        LEFT JOIN Question_Tags qt ON t.TagID = qt.TagID
+        LEFT JOIN Question_Tags qt ON t.tagId = qt.tagId
         ${whereClause}
-        GROUP BY t.TagID
+        GROUP BY t.tagId
         ${orderByClause}
         `,
         queryParams,
@@ -74,6 +75,23 @@ class TagService {
           if (error) return reject(error);
           resolve(results as Array<Tag & { questionCount: number }>);
         },
+      );
+    });
+  }
+
+  getAllTagsWithQuestionCount() {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        'SELECT Tags.name, COUNT(Question_Tags.questionId) as questionCount ' +
+        'FROM Tags ' +
+        'LEFT JOIN Question_Tags ON Tags.tagId = Question_Tags.tagId ' +
+        'GROUP BY Tags.name',
+        (error, results) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(results);
+        }
       );
     });
   }

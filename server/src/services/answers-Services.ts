@@ -1,4 +1,4 @@
-import pool from '../mysql-pool'; // Or wherever your connection pool is exported from
+import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export type Answer = {
@@ -15,7 +15,7 @@ export type Answer = {
 class AnswerService {
 
   /**
-   * Get an answers.
+   * Get answer with id.
    */
 
   getAnswer(id: number) {
@@ -39,7 +39,7 @@ class AnswerService {
   getAnswersForQuestion(questionId: number)  {
     return new Promise<Answer[]>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Answers WHERE questionId = ?',
+        'SELECT * FROM Answers WHERE questionId = ? ORDER BY CreatedAt',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) reject(error);
@@ -55,11 +55,11 @@ class AnswerService {
   addAnswer(questionId: number, userId: number, content: string) {
     return new Promise<number>((resolve, reject) => {
       pool.query(
-        'INSERT INTO Answers (QuestionID, UserID, Content) VALUES (?, ?, ?)',
+        'INSERT INTO Answers (questionId, userId, content) VALUES (?, ?, ?)',
         [questionId, userId, content],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
-          else resolve(results.insertId); // Return the ID of the newly added answer
+          else resolve(results.insertId); // Return the Id of the newly added answer
         },
       );
     });
@@ -71,7 +71,7 @@ class AnswerService {
   updateAnswer(answerId: number, content: string) {
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Answers SET Content = ? WHERE AnswerID = ?',
+        'UPDATE Answers SET content = ? WHERE answerId = ?',
         [content, answerId],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
@@ -88,7 +88,7 @@ class AnswerService {
   deleteAnswer(answerId: number) {
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM Answers WHERE AnswerID = ?',
+        'DELETE FROM Answers WHERE answerId = ?',
         [answerId],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
@@ -102,10 +102,11 @@ class AnswerService {
   /**
    * Toggles the accepted state of an answer.
    */
-  markAnswerAsAccepted(answerId: number, isAccepted: number) {
+  markAnswerAsAccepted(answerId: number, isAccepted: boolean) {
+    console.log("yo2:" ,answerId, isAccepted)
     return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Answers SET IsAccepted = ? WHERE AnswerID = ?',
+        'UPDATE Answers SET isAccepted = ? WHERE answerId = ?',
         [isAccepted, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
@@ -129,6 +130,7 @@ class AnswerService {
         'SELECT questionId, COUNT(*) as count FROM Answers GROUP BY questionId',
         (error, results: RowDataPacket[]) => {
           if (error) reject(error);
+          
           else resolve(results as { questionId: number, count: number }[]);
         }
       );

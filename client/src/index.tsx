@@ -6,7 +6,6 @@ import { HashRouter, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
 import { AnswerEdit, AnswerNew } from './answerComponent';
 import questionService, {Question}  from './questionsServices';
-import TagsList from './tagsComponents'; {/* TAGS */} 
 
 interface MenuState {
   questions: Question[];
@@ -45,6 +44,7 @@ class Menu extends Component {
         <NavBar.Link to="/questions">Questions</NavBar.Link>
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
+        <NavBar.Link to="/favorites">Favorites</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
         {filteredQuestions.length > 0 && (
           <Row>
@@ -78,7 +78,6 @@ if (root) {
         <Route exact path='/questions/:id(\d+)/edit' component={QuestionEdit}/>
         <Route exact path='/answers/:id(\d+)/edit' component={AnswerEdit}/>
         <Route path="/answers/new/:id(\d+)" component={AnswerNew} />
-        <Route path="/tags" component={TagsList} /> {/* TAGS ROUTE*/}
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

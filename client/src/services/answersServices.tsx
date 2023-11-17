@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Assuming the baseURL is the same as for the QuestionService
 axios.defaults.baseURL = 'http://localhost:3000/api/v1';
 
 export type Answer = {
@@ -75,6 +74,15 @@ class AnswerService {
    */
   getAnswerCounts() {
    return axios.get<{ questionId: number, count: number }[]>('/answerCounts').then(response => response.data);
+ }
+
+ /**
+   * Vote on an answer. Vote can be 1 for upvote and -1 for downvote.
+   */
+ voteOnAnswer(answerId: number, vote: number) {
+  return axios
+    .post<void>(`/answers/${answerId}/vote`, { vote })
+    .then(response => response.data);
  }
 }
 

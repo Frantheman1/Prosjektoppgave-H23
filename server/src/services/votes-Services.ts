@@ -1,46 +1,34 @@
 import pool from '../mysql-pool';
-import type { RowDataPacket, ResultSetHeader } from 'mysql2';
+import type { ResultSetHeader } from 'mysql2';
 
 class VoteService {
   /**
-   * Cast a vote on an answer.
+   * Cast a vote on an answer by updating score.
    */
-  vote(answerId: number, userId: number, voteType: boolean) {
-    const voteValue = voteType ? 1 : 0;
+  voteOnAnswer(answerId: number, userId: number, voteType: number) {
     return new Promise<void>((resolve, reject) => {
-      // Check if the user has already voted on this answer
       pool.query(
-        'SELECT VoteID FROM Votes WHERE AnswerID = ? AND UserID = ?',
-        [answerId, userId],
-        (error, results: RowDataPacket[]) => {
+        'INSERT INTO Votes (userId, answerId, voteType) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE voteType = VALUES(voteType)',
+        [userId, answerId, voteType],
+        (error) => {
           if (error) {
             return reject(error);
           }
-          if (results.length > 0) {
-            const voteId = results[0].VoteID;
-            pool.query(
-              'UPDATE Votes SET VoteType = ? WHERE VoteID = ?',
-              [voteValue, voteId],
-              (error, updateResults: ResultSetHeader) => {
-                if (error) return reject(error);
-                if (updateResults.affectedRows === 0) {
-                  return reject(new Error('Vote could not be updated.'));
-                }
-                resolve();
-              },
-            );
-          } else {
-            // If not, insert a new vote
-            pool.query(
-              'INSERT INTO Votes (AnswerID, UserID, VoteType) VALUES (?, ?, ?)',
-              [answerId, userId, voteValue],
-              (error, insertResults: ResultSetHeader) => {
-                if (error) return reject(error);
-                resolve();
-              },
-            );
-          }
-        },
+  
+          pool.query(
+            'UPDATE Answers SET score = (SELECT SUM(CASE WHEN voteType = 1 THEN 1 ELSE -1 END) FROM Votes WHERE answerId = ?) WHERE answerId = ?',
+            [answerId, answerId],
+            (error, results: ResultSetHeader) => {
+              if (error) {
+                return reject(error);
+              }
+              if (results.affectedRows === 0) {
+                return reject(new Error('No answer score was updated.'));
+              }
+              resolve();
+            }
+          );
+        }
       );
     });
   }
