@@ -16,7 +16,7 @@ I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørs
 ---
 
 
-## Følgende krav og betingelser gjelder for prosjektet: 
+## Krav og betingelser for prosjektet: 
 
 - Det skal være mulig å hente ut, opprette, endre og slette spørsmål.
 - Det skal være mulig å søke etter spørsmål.
@@ -62,6 +62,21 @@ cd server
 npm test (får dobbelsjekke dette når koden er helt på plass:))  
 ```
 
+---
+## Teknologier og verktøy  
+### Klientsiden  
+-React  
+-React Router  
+-Axios for nettverksforespørsler  
+-Enzyme for testing  
+
+### Serversiden  
+-Express  
+-MySQL for databasen  
+-Axios for nettverksforespørsler  
+-Babel for å transpilere TypeScript-kode  
+
+---
 ## Medvirkende
 <a href="https://github.com/ValentinRStoyanov">
   <img src="https://github.com/ValentinRStoyanov.png" alt="ValentinRStoyanov's GitHub Profile" height="200">
@@ -79,3 +94,11 @@ npm test (får dobbelsjekke dette når koden er helt på plass:))
   <img src="https://github.com/Alimontan.png" alt="Alimontan's GitHub Profile" height="200">
 </a>
 
+## Lisens
+
+Dette prosjekltet har for øyeblikket ingen lisens. Alle rettigheter er forbeholdt.  
+
+Dette betyr at du for øyeblikket ikke har tillatelse til å bruke, kopiere, modifisere eller distribuere koden.
+Hvis du er interessert i å bidra til prosjektet eller bruke koden på noen måte, vennligst kontakt prosjekteierne for å diskutere lisensiering.  
+
+Vi vurderer muligheten for å legge til en lisens i fremtiden. Takk for din forståelse.
