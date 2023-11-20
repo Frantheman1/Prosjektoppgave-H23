@@ -1,23 +1,22 @@
 # Prosjektoppgave-H23
 
-I denne prosjektoppgaven skal vi lage en Q&A platform. Prosjektoppgaven er en del av webtenologifaget. I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
+I denne prosjektoppgaven skal vi lage en Q&A plattform. Prosjektoppgaven er en del vår bachelor i Informasjonsbehandling ved NTNU, i faget INFT2002 Webutvikling. 
+I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
 
 <p>
 <img src="client/public/images/github2.jpeg" alt="QnA" width=500px />
 </p>
 
-- “YouKnow” 
+- “YouKnow” (Bruker vi egt navnet??)  
 
-- NTNU, Webteknologi 
+- NTNU, Webutvikling  
 
-- Valentin, Kine, Fran og Ali
-
-- QNA
+- Q&A  
 
 ---
 
 
-## Følgende krav og betingelser gjelder for prosjektet: 
+## Krav og betingelser for prosjektet: 
 
 - Det skal være mulig å hente ut, opprette, endre og slette spørsmål.
 - Det skal være mulig å søke etter spørsmål.
@@ -35,4 +34,71 @@ I denne prosjektoppgaven skal vi lage en Q&A platform. Prosjektoppgaven er en de
 - Listen med tagger må kunne filtreres på navn og sorteres etter popularitet.
 --- 
 
+## Installasjon
+Før vi kan kjøre prosjektet, må vi installere noen avhengigheter. Dette gjøres ved at du kjører følgende kommandoer i terminalen:  
+```
+cd server  
+npm install  
 
+cd ../client  
+npm install  
+```
+---
+
+## Oppstart
+I dette prosjektet kan man kjøre selve programmet for å sjekke ut nettsiden, eller så kan man kjøre noen tester. På samme måte som installasjonen, må du skrive kommandoene under i terminalen:  
+
+### Kjøre programmet:  
+```
+cd server  
+npm start  
+
+cd ../client  
+npm start  
+```
+### Kjøre tester:  
+```
+cd server  
+npm test (får dobbelsjekke dette når koden er helt på plass:))  
+```
+
+---
+## Teknologier og verktøy  
+### Klientsiden  
+-React  
+-React Router  
+-Axios for nettverksforespørsler  
+-Enzyme for testing  
+
+### Serversiden  
+-Express  
+-MySQL for databasen  
+-Axios for nettverksforespørsler  
+-Babel for å transpilere TypeScript-kode  
+
+---
+## Medvirkende
+<a href="https://github.com/ValentinRStoyanov">
+  <img src="https://github.com/ValentinRStoyanov.png" alt="ValentinRStoyanov's GitHub Profile" height="200">
+</a>
+
+<a href="https://github.com/Kineaw">
+  <img src="https://github.com/Kineaw.png" alt="Kineaw's GitHub Profile" height="200">
+</a>
+
+<a href="https://github.com/Frantheman1">
+  <img src="https://github.com/Frantheman1.png" alt="Frantheman1's GitHub Profile" height="200">
+</a>
+
+<a href="https://github.com/Alimontan">
+  <img src="https://github.com/Alimontan.png" alt="Alimontan's GitHub Profile" height="200">
+</a>
+
+## Lisens
+
+Dette prosjekltet har for øyeblikket ingen lisens. Alle rettigheter er forbeholdt.  
+
+Dette betyr at du for øyeblikket ikke har tillatelse til å bruke, kopiere, modifisere eller distribuere koden.
+Hvis du er interessert i å bidra til prosjektet eller bruke koden på noen måte, vennligst kontakt prosjekteierne for å diskutere lisensiering.  
+
+Vi vurderer muligheten for å legge til en lisens i fremtiden. Takk for din forståelse.
