@@ -1,6 +1,6 @@
 # Prosjektoppgave-H23
 
-I denne prosjektoppgaven skal vi lage en Q&A plattform. Prosjektoppgaven er en del vår bachelor i Informasjonsbehandling ved NTNU, i faget INFT2002 Webutvikling. 
+I denne prosjektoppgaven skal vi lage en Q&A plattform. Prosjektoppgaven er en del vår bachelor i Informasjonsbehandling ved NTNU, i faget INFT2002 Webutvikling.  
 I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
 
 <p>
@@ -46,7 +46,7 @@ npm install
 ---
 
 ## Oppstart
-I dette prosjektet kan man kjøre selve programmet for å sjekke ut nettsiden, eller så kan man kjøre noen tester. På samme måte som installasjonen, må du skrive kommandoene under i terminalen:  
+I dette prosjektet kan man kjøre selve programmet for å sjekke ut nettsiden, eller så kan man kjøre noen tester. På samme måte som installasjonen, må du skrive kommandoene under i din terminal:  
 
 ### Kjøre programmet:  
 ```
@@ -59,9 +59,18 @@ npm start
 ### Kjøre tester:  
 ```
 cd server  
-npm test (får dobbelsjekke dette når koden er helt på plass:))  
+npm test (får dobbelsjekke dette når koden er helt på plass)  
 ```
+### Sette opp config.ts  
 
+Følgende miljøvariabler må være satt for å konfigurere tilkoblingen:
+
+```
+process.env.MYSQL_HOST:'mysql.host.no' //Verten for MySQL-serveren.
+process.env.MYSQL_USER:'' //Brukernavnet for databasetilkoblingen.
+process.env.MYSQL_PASSWORD: //Passordet for databasetilkoblingen.
+process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
+```
 ---
 ## Teknologier og verktøy  
 ### Klientsiden  
@@ -96,7 +105,7 @@ npm test (får dobbelsjekke dette når koden er helt på plass:))
 
 ## Lisens
 
-Dette prosjekltet har for øyeblikket ingen lisens. Alle rettigheter er forbeholdt.  
+Dette prosjektet har for øyeblikket ingen lisens. Alle rettigheter er forbeholdt.  
 
 Dette betyr at du for øyeblikket ikke har tillatelse til å bruke, kopiere, modifisere eller distribuere koden.
 Hvis du er interessert i å bidra til prosjektet eller bruke koden på noen måte, vennligst kontakt prosjekteierne for å diskutere lisensiering.  
