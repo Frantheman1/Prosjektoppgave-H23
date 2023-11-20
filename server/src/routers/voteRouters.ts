@@ -1,3 +1,8 @@
+// voteRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import express from 'express';
 import voteService from '../services/votes-Services';
 

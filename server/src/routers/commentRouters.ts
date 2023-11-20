@@ -1,3 +1,9 @@
+// commentRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
+
 import express from 'express';
 import commentService from '../services/comments-Services';
 

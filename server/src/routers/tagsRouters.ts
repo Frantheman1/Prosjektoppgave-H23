@@ -1,11 +1,14 @@
+// tagsRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import express from 'express';
 import tagService from '../services/tags-Services';
 
 const routerTags = express.Router();
 
-/**
- * Get all tags
- */
+// Get all tags
 routerTags.get('/tags', (_request,response) => {
  tagService
   .getAllTags()
@@ -13,9 +16,7 @@ routerTags.get('/tags', (_request,response) => {
   .catch((error) => response.status(500).send(error));
 });
 
-/**
- * Get tags for a specific question
- */
+// Get tags for a specific question
 routerTags.get('/tags/question/:questionId', (request, response) => {
  tagService
   .getTagsForQuestion(Number(request.params.questionId))
@@ -23,10 +24,8 @@ routerTags.get('/tags/question/:questionId', (request, response) => {
   .catch((error) => response.status(500).send(error))
 })
 
-/**
- * Adds a tag to a question
- */
 
+//Adds a tag to a question
 routerTags.post('/tags/question', (request,response) => {
  const {tagId, questionId} = request.body;
 
@@ -41,9 +40,8 @@ routerTags.post('/tags/question', (request,response) => {
  }
 });
 
-/**
- * Get all tags with question count
- */
+
+//Get all tags with question count
 routerTags.get('/tags/count', (_request, response) => {
   tagService
     .getAllTagsWithQuestionCount()

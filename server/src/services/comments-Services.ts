@@ -1,3 +1,9 @@
+// comments-Services.ts
+//
+// Author: Valentin Stoyanov
+// Co-author: Kine Alte Weiseth
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -12,6 +18,7 @@ export type Comment = {
 };
 
 class CommentService {
+
   /**
    * Get all comments
    */
@@ -56,7 +63,7 @@ class CommentService {
     content: string,
   )  {
     return new Promise<number>((resolve, reject) => {
-      console.log("sadasd", userId, questionId, content, answerId)
+      // Chooses between answerId of questionId
       const fields = questionId ? 'userId, questionId, content' : 'userId, answerId, content';
       const values = questionId ? [userId, questionId, content] : [userId, answerId, content];
       pool.query(

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
-import { Alert, Card, Row, Column, Form, Button } from './widgets';
+import { Alert, Card, Row, Column, Form, Button, ShareComponent } from './widgets';
 import { NavLink } from 'react-router-dom';
 import questionService, { Question } from './services/questionsServices';
 import tagServices, { Tag } from './services/tagsServices'
@@ -11,10 +11,10 @@ import commentService, { Comment } from './services/commentsSevrvices';
 import { createHashHistory } from 'history';
 
 const history = createHashHistory();
+
 /**
  * Renders Questions list.
  */
-
 export class QuestionsList extends Component {
   questions: Question[] = []
   tags:{ [key: number]: Tag[] }  = {}
@@ -24,34 +24,49 @@ export class QuestionsList extends Component {
   render() {
     return (
       <>
-       <Button.Success onClick={() => history.push('/questions/new')}>New question</Button.Success>
-       <Button.Success onClick={() => this.sortByProperty('viewCount')}>Sort by View Count</Button.Success>
-       <Button.Success onClick={() => this.sortByProperty('answerCount')}>Sort by Answer Count</Button.Success>
-       <Button.Success onClick={() => this.sortByProperty('createdAt')}>Sort by Date</Button.Success>
-       <Button.Success onClick={() => this.showUnanswered()}>Show Unanswered Questions</Button.Success>
-        <Card title='Questions'>
-          
+       <Button.Success onClick={() => history.push('/questions/new')}>
+          New question
+       </Button.Success>
+
+       <Button.Success onClick={() => this.sortByProperty('viewCount')}>
+        Sort by View Count
+       </Button.Success>
+
+       <Button.Success onClick={() => this.sortByProperty('answerCount')}>
+        Sort by Answer Count
+       </Button.Success>
+       <Button.Success onClick={() => this.sortByProperty('createdAt')}>
+        Sort by Date
+       </Button.Success>
+       <Button.Success onClick={() => this.showUnanswered()}>
+        Show Unanswered Questions
+       </Button.Success>
+
+       <Card title='Questions'>
           {this.displayedQuestions.map((question) => (
             <Row key={question.questionId}>
               <NavLink  
                 to={'/questions/' + question.questionId} 
-                onClick={() => this.updateView(question.questionId)}
-                >
+                onClick={() => this.updateView(question.questionId)}>
                 <Column>
                   <Row>{question.title}-</Row>
                   <Row>{question.content}</Row>
                   <Row>
-                  {this.tags[question.questionId]?.map((tag, index) => (
-                    <Row key={index}>{tag.name}</Row>
-                  ))}
-                    </Row>
+                    {this.tags[question.questionId]?.map((tag, index) => (
+                      <Row key={index}>{tag.name}</Row>
+                    ))}
+                  </Row>
                  </Column>
-              </NavLink>
-              
+              </NavLink> 
+              <Row>
+                <ShareComponent url={`http://localhost:3000/#/questions/${question.questionId}`} title={question.title} />
+              </Row>             
             </Row>
           ))}
 
         </Card>
+
+        
       </>
     )
   }
@@ -73,7 +88,6 @@ export class QuestionsList extends Component {
         const countB = this.answerCounts[b.questionId] || 0;
         return countB - countA;
       }
-
       if (typeof a[propertyName] === 'number' && typeof b[propertyName] === 'number') {
         return (b[propertyName] as number)  - (a[propertyName] as number) ;
       }

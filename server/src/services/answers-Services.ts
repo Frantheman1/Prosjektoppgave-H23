@@ -1,3 +1,9 @@
+// answer-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -17,7 +23,6 @@ class AnswerService {
   /**
    * Get answer with id.
    */
-
   getAnswer(id: number) {
     return new Promise<Answer>((resolve, reject) => {
       pool.query(
@@ -103,7 +108,6 @@ class AnswerService {
    * Toggles the accepted state of an answer.
    */
   markAnswerAsAccepted(answerId: number, isAccepted: boolean) {
-    console.log("yo2:" ,answerId, isAccepted)
     return new Promise<void>((resolve, reject) => {
       pool.query(
         'UPDATE Answers SET isAccepted = ? WHERE answerId = ?',

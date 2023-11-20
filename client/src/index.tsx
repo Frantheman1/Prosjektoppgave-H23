@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Component } from 'react-simplified';
 import { NavBar, Card, Form, Alert,Row} from './widgets';
-import { HashRouter, Route } from 'react-router-dom';
+import { HashRouter, NavLink, Route } from 'react-router-dom';
 import { QuestionsList, QuestionsNew, QuestionDetails, QuestionEdit } from './questionsComponent';
 import { AnswerEdit, AnswerNew } from './answerComponent';
 import { FavoritesList } from './favoriteComponent';
@@ -11,28 +11,16 @@ import { TagsList } from './tagsComponent';
 import questionService, {Question}  from './services/questionsServices';
 
 
-
-interface MenuState {
-  questions: Question[];
-  searchValue: string;
-}
-
 class Menu extends Component {
-  state: MenuState = {
-    questions: [],
-    searchValue: '',
-  };
+  state: {
+    questions: Question[];
+    searchValue: string;
+  } = {questions: [],
+       searchValue: ''};
+  filteredQuestions: Question[] = [];
 
   render() {
-    const { questions, searchValue } = this.state;
-    let filteredQuestions: Question[] = [];
-
-    if (searchValue) {
-      filteredQuestions = questions.filter(question =>
-       question.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        question.content.toLowerCase().includes(searchValue.toLowerCase())
-      );
-    }
+    
     return (
       <NavBar brand="images/NewLogo4.png" brandAlt='Logo of the Site'>
         <Form.Input
@@ -40,25 +28,37 @@ class Menu extends Component {
           value={this.state.searchValue}
           onChange={(e) => {
             this.setState({ searchValue: e.target.value });
-            console.log(filteredQuestions)
+            this.search()
           }}
           isSearchBar={true}
           placeholder="Search"
         />
+        {this.filteredQuestions.length > 0 && (
+          <Row>
+            {this.filteredQuestions.map((question, index) => (
+              <NavLink to={'/questions/' + question.questionId} >{question.title}</NavLink>
+            ))}
+          </Row>
+        )}
         <NavBar.Link to="/questions">Questions</NavBar.Link>
         <NavBar.Link to="/tags">Tags</NavBar.Link>
         <NavBar.Link to="/users">Users</NavBar.Link>
         <NavBar.Link to="/favorites">Favorites</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
-        {filteredQuestions.length > 0 && (
-          <Row>
-            {filteredQuestions.map((question, index) => (
-              <Row key={index}>{question.title}</Row>
-            ))}
-          </Row>
-        )}
+        
       </NavBar>
     );
+  }
+
+  search() {
+    const { questions, searchValue } = this.state;
+    
+    if (searchValue) {
+      this.filteredQuestions = questions.filter(question =>
+       question.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        question.content.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    }
   }
 
   mounted() {

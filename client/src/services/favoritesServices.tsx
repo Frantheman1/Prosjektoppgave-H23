@@ -1,3 +1,8 @@
+// favoritesServices.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import axios from 'axios';
 import { Answer } from './answersServices';
 

@@ -1,3 +1,9 @@
+// favoriteRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
+
 import express from 'express';
 import favoriteService from '../services/favorites-Services';
 

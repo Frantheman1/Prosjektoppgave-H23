@@ -1,3 +1,8 @@
+// questionsServices.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v1';
@@ -65,6 +70,7 @@ class QuestionService {
       .put('/updateViewCount', { questionId })
       .then(response => response.data);
   }
+
 }
 
 const questionService = new QuestionService();

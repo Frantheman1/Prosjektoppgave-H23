@@ -1,8 +1,14 @@
+// questionRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import express, { response } from 'express';
 import questionService from '../services/questions-Services';
 
 const routerQuestions = express.Router();
 
+// Get all questions in Questions table
 routerQuestions.get('/questions', (_request, response) => {
   questionService
     .getAll()
@@ -10,6 +16,7 @@ routerQuestions.get('/questions', (_request, response) => {
     .catch((error) => response.status(500).send(error))
 })
 
+// Get a specific question by its Id
 routerQuestions.get('/questions/:id', (request, response) => {
   const id = Number(request.params.id);
   questionService
@@ -18,7 +25,8 @@ routerQuestions.get('/questions/:id', (request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
-// Example request body: { title: "Ny oppgave", content: 'random tekst' ,userId: 5}
+// Post a new question to the database
+// Example request body: { title: "New question", content: 'random text' , userId: 5}
 routerQuestions.post('/questions', (request, response) => {
   const { title, content, userId } = request.body;
   if(title && content) {
@@ -41,6 +49,8 @@ routerQuestions.post('/questions', (request, response) => {
   }
 });
 
+
+// Update a specific question by its Id
 routerQuestions.put('/questions/:id', (request, response) => {
   const { title, content } = request.body;
   const id = Number(request.params.id);
@@ -54,6 +64,7 @@ routerQuestions.put('/questions/:id', (request, response) => {
   }
 });
 
+// Update ViewCount on question view
 routerQuestions.put('/updateViewCount', (request, response) => {
   const { questionId } = request.body;
 
@@ -67,11 +78,14 @@ routerQuestions.put('/updateViewCount', (request, response) => {
     .catch((error) => response.status(500).send(error));
 });
 
+
+// Delete a specific question by its Id
 routerQuestions.delete('/questions/:id', (request, response) => {
   questionService
     .delete(Number(request.params.id))
     .then(() => response.send())
     .catch((error) => response.status(500).send(error));
 });
+
 
 export default routerQuestions;

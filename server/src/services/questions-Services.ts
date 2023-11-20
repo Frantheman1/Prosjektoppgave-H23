@@ -1,3 +1,8 @@
+// questions-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -17,7 +22,6 @@ class QuestionService {
   /**
    * Get question with given id.
    */
-
   get(id: number) {
     return new Promise<Question>((resolve, reject) => {
       pool.query(
@@ -35,7 +39,6 @@ class QuestionService {
   /**
    * Gets all questions
    */
-
   getAll() {
     return new Promise<Question[]>((resolve, reject) => {
       pool.query ('SELECT * FROM Questions' , (error, results: RowDataPacket[]) => {

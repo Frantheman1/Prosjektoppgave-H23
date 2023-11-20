@@ -1,3 +1,9 @@
+// answerRouters.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
+
 import express from 'express';
 import answerService from '../services/answers-Services';
 
@@ -68,7 +74,7 @@ routerAnswers.put('/answers/:answerId/accept', (request, response) => {
   }
 });
 
-
+// Returns the count of answers per question
 routerAnswers.get('/answerCounts', (_request, response) => {
  answerService.getAnswerCounts()
    .then(counts => response.send(counts))

@@ -1,3 +1,8 @@
+// tagsServices.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v1';
@@ -15,12 +20,6 @@ export type TagWithCount = {
 
 class TagsServices {
 
- /**
-   * Get all tags.
-   */
- getAllTags() {
-  return axios.get<Tag[]>('/tags').then(response => response.data);
-}
 
 /**
  * Get tags for a specific question.
@@ -37,6 +36,9 @@ addTagToQuestion(questionId: number, tagId: number) {
    .then(response => response.data);
 }
 
+/**
+ * Gets all tags with the question count for set tags
+ */
 getAllTagsWithQuestionCount() {
   return axios.get<TagWithCount[]>('/tags/count').then(response => response.data);
 }

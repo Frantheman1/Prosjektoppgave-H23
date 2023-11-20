@@ -1,3 +1,8 @@
+// tags-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 

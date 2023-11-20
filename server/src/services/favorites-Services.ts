@@ -1,3 +1,8 @@
+// favorites-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { Answer } from './answers-Services';
@@ -21,7 +26,7 @@ class FavoriteService {
   }
 
   /**
-   * Legg til et svar som favoritt for en gitt bruker.
+   * Add a new answer to the Favorites
    */
   addFavorite(userId: number, answerId: number) {
     return new Promise<void>((resolve, reject) => {
@@ -30,7 +35,7 @@ class FavoriteService {
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
-            // Håndterer duplikat nøkkel-feil, som betyr at favoritten allerede eksisterer
+            // Handles duplicates
             if (error.code === 'ER_DUP_ENTRY') {
               return reject(new Error('Answer is already marked as favorite.'));
             }
@@ -43,7 +48,7 @@ class FavoriteService {
   }
 
   /**
-   * Fjern et svar fra favorittlisten til en gitt bruker.
+   * Removes the a answer from the favorite
    */
   removeFavorite(userId: number, answerId: number) {
     return new Promise<void>((resolve, reject) => {

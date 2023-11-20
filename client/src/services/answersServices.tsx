@@ -1,3 +1,8 @@
+// answersServices.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/api/v1';
@@ -13,6 +18,7 @@ export type Answer = {
  score: number;
 };
 
+// Type used for AnswerCount
 export type AnswerCountMap = {
  [key: number]: number;
 };

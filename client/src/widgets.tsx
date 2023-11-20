@@ -2,10 +2,50 @@ import * as React from 'react';
 import { ReactNode, ChangeEvent } from 'react';
 import { Component } from 'react-simplified';
 import { NavLink } from 'react-router-dom';
-import "../public/styles/style.css"
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  EmailIcon
+} from 'react-share';
 
 
+/**
+ * Renders social media share buttons using react-share library.
+ * 
+ * This component provides a set of buttons for sharing content on different social media platforms.
+ * It utilizes the react-share library to render buttons for Facebook, Twitter, and Email sharing.
+ * 
+ * Properties:
+ * - `url`: String - The URL of the content to be shared.
+ * - `title`: String - The title of the content to be shared, used in social media posts.
+ */
 
+export class ShareComponent extends Component<{ url: string; title: string }> {
+  render() {
+    const { url, title } = this.props; // Assuming url and title are passed as props
+
+    return (
+      <div className="share-buttons">
+        <FacebookShareButton url={url}>
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
+
+        <TwitterShareButton url={url} title={title} hashtags={["exampleHashtag"]}>
+          <TwitterIcon size={32} round />
+        </TwitterShareButton>
+
+        <EmailShareButton url={url} subject={title} body="Check out this link!">
+          <EmailIcon size={32} round />
+        </EmailShareButton>
+
+        {/* Add more buttons as needed */}
+      </div>
+    );
+  }
+}
 /**
  * Renders an information card using Bootstrap classes.
  *
@@ -223,6 +263,7 @@ class FormInput extends Component<{
   type: string;
   value: string | number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   isSearchBar?: boolean;
   [prop: string]: any;
   
