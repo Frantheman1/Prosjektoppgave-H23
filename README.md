@@ -105,9 +105,4 @@ process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
 
 ## Lisens
 
-Dette prosjektet har for øyeblikket ingen lisens. Alle rettigheter er forbeholdt.  
-
-Dette betyr at du for øyeblikket ikke har tillatelse til å bruke, kopiere, modifisere eller distribuere koden.
-Hvis du er interessert i å bidra til prosjektet eller bruke koden på noen måte, vennligst kontakt prosjekteierne for å diskutere lisensiering.  
-
-Vi vurderer muligheten for å legge til en lisens i fremtiden. Takk for din forståelse.
+Dette prosjektet er lisensiert under MIT license - se [LICENSE](https://github.com/Frantheman1/Prosjektoppgave-H23/blob/dev/LICENSE) for detaljer på dette. // TO-DO: Endre sti om vi pusher til main

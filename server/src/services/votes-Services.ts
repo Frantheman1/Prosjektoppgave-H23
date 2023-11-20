@@ -6,6 +6,13 @@
 import pool from '../mysql-pool';
 import type { ResultSetHeader } from 'mysql2';
 
+export type Vote = {
+  voteId: number;
+  answerId: number;
+  userId: number;
+  voteType:boolean;
+}
+
 class VoteService {
   /**
    * Cast a vote on an answer by updating score.

@@ -8,6 +8,12 @@ import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { Answer } from './answers-Services';
 
 
+export type Favorite = {
+  favoriteId: number;
+  answerId: number;
+  userId: number;
+}
+
 class FavoriteService {
   /**
    * Get all favorite answers for a given user.

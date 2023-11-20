@@ -1,6 +1,7 @@
 // commentsServices.ts
 //
 // Author: Valentin Stoyanov
+// Co-author: Kine Alte Weiseth
 // Last updated: 20/11/2023 
 
 import axios from 'axios';

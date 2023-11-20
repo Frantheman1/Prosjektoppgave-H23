@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react-simplified';
-import { Alert, Card, Row, Column, Form, Button, ShareComponent } from './widgets';
+import { Alert, Card, Row, Column, Form, Button } from './widgets';
 import { NavLink } from 'react-router-dom';
 import questionService, { Question } from './services/questionsServices';
 import tagServices, { Tag } from './services/tagsServices'
@@ -58,9 +58,6 @@ export class QuestionsList extends Component {
                   </Row>
                  </Column>
               </NavLink> 
-              <Row>
-                <ShareComponent url={`http://localhost:3000/#/questions/${question.questionId}`} title={question.title} />
-              </Row>             
             </Row>
           ))}
 
@@ -232,7 +229,6 @@ export class QuestionDetails extends Component<
           })}
 
         </Card>
-
 
         <Card title='Answers'>
           <Button.Success onClick={() => this.sortByProperty('score')}>Sort by Answer Count</Button.Success>

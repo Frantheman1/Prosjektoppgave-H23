@@ -44,8 +44,8 @@ class TagService {
   /**
    * Add a tag to a question.
    */
-  addTagToQuestion(tagId: number, questionId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  addTagToQuestion(tagId: number, questionId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
         'INSERT INTO Question_Tags (questionId, tagId) VALUES (?, ?)',
         [questionId, tagId],
@@ -55,6 +55,19 @@ class TagService {
         },
       );
     });
+  }
+
+  createTag(name: string) {
+    return new Promise<number>((resolve,reject) => {
+      pool.query(
+        'INSERT INTO Tags (name) VALUES (?)',
+        [name],
+        (error,results: ResultSetHeader) => {
+          if (error) return reject(error);
+          resolve(results.insertId)
+        }
+      )
+    })
   }
 
   /**

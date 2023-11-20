@@ -11,38 +11,21 @@ export type User = {
 
 class UserService {
   /**
-   * Find a user by username.
-   */
-  findUserByUsername(username: string) {
-    return new Promise<User | null>((resolve, reject) => {
-      pool.query(
-        'SELECT * FROM Users WHERE username = ?',
-        [username],
-        (error, results: RowDataPacket[]) => {
-          if (error) reject(error);
-          else resolve(results.length > 0 ? results[0] as User : null);
-        }
-      );
-    });
-  }
-
-  /**
-   * Register a new user.
-   */
-  registerUser(username: string, hashedPassword: string) {
+   * Create a User for testing purposes only
+   */ 
+  createUser(username: string, email: string, passwordHash: string)  {
     return new Promise<number>((resolve, reject) => {
       pool.query(
-        'INSERT INTO Users (username, password) VALUES (?, ?)',
-        [username, hashedPassword],
+        'INSERT INTO Users (username, email, passwordHash) VALUES (?, ?, ?)',
+        [username, email, passwordHash],
         (error, results: ResultSetHeader) => {
-          if (error) reject(error);
-          else resolve(results.insertId);
-        }
+          if (error) return reject(error);
+          resolve(results.insertId);
+        },
       );
     });
   }
-
-  // ... Add other user-related methods as needed
+  
 }
 
 const userService = new UserService();

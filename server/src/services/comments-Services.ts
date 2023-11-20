@@ -10,8 +10,8 @@ import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 export type Comment = {
   commentId: number;
   userId: number;
-  questionId?: number;
-  answerId?: number;
+  questionId: number | null;
+  answerId: number | null;
   content: string;
   createdAt: Date;
   modifiedAt: Date;
