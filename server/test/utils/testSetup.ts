@@ -123,8 +123,6 @@ export class TestDatabaseManager  {
 
  static async setupDatabase() {
   await pool.query('SET FOREIGN_KEY_CHECKS=0');
-
-  // Truncate all tables
   await pool.query('TRUNCATE TABLE Favorites');
   await pool.query('TRUNCATE TABLE Votes');
   await pool.query('TRUNCATE TABLE Comments');

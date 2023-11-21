@@ -127,7 +127,6 @@ beforeEach(async () => {
     await commentService.addComment(testComments[1].userId, testComments[1].questionId, testComments[1].answerId, testComments[1].content); // Create testComment[1] after testComment[0] has been created
     await commentService.addComment(testComments[2].userId, testComments[2].questionId, testComments[2].answerId, testComments[2].content); // Create testComment[2] after testComment[1] has been created
     await commentService.addComment(testComments[3].userId, testComments[3].questionId, testComments[3].answerId, testComments[3].content); // Create testComment[3] after testComment[2] has been created
-    // No need to call done() in an async test
   } catch (error) {
     throw error;
   }
@@ -138,12 +137,10 @@ afterAll(async () => {
   if (webServer) {
     await new Promise((resolve) => webServer.close(resolve));
   }
-});
 
-// Stop web server and close connection to MySQL server
-afterAll((done) => {
-  if (!webServer) return done(new Error());
-  webServer.close(() => pool.end(() => done()));
+  if(pool){
+    await pool.end();
+  }
 });
 
 describe('Fetch comments (GET)', () => {
