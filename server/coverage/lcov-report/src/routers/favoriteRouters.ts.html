@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">85% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/20</span>
+                <span class='fraction'>17/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>6/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/20</span>
+                <span class='fraction'>17/20</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -118,38 +118,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,35 +167,35 @@ import favoriteService from '../services/favorites-Services';
 const routerFavorites = express.Router();
 &nbsp;
 // Get all favorite answers for a given user
-routerFavorites.get('/favorites/:userId', <span class="fstat-no" title="function not covered" >(r</span>equest, response) =&gt; {
- const userId = <span class="cstat-no" title="statement not covered" >Number(request.params.userId);</span>
+routerFavorites.get('/favorites/:userId', (request, response) =&gt; {
+ const userId = Number(request.params.userId);
 &nbsp;
-<span class="cstat-no" title="statement not covered" > favoriteService.getFavorites(userId)</span>
-   .then(<span class="fstat-no" title="function not covered" >fa</span>vorites =&gt; <span class="cstat-no" title="statement not covered" >favorites.length ? response.send(favorites) : response.status(404).send('No favorites found for this user'))</span>
+ favoriteService.getFavorites(userId)
+   .then(favorites =&gt; favorites.length ? response.send(favorites) : response.status(404).send('No favorites found for this user'))
    .catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >response.status(500).send(error))</span>;
 });
 &nbsp;
 // Add a favorite answer for a user
-routerFavorites.post('/favorites', <span class="fstat-no" title="function not covered" >(r</span>equest, response) =&gt; {
- const { userId, answerId } = <span class="cstat-no" title="statement not covered" >request.body;</span>
-<span class="cstat-no" title="statement not covered" > if (userId &amp;&amp; answerId) {</span>
-<span class="cstat-no" title="statement not covered" >   favoriteService.addFavorite(userId, answerId)</span>
-     .then(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >response.send('Favorite added successfully'))</span>
+routerFavorites.post('/favorites', (request, response) =&gt; {
+ const { userId, answerId } = request.body;
+ if (userId &amp;&amp; answerId) {
+   favoriteService.addFavorite(userId, answerId)
+     .then(() =&gt; response.send('Favorite added successfully'))
      .catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >response.status(500).send(error.message))</span>;
  } else {
-<span class="cstat-no" title="statement not covered" >   response.status(400).send('Missing required fields: userId or answerId');</span>
+   response.status(400).send('Missing required fields: userId or answerId');
  }
 });
 &nbsp;
 // Remove a favorite answer for a user
-routerFavorites.delete('/favorites', <span class="fstat-no" title="function not covered" >(r</span>equest, response) =&gt; {
- const { userId, answerId } = <span class="cstat-no" title="statement not covered" >request.body;</span>
-<span class="cstat-no" title="statement not covered" > if (userId &amp;&amp; answerId) {</span>
-<span class="cstat-no" title="statement not covered" >   favoriteService.removeFavorite(userId, answerId)</span>
-     .then(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >response.send('Favorite removed successfully'))</span>
+routerFavorites.delete('/favorites', (request, response) =&gt; {
+ const { userId, answerId } = request.body;
+ if (userId &amp;&amp; answerId) {
+   favoriteService.removeFavorite(userId, answerId)
+     .then(() =&gt; response.send('Favorite removed successfully'))
      .catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >response.status(500).send(error.message))</span>;
  } else {
-<span class="cstat-no" title="statement not covered" >   response.status(400).send('Missing required fields: userId or answerId');</span>
+   response.status(400).send('Missing required fields: userId or answerId');
  }
 });
 &nbsp;
@@ -208,7 +208,7 @@ export default routerFavorites;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-20T21:40:43.396Z
+                at 2023-11-21T19:16:01.835Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

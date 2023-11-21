@@ -8,14 +8,6 @@ import tagService from '../services/tags-Services';
 
 const routerTags = express.Router();
 
-// Get all tags
-routerTags.get('/tags', (_request,response) => {
- tagService
-  .getAllTags()
-  .then((tags) => response.send(tags))
-  .catch((error) => response.status(500).send(error));
-});
-
 // Get tags for a specific question
 routerTags.get('/tags/question/:questionId', (request, response) => {
  tagService

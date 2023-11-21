@@ -97,10 +97,10 @@ class CommentService {
   /**
    * Delete a comment.
    */
-  deleteComment(commentId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  deleteComment(commentId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM Comments WHERE commentId = ?'
+        'DELETE FROM Comments WHERE commentId  = ?'
         [commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
