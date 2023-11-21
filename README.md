@@ -1,3 +1,9 @@
+<!-- 
+title: README.md
+author: Kine Weiseth
+date: 22.11.2023
+ -->
+
 # Prosjektoppgave-H23
 
 I denne prosjektoppgaven skal vi lage en Q&A plattform. Prosjektoppgaven er en del vår bachelor i Informasjonsbehandling ved NTNU, i faget INFT2002 Webutvikling.  
@@ -38,7 +44,7 @@ I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørs
 
 ## Installasjon
 Før vi kan kjøre prosjektet, må vi installere noen avhengigheter. Dette gjøres ved at du kjører følgende kommandoer i terminalen:  
-```
+```sh
 cd server  
 npm install  
 
@@ -50,8 +56,8 @@ npm install
 ## Oppstart
 I dette prosjektet kan man kjøre selve programmet for å sjekke ut nettsiden, eller så kan man kjøre noen tester. På samme måte som installasjonen, må du skrive kommandoene under i din terminal:  
 
-### Kjøre programmet:  
-```
+### Start programmet:  
+```sh
 cd server  
 npm start  
 
@@ -59,20 +65,39 @@ cd ../client
 npm start  
 ```
 ### Kjøre tester:  
-```
+Du kan her kjøre tester på server
+```sh
 cd server  
-npm test (får dobbelsjekke dette når koden er helt på plass)  
+npm test
+```
+Og du kan kjøre tester på klient
+```sh
+cd client  
+npm test
 ```
 ### Sette opp config.ts  
 
-Følgende miljøvariabler må være satt for å konfigurere tilkoblingen:
+Du må få satt opp to konfigurasjonsfiler for å opprette en database forbindelse. Her er et eksempel på hvordan de kan se ut:  
 
-```
-process.env.MYSQL_HOST:'mysql.host.no' //Verten for MySQL-serveren.
-process.env.MYSQL_USER:'' //Brukernavnet for databasetilkoblingen.
-process.env.MYSQL_PASSWORD: //Passordet for databasetilkoblingen.
-process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
-```
+`server/config.ts`:
+```ts
+process.env.MYSQL_HOST = 'mysql.stud.ntnu.no';
+process.env.MYSQL_USER = 'username_todo';
+process.env.MYSQL_PASSWORD = 'username_todo';
+process.env.MYSQL_DATABASE = 'username_todo_dev';
+```  
+
+`server/test/config.ts`:
+```ts
+process.env.MYSQL_HOST = 'mysql.stud.ntnu.no';
+process.env.MYSQL_USER = 'username_todo';
+process.env.MYSQL_PASSWORD = 'username_todo';
+process.env.MYSQL_DATABASE = 'username_todo_test';
+```  
+
+Det er viktig at disse ikke blir lastet opp på git, så disse filene burde legges inn i en gitignore fil.  
+
+
 ---
 ## Teknologier og verktøy  
 ### Klientsiden  
@@ -86,6 +111,7 @@ process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
 -MySQL for databasen  
 -Axios for nettverksforespørsler  
 -Babel for å transpilere TypeScript-kode  
+-Jest for testing  
 
 ---
 
