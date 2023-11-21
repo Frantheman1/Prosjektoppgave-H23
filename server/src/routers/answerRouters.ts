@@ -23,8 +23,12 @@ routerAnswers.get('/answers/:answerId', (request, response) => {
 routerAnswers.get('/answers/question/:questionId', (request, response) => {
   const questionId = Number(request.params.questionId);
 
+  if (isNaN(questionId)) {
+    return response.status(400).send('Invalid question ID format');
+  }
+
   answerService.getAnswersForQuestion(questionId)
-    .then(answers => answers.length ? response.send(answers) : response.status(404).send('No answers found for this question'))
+    .then(answers => answers.length ? response.send(answers) : response.status(404).send('Request failed with status code 404'))
     .catch(error => response.status(500).send(error));
 });
 
@@ -64,14 +68,22 @@ routerAnswers.delete('/answers/:answerId', (request, response) => {
 // Toggle the accepted state of an answer
 routerAnswers.put('/answers/:answerId/accept', (request, response) => {
   const answerId = Number(request.params.answerId);
+ 
   const { isAccepted } = request.body;
   if (typeof isAccepted === 'boolean') {
-    answerService.markAnswerAsAccepted(answerId, isAccepted)
-      .then(() => response.send())
-      .catch(error => response.status(500).send(error));
-  } else {
-    response.status(400).send('Invalid input for toggling accepted state');
-  }
+    answerService.getAnswer(answerId)
+    .then(answer => {
+      if (answer) {
+        return answerService.markAnswerAsAccepted(answerId, isAccepted);
+      } else {
+        response.status(404).send('Answer not found');
+      }
+    })
+    .then(() => response.send())
+    .catch(error => response.status(500).send(error));
+} else {
+  response.status(400).send('Invalid input for toggling accepted state');
+}
 });
 
 // Returns the count of answers per question

@@ -4,7 +4,7 @@
   "description": "A Q&A plattform for people to get answers and ask questions",
   "main": "index.tsx",
   "scripts": {
-    "test": "jest --setupFiles ./test/config.ts",
+    "test": "jest --setupFiles ./test/config.ts --detectOpenHandles",
     "start": "nodemon src/server.ts --exec \"npx babel-node -x .ts --require ./config\""
   },
   "repository": {

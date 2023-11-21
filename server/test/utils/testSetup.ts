@@ -20,8 +20,8 @@ export class TestDatabaseManager {
       userId: 1,
       title: 'testquestion1',
       content: 'testing1',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       viewCount: 1,
     },
     {
@@ -29,8 +29,8 @@ export class TestDatabaseManager {
       userId: 1,
       title: 'testquestion2',
       content: 'testing2',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       viewCount: 10,
     },
     {
@@ -38,8 +38,8 @@ export class TestDatabaseManager {
       userId: 1,
       title: 'testquestion3',
       content: 'testing3',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       viewCount: 25,
     },
     {
@@ -47,8 +47,8 @@ export class TestDatabaseManager {
       userId: 1,
       title: 'testquestion4',
       content: 'testing4',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       viewCount: 4,
     },
     {
@@ -56,8 +56,8 @@ export class TestDatabaseManager {
       userId: 1,
       title: 'testquestion5',
       content: 'testing5',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
       viewCount: 1,
     },
   ];
@@ -68,9 +68,9 @@ export class TestDatabaseManager {
       userId: 1,
       content: 'Some answer',
       isAccepted: false,
-      score: -1,
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      score: 0,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       answerId: 2,
@@ -79,8 +79,8 @@ export class TestDatabaseManager {
       content: 'Some answer2',
       isAccepted: false,
       score: 1,
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       answerId: 3,
@@ -89,8 +89,8 @@ export class TestDatabaseManager {
       content: 'Some answer3',
       isAccepted: false,
       score: 0,
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
   ];
 
@@ -101,8 +101,8 @@ export class TestDatabaseManager {
       questionId: 1,
       answerId: 0,
       content: 'Some question comment1',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       commentId: 2,
@@ -110,8 +110,8 @@ export class TestDatabaseManager {
       questionId: 2,
       answerId: 0,
       content: 'Some question comment2',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       commentId: 3,
@@ -119,8 +119,8 @@ export class TestDatabaseManager {
       questionId: 0,
       answerId: 1,
       content: 'Some answer comment1',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
     {
       commentId: 4,
@@ -128,8 +128,8 @@ export class TestDatabaseManager {
       questionId: 0,
       answerId: 2,
       content: 'Some answer comment2',
-      createdAt: new Date(2023, 11, 14),
-      modifiedAt: new Date(2023, 11, 14),
+      createdAt: new Date(),
+      modifiedAt: new Date(),
     },
   ];
 
@@ -139,6 +139,12 @@ export class TestDatabaseManager {
     { tagId: 3, name: 'testname3' },
     { tagId: 4, name: 'testname4' },
     { tagId: 5, name: 'testname5' },
+  ];
+
+  static testQuestionTags = [
+    { tagId: 1, questionId:1 },
+    { tagId: 2, questionId:1 },
+    { tagId: 3, questionId:2 },
   ];
 
   static testVotes: Vote[] = [
@@ -180,6 +186,10 @@ export class TestDatabaseManager {
         const tag = item as Tag;
         await tagService.createTag(tag.name);
         break;
+      case 'testQuestionTags':
+          const tagq = item;
+          await tagService.addTagToQuestion(tagq.tagId, tagq.questionId);
+          break;
       case 'testFavorites':
         const favorite = item as Favorite;
         await favoriteService.addFavorite(favorite.answerId, favorite.userId);
@@ -198,16 +208,18 @@ export class TestDatabaseManager {
       testTags: TestDatabaseManager.testTags,
       // testVotes: TestDatabaseManager.testVotes,
       testFavorites: TestDatabaseManager.testFavorites,
+      testQuestionTags:TestDatabaseManager.testQuestionTags,
     };
 
-    for (const testData of Object.entries(dataSets)) {
-      let type: string = testData[0] || 'unknown';
-      await Promise.all(
-        testData[1].map(async (item) => {
-          await TestDatabaseManager.processTestData(type, item);
-        }),
-      );
-    }
+
+     for (const testData of Object.entries(dataSets)) {
+       let type: string = testData[0] || 'unknown';
+       await Promise.all(
+         testData[1].map(async (item) => {
+           await TestDatabaseManager.processTestData(type, item);
+         }),
+       );
+     }
   }
 
   static async setupDatabase() {

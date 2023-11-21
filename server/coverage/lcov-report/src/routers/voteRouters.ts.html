@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -98,20 +98,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,18 +127,18 @@ import voteService from '../services/votes-Services';
 &nbsp;
 const routerVotes = express.Router();
 &nbsp;
-routerVotes.post('/votes/:answerId', <span class="fstat-no" title="function not covered" >(r</span>equest, response) =&gt; {
- const answerId = <span class="cstat-no" title="statement not covered" >Number(request.params.answerId);</span>
- const userId = <span class="cstat-no" title="statement not covered" >request.body.userId; </span>
- const voteType = <span class="cstat-no" title="statement not covered" >request.body.voteType; </span>
+routerVotes.post('/votes/:answerId', (request, response) =&gt; {
+ const answerId = Number(request.params.answerId);
+ const userId = request.body.userId; 
+ const voteType = request.body.voteType; 
 &nbsp;
-<span class="cstat-no" title="statement not covered" > if (voteType != 1 &amp;&amp; voteType != 0) {</span>
-<span class="cstat-no" title="statement not covered" >   return response.status(400).send('Invalid userId or voteType');</span>
+ if (voteType != 1 &amp;&amp; voteType != 0) {
+   return response.status(400).send('Invalid userId or voteType');
  }
 &nbsp;
-<span class="cstat-no" title="statement not covered" > voteService.voteOnAnswer(answerId, userId, voteType)</span>
-   .then(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >response.send(`Vote updated for answer ${answerId}`))</span>
-   .catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >response.status(500).send(error.message))</span>;
+ voteService.voteOnAnswer(answerId, userId, voteType)
+   .then(() =&gt; response.send(`Vote updated for answer ${answerId}`))
+   .catch(error =&gt; response.status(500).send(error.message));
 });
 &nbsp;
 export default routerVotes
@@ -151,7 +151,7 @@ export default routerVotes
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-20T21:40:43.396Z
+                at 2023-11-21T19:16:01.835Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

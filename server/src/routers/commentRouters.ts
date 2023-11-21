@@ -69,7 +69,7 @@ routerComments.put('/comments/:commentId', (request, response) => {
 routerComments.delete('/comments/:commentId', (request, response) => {
   const commentId = Number(request.params.commentId);
   commentService.deleteComment(commentId)
-    .then(() => response.send())
+    .then(() => response.status(200).send("Comment deleted"))
     .catch(error => response.status(500).send(error));
 });
 
