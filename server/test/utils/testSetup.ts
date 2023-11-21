@@ -1,7 +1,7 @@
 import axios from 'axios';
 import pool from '../../src/mysql-pool';
-import answerService, { Answer} from '../../src/services/answers-Services';
-import commentService, { Comment }from '../../src/services/comments-Services';
+import answerService, { Answer } from '../../src/services/answers-Services';
+import commentService, { Comment } from '../../src/services/comments-Services';
 import questionService, { Question } from '../../src/services/questions-Services';
 import favoriteService, { Favorite } from '../../src/services/favorites-Services';
 import tagService, { Tag } from '../../src/services/tags-Services';
@@ -9,134 +9,226 @@ import voteServices, { Vote } from '../../src/services/votes-Services';
 import userService, { User } from '../../src/services/users-Services';
 import app from '../../src/app';
 
-export class TestDatabaseManager  {
- static insertTestData() {
-  
-  const testUser: User[] = [
-   { id: 1, username: 'testuser1', email: 'testuser1@example.com', password: 'hashedpassword1' },
-  ]
-  
-  const testQuestion: Question[] = [
-   { questionId: 1, userId: 1, title: "math question", content: "hva er 2+2?", createdAt: new Date(2023-11-24), modifiedAt: new Date(2023-11-24), viewCount: 1 },
-   { questionId: 2, userId: 1, title: "math question", content: "hva er 4*1?", createdAt: new Date(2023-11-24), modifiedAt: new Date(2023-11-24), viewCount: 10 },
-   { questionId: 3, userId: 1, title: "dating help plez", content: "how to rizz?", createdAt: new Date(2023-11-24), modifiedAt: new Date(2023-11-24), viewCount: 25 },
-   { questionId: 4, userId: 1, title: "cooking", content: "how long do i cook eggs?", createdAt: new Date(2023-11-24), modifiedAt: new Date(2023-11-24), viewCount: 4 },
-   { questionId: 5, userId: 1, title: "math question", content: "hva er 10 gangen?", createdAt: new Date(2023-11-24), modifiedAt: new Date(2023-11-24), viewCount: 1 }
-  ]
-  const testAnswer: Answer[] = [
-   { answerId: 1, questionId: 1, userId: 1, content: 'Some answer', isAccepted:false, score: -1, createdAt: new Date(2023-11-14),modifiedAt: new Date(2023-11-14)},
-   { answerId: 2, questionId: 2, userId: 1, content: 'Some answer2', isAccepted:false, score: 1, createdAt: new Date(2023-11-14),modifiedAt: new Date(2023-11-14)},
-   { answerId: 3, questionId: 1, userId: 1, content: 'Some answer3', isAccepted:false, score: 0, createdAt: new Date(2023-11-14),modifiedAt: new Date(2023-11-14)},
+export class TestDatabaseManager {
+  static testUser: User[] = [
+    { id: 1, username: 'testuser1', email: 'testuser1@example.com', password: 'hashedpassword1' },
   ];
 
-  const testComments: Comment[] = [
-   { commentId: 1,
-     userId: 1,
-     questionId: 1,
-     answerId: 0,
-     content: "Some question comment1",
-     createdAt: new Date(2023-11-14),
-     modifiedAt: new Date(2023-11-14), },
-   { commentId: 2,
-     userId: 1,
-     questionId: 2,
-     answerId: 0,
-     content: "Some question comment2",
-     createdAt: new Date(2023-11-14),
-     modifiedAt: new Date(2023-11-14), },
-   { commentId: 3,
-     userId: 1,
-     questionId: 0,
-     answerId: 1,
-     content: "Some answer comment1",
-     createdAt: new Date(2023-11-14),
-     modifiedAt: new Date(2023-11-14), },
-   { commentId: 4,
-     userId: 1,
-     questionId: 0,
-     answerId: 2,
-     content: "Some answer comment2",
-     createdAt: new Date(2023-11-14),
-     modifiedAt: new Date(2023-11-14), },
- ];
-  
- const testTags: Tag[] = [
-  { tagId: 1, name: 'testname1' },
-  { tagId: 2, name: 'testname2' },
-  { tagId: 3, name: 'testname3' },
-  { tagId: 4, name: 'testname4' },
-  { tagId: 5, name: 'testname5' },
- ];
+  static testQuestions: Question[] = [
+    {
+      questionId: 1,
+      userId: 1,
+      title: 'testquestion1',
+      content: 'testing1',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+      viewCount: 1,
+    },
+    {
+      questionId: 2,
+      userId: 1,
+      title: 'testquestion2',
+      content: 'testing2',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+      viewCount: 10,
+    },
+    {
+      questionId: 3,
+      userId: 1,
+      title: 'testquestion3',
+      content: 'testing3',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+      viewCount: 25,
+    },
+    {
+      questionId: 4,
+      userId: 1,
+      title: 'testquestion4',
+      content: 'testing4',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+      viewCount: 4,
+    },
+    {
+      questionId: 5,
+      userId: 1,
+      title: 'testquestion5',
+      content: 'testing5',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+      viewCount: 1,
+    },
+  ];
+  static testAnswers: Answer[] = [
+    {
+      answerId: 1,
+      questionId: 1,
+      userId: 1,
+      content: 'Some answer',
+      isAccepted: false,
+      score: -1,
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+    {
+      answerId: 2,
+      questionId: 2,
+      userId: 1,
+      content: 'Some answer2',
+      isAccepted: false,
+      score: 1,
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+    {
+      answerId: 3,
+      questionId: 1,
+      userId: 1,
+      content: 'Some answer3',
+      isAccepted: false,
+      score: 0,
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+  ];
 
- const testVotes: Vote[] = [
-  { voteId: 1, answerId: 1,userId: 1, voteType: false },
-  { voteId: 2, answerId: 2,userId: 1, voteType: true },
-  { voteId: 3, answerId: 3,userId: 1, voteType: true }
- ];
- 
- const testFavorite: Favorite[] = [
-  { favoriteId: 1, answerId: 1, userId: 1 },
-  { favoriteId: 2, answerId: 2, userId: 1 },
-  { favoriteId: 3, answerId: 3, userId: 1 }
- ];
+  static testComments: Comment[] = [
+    {
+      commentId: 1,
+      userId: 1,
+      questionId: 1,
+      answerId: 0,
+      content: 'Some question comment1',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+    {
+      commentId: 2,
+      userId: 1,
+      questionId: 2,
+      answerId: 0,
+      content: 'Some question comment2',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+    {
+      commentId: 3,
+      userId: 1,
+      questionId: 0,
+      answerId: 1,
+      content: 'Some answer comment1',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+    {
+      commentId: 4,
+      userId: 1,
+      questionId: 0,
+      answerId: 2,
+      content: 'Some answer comment2',
+      createdAt: new Date(2023, 11, 14),
+      modifiedAt: new Date(2023, 11, 14),
+    },
+  ];
 
- const completeArray: any[] = [
-  testUser,
-  testQuestion,
-  testAnswer,
-  testComments,
-  testTags,
-  testVotes,
-  testFavorite
- ]
+  static testTags: Tag[] = [
+    { tagId: 1, name: 'testname1' },
+    { tagId: 2, name: 'testname2' },
+    { tagId: 3, name: 'testname3' },
+    { tagId: 4, name: 'testname4' },
+    { tagId: 5, name: 'testname5' },
+  ];
 
- 
- for (const testData of completeArray) {
-  for (const item of testData) {
-   switch (testData) {
-     case testUser:
-       userService.createUser(item.username, item.email, item.password);
-       break;
-     case testQuestion:
-       questionService.create(item.userId, item.title, item.content);
-       break;
-     case testAnswer:
-       answerService.addAnswer(item.questionId, item.userId, item.content);
-       break;
-     case testComments:
-       commentService.addComment(item.userId, item.questionId, item.answerId, item.content);
-       break;
-     case testTags:
-       tagService.createTag(item.name);
-       break;
-     case testFavorite:
-       favoriteService.addFavorite(item.answerId, item.userId);
-       break;
-     default:
-      throw new Error('Unknown data type in test data array');
- }
- 
- }
+  static testVotes: Vote[] = [
+    { voteId: 1, answerId: 1, userId: 1, voteType: false },
+    { voteId: 2, answerId: 2, userId: 1, voteType: true },
+    { voteId: 3, answerId: 3, userId: 1, voteType: true },
+  ];
 
-}
-}
+  static testFavorites: Favorite[] = [
+    { favoriteId: 1, answerId: 1, userId: 1 },
+    { favoriteId: 2, answerId: 2, userId: 1 },
+    { favoriteId: 3, answerId: 3, userId: 1 },
+  ];
 
- static async setupDatabase() {
-  await pool.query('SET FOREIGN_KEY_CHECKS=0');
+  static async processTestData(type: string, item: any) {
+    switch (type) {
+      case 'testUser':
+        const user = item as User;
+        await userService.createUser(user.username, user.email, user.password);
+        break;
+      case 'testQuestions':
+        const question = item as Question;
+        await questionService.create(question.title, question.content, question.userId);
+        break;
+      case 'testAnswers':
+        const answer = item as Answer;
+        await answerService.addAnswer(answer.questionId, answer.userId, answer.content);
+        break;
+      case 'testComments':
+        const comment = item as Comment;
+        await commentService.addComment(
+          comment.userId,
+          comment.questionId,
+          comment.answerId,
+          comment.content,
+        );
+        break;
+      case 'testTags':
+        const tag = item as Tag;
+        await tagService.createTag(tag.name);
+        break;
+      case 'testFavorites':
+        const favorite = item as Favorite;
+        await favoriteService.addFavorite(favorite.answerId, favorite.userId);
+        break;
+      default:
+        throw new Error('Unknown data type in test data array');
+    }
+  }
 
-  // Truncate all tables
-  await pool.query('TRUNCATE TABLE Favorites');
-  await pool.query('TRUNCATE TABLE Votes');
-  await pool.query('TRUNCATE TABLE Comments');
-  await pool.query('TRUNCATE TABLE Answers');
-  await pool.query('TRUNCATE TABLE Questions');
-  await pool.query('TRUNCATE TABLE Question_Tags');
-  await pool.query('TRUNCATE TABLE Tags');
-  await pool.query('TRUNCATE TABLE Users');
+  static async insertTestData() {
+    const dataSets = {
+      testUser: TestDatabaseManager.testUser,
+      testQuestions: TestDatabaseManager.testQuestions,
+      testAnswers: TestDatabaseManager.testAnswers,
+      testComments: TestDatabaseManager.testComments,
+      testTags: TestDatabaseManager.testTags,
+      // testVotes: TestDatabaseManager.testVotes,
+      testFavorites: TestDatabaseManager.testFavorites,
+    };
 
-  await this.insertTestData();
+    for (const testData of Object.entries(dataSets)) {
+      let type: string = testData[0] || 'unknown';
+      await Promise.all(
+        testData[1].map(async (item) => {
+          await TestDatabaseManager.processTestData(type, item);
+        }),
+      );
+    }
+  }
 
-  await pool.query('SET FOREIGN_KEY_CHECKS=1');
+  static async setupDatabase() {
+    pool.query('SET FOREIGN_KEY_CHECKS=0');
 
- }
+    // Truncate all tables
+    pool.query('TRUNCATE TABLE Favorites');
+    pool.query('TRUNCATE TABLE Votes');
+    pool.query('TRUNCATE TABLE Comments');
+    pool.query('TRUNCATE TABLE Answers');
+    pool.query('TRUNCATE TABLE Questions');
+    pool.query('TRUNCATE TABLE Question_Tags');
+    pool.query('TRUNCATE TABLE Tags');
+    pool.query('TRUNCATE TABLE Users');
+
+    try {
+      await this.insertTestData();
+    } catch (e) {
+      console.error(e);
+    }
+
+    pool.query('SET FOREIGN_KEY_CHECKS=1');
+  }
 }
