@@ -24,7 +24,7 @@ export class QuestionsList extends Component {
   render() {
     return (
       <>
-       <Button.Success onClick={() => history.push('/questions/new')}>
+       <Button.Success onClick={() => history.push('/questions/new/')}>
           New question
        </Button.Success>
 
@@ -473,10 +473,14 @@ export class QuestionEdit extends Component<
 }
 
 
-export class QuestionsNew extends Component {
+export class QuestionsNew extends Component<{ match: { params: { id: number } } }>  
+{
   title: string = ''
   content: string = ''
   userId: number = 1
+  tag: string = ''
+  tags: { tagId: number }[] = [];
+  displayedTags: { name: string }[] = []
 
   render(){
     return (
@@ -506,6 +510,29 @@ export class QuestionsNew extends Component {
               rows={10}/>
             </Column>
           </Row>
+          <Row>
+            <Column width={2}>
+              <Form.Label>Add Tags:</Form.Label>
+            </Column>
+            <Column>
+              <Form.Input 
+              type="text"
+              value={this.tag} 
+              onChange={(event) => {this.tag = event.currentTarget.value}} 
+              onKeyPress={(event) => {
+                if(event.key === "Enter") {
+                  this.addTag()
+                }
+              }}
+              rows={10}/>
+            </Column>
+            <Row>
+              {this.displayedTags.map(tag => {
+                <Column>{//###
+                }</Column>
+              }) }
+            </Row>
+          </Row>
         </Card>
         <Button.Success
           onClick={this.create}
@@ -516,14 +543,51 @@ export class QuestionsNew extends Component {
     )
   }
 
+  addTag() {
+
+    // 1 Her ikke bruk create Tags men bare lag en liste med ID og navn
+    // Her ska for så vidt det bare lages en liste med tags som skal
+    // vises men ikke interacte med sql slikt at vis de ikke vil lage question så blir de og ikke lagt
+    // Diplay liste der comment er ###
+    this.displayedTags.push({name: this.tag});
+    tagServices.createTag(this.tag)
+      .then(tagId => {
+        this.tags.push(tagId);
+      })
+      .catch(error => {
+        console.error("Error creating tag:", error);
+        Alert.danger('Error creating tag: ' + error.message);
+      });
+    console.log(this.displayedTags)
+    this.tag = ''
+  }
+
   create() {
     questionService
-      .create(this.title,this.content, this.userId)
-      .then((id) => history.push('/questions/' + id))
+      .create(this.title, this.content, this.userId)
+      .then((id) => {
+
+        // 2 Her Promise all så gå gjennom idene i del 1
+        // For hver id call  tagServices.createTag(name) med navnet i 
+        // hver rad og for hver gang Iden bruker du ved å skrive .then
+        // også bruke tagServices.addTagToQuestion(id, tagId.tagId);
+        // Use Promise.all to wait for all tag additions to complete
+        Promise.all(this.tags.map(tagId => {
+          return tagServices.addTagToQuestion(id, tagId.tagId);
+        }))
+        .then(() => {
+          // Navigate to the new question page only after all tags are added
+          history.push('/questions/' + id);
+        })
+        .catch((tagError) => {
+          console.error("Error adding tags:", tagError);
+          Alert.danger('Error adding tags: ' + tagError.message);
+        });
+      })
       .catch((error) => {
         console.error("Detailed error:", error);
-        console.log(this.title, this.content, this.userId)
-        Alert.danger('Error creating task: ' + error.message)
-      })
+        console.log(this.title, this.content, this.userId);
+        Alert.danger('Error creating question: ' + error.message);
+      });
   }
 }

@@ -11,10 +11,10 @@ const testAnswer = TestDatabaseManager.testAnswers
 axios.defaults.baseURL = 'http://localhost:3001/api/v1';
 
 let webServer: any;
-beforeAll(async () => {
+beforeAll((done) => {
   try {
     // Use a separate port for testing
-    webServer = app.listen(3001);
+    webServer = app.listen(3001, () => done());
   } catch (error) {
     throw error;
   }
@@ -29,10 +29,6 @@ beforeEach(async () => {
   } catch (error) {
     console.error(error);
   }
-
-  jest.mock('../src/services/answers-Services', () => ({
-    getAnswerCounts: jest.fn(),
-  }));
 });
 
 // Stop web server and close connection to MySQL server
@@ -441,6 +437,35 @@ describe('Create tag (POST)', () => {
   test('Add a tag with invalid fields (400 Bad Request)', (done) => {
     const newTag = { tagId: 'invalid', questionId: 1 }; // Invalid tagId
     axios.post('/tags/question', newTag)
+      .catch((error) => {
+        expect(error.response.status).toEqual(400);
+        done();
+      });
+  });
+
+  test('Add a new tag (201 Created)', (done) => {
+    const newTag = { name: 'New Tag' };
+    axios.post('/tags', newTag).then((response) => {
+      expect(response.status).toEqual(201);
+      const responseData = response.data;
+      expect(responseData).toHaveProperty('tagId');
+      // You can add more assertions here based on the expected structure of responseData
+      done();
+    }).catch(error => done(error));
+  });
+
+  test('Add a new tag without a name (400 Bad Request)', (done) => {
+    const newTag = {}; // Missing name
+    axios.post('/tags', newTag)
+      .catch((error) => {
+        expect(error.response.status).toEqual(400);
+        done();
+      });
+  });
+
+  test('Add a new tag with invalid name type (400 Bad Request)', (done) => {
+    const newTag = { name: 123 }; // Invalid name type (number instead of string)
+    axios.post('/tags', newTag)
       .catch((error) => {
         expect(error.response.status).toEqual(400);
         done();

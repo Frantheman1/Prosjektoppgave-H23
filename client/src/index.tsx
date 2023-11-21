@@ -23,26 +23,37 @@ class Menu extends Component {
     
     return (
       <NavBar brand="images/NewLogo4.png" brandAlt='Logo of the Site'>
+       <Row>
         <Form.Input
           type="text"
           value={this.state.searchValue}
-          onChange={(e) => {
-            this.setState({ searchValue: e.target.value });
-            this.search()
+          onChange={(event) => {
+            const newValue = event.target.value;
+            this.setState({ searchValue: newValue }, () => {
+              if (newValue === '') {
+                this.filteredQuestions = [];
+              } else {
+                this.search();
+              }
+            });
           }}
           isSearchBar={true}
           placeholder="Search"
         />
+
         {this.filteredQuestions.length > 0 && (
           <Row>
             {this.filteredQuestions.map((question, index) => (
-              <NavLink to={'/questions/' + question.questionId} >{question.title}</NavLink>
+              <NavLink to={'/questions/' + question.questionId} onClick={(event) => {
+                this.setState({ searchValue: '' });
+                this.filteredQuestions = []
+              }}>{question.title}</NavLink>
             ))}
           </Row>
         )}
+        </Row>
         <NavBar.Link to="/questions">Questions</NavBar.Link>
         <NavBar.Link to="/tags">Tags</NavBar.Link>
-        <NavBar.Link to="/users">Users</NavBar.Link>
         <NavBar.Link to="/favorites">Favorites</NavBar.Link>
         <NavBar.Link to="/about">About</NavBar.Link>
         

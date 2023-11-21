@@ -1,7 +1,7 @@
 // tagsServices.ts
 //
 // Author: Valentin Stoyanov
-// Last updated: 20/11/2023 
+// Last updated: 21/11/2023 
 
 import axios from 'axios';
 
@@ -43,6 +43,17 @@ addTagToQuestion(questionId: number, tagId: number) {
  */
 getAllTagsWithQuestionCount() {
   return axios.get<TagWithCount[]>('/tags/count').then(response => response.data);
+}
+
+ /**
+   * Creates a new tag.
+   */
+ createTag(name: string) {
+  return axios.post<{ tagId: number }>('/tags', { name })
+    .then(response => response.data)
+    .catch(error => {
+      throw new Error(error.response.data || 'Error creating tag');
+    });
 }
 
 }

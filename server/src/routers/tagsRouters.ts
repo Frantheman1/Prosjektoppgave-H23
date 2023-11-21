@@ -16,6 +16,20 @@ routerTags.get('/tags/question/:questionId', (request, response) => {
   .catch((error) => response.status(500).send(error))
 })
 
+// Create a new tag
+routerTags.post('/tags', (request, response) => {
+  const { name } = request.body;
+
+  if (typeof name === 'string' && name.trim() !== '') {
+    tagService
+      .createTag(name)
+      .then(tagId => response.status(201).send({ tagId }))
+      .catch(error => response.status(500).send(error.message));
+  } else {
+    response.status(400).send('Invalid or missing tag name');
+  }
+});
+
 
 //Adds a tag to a question
 routerTags.post('/tags/question', (request,response) => {

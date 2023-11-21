@@ -1038,7 +1038,7 @@ var QuestionsList = /*#__PURE__*/function (_Component) {
       var _this2 = this;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
         onClick: function onClick() {
-          return history.push('/questions/new');
+          return history.push('/questions/new/');
         }
       }, "New question"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
         onClick: function onClick() {
@@ -1421,8 +1421,8 @@ var QuestionEdit = /*#__PURE__*/function (_ref) {
   }]);
   return QuestionEdit;
 }(react_simplified__WEBPACK_IMPORTED_MODULE_1__.Component);
-var QuestionsNew = /*#__PURE__*/function (_Component3) {
-  _inherits(QuestionsNew, _Component3);
+var QuestionsNew = /*#__PURE__*/function (_ref2) {
+  _inherits(QuestionsNew, _ref2);
   var _super4 = _createSuper(QuestionsNew);
   function QuestionsNew() {
     var _this13;
@@ -1434,6 +1434,9 @@ var QuestionsNew = /*#__PURE__*/function (_Component3) {
     _defineProperty(_assertThisInitialized(_this13), "title", '');
     _defineProperty(_assertThisInitialized(_this13), "content", '');
     _defineProperty(_assertThisInitialized(_this13), "userId", 1);
+    _defineProperty(_assertThisInitialized(_this13), "tag", '');
+    _defineProperty(_assertThisInitialized(_this13), "tags", []);
+    _defineProperty(_assertThisInitialized(_this13), "displayedTags", []);
     return _this13;
   }
   _createClass(QuestionsNew, [{
@@ -1459,20 +1462,69 @@ var QuestionsNew = /*#__PURE__*/function (_Component3) {
           _this14.content = event.currentTarget.value;
         },
         rows: 10
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, {
+        width: 2
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Label, null, "Add Tags:")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Form.Input, {
+        type: "text",
+        value: this.tag,
+        onChange: function onChange(event) {
+          _this14.tag = event.currentTarget.value;
+        },
+        onKeyPress: function onKeyPress(event) {
+          if (event.key === "Enter") {
+            _this14.addTag();
+          }
+        },
+        rows: 10
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Row, null, this.displayedTags.map(function (tag) {
+        /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Column, null);
       })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_2__.Button.Success, {
         onClick: this.create
       }, "Create"));
     }
   }, {
+    key: "addTag",
+    value: function addTag() {
+      var _this15 = this;
+      // 1 Her ikke bruk create Tags men bare lag en liste med ID og navn
+      // Her ska for så vidt det bare lages en liste med tags som skal
+      // vises men ikke interacte med sql slikt at vis de ikke vil lage question så blir de og ikke lagt
+      // Diplay liste der comment er ###
+      this.displayedTags.push({
+        name: this.tag
+      });
+      _services_tagsServices__WEBPACK_IMPORTED_MODULE_4__["default"].createTag(this.tag).then(function (tagId) {
+        _this15.tags.push(tagId);
+      })["catch"](function (error) {
+        console.error("Error creating tag:", error);
+        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating tag: ' + error.message);
+      });
+      console.log(this.displayedTags);
+      this.tag = '';
+    }
+  }, {
     key: "create",
     value: function create() {
-      var _this15 = this;
+      var _this16 = this;
       _services_questionsServices__WEBPACK_IMPORTED_MODULE_3__["default"].create(this.title, this.content, this.userId).then(function (id) {
-        return history.push('/questions/' + id);
+        // 2 Her Promise all så gå gjennom idene i del 1
+        // For hver id call  tagServices.createTag(name) med navnet i 
+        // hver rad og for hver gang Iden bruker du ved å skrive .then
+        // også bruke tagServices.addTagToQuestion(id, tagId.tagId);
+        // Use Promise.all to wait for all tag additions to complete
+        Promise.all(_this16.tags.map(function (tagId) {
+          return _services_tagsServices__WEBPACK_IMPORTED_MODULE_4__["default"].addTagToQuestion(id, tagId.tagId);
+        })).then(function () {
+          // Navigate to the new question page only after all tags are added
+          history.push('/questions/' + id);
+        })["catch"](function (tagError) {
+          console.error("Error adding tags:", tagError);
+          _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error adding tags: ' + tagError.message);
+        });
       })["catch"](function (error) {
         console.error("Detailed error:", error);
-        console.log(_this15.title, _this15.content, _this15.userId);
-        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating task: ' + error.message);
+        console.log(_this16.title, _this16.content, _this16.userId);
+        _widgets__WEBPACK_IMPORTED_MODULE_2__.Alert.danger('Error creating question: ' + error.message);
       });
     }
   }]);
@@ -1933,7 +1985,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 // tagsServices.ts
 //
 // Author: Valentin Stoyanov
-// Last updated: 20/11/2023 
+// Last updated: 21/11/2023 
 
 
 axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.baseURL = 'http://localhost:3000/api/v1';
@@ -1975,6 +2027,21 @@ var TagsServices = /*#__PURE__*/function () {
     value: function getAllTagsWithQuestionCount() {
       return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get('/tags/count').then(function (response) {
         return response.data;
+      });
+    }
+
+    /**
+      * Creates a new tag.
+      */
+  }, {
+    key: "createTag",
+    value: function createTag(name) {
+      return axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/tags', {
+        name: name
+      }).then(function (response) {
+        return response.data;
+      })["catch"](function (error) {
+        throw new Error(error.response.data || 'Error creating tag');
       });
     }
   }]);
@@ -45368,28 +45435,38 @@ var Menu = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar, {
         brand: "images/NewLogo4.png",
         brandAlt: "Logo of the Site"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Form.Input, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Form.Input, {
         type: "text",
         value: this.state.searchValue,
-        onChange: function onChange(e) {
+        onChange: function onChange(event) {
+          var newValue = event.target.value;
           _this2.setState({
-            searchValue: e.target.value
+            searchValue: newValue
+          }, function () {
+            if (newValue === '') {
+              _this2.filteredQuestions = [];
+            } else {
+              _this2.search();
+            }
           });
-          _this2.search();
         },
         isSearchBar: true,
         placeholder: "Search"
       }), this.filteredQuestions.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, null, this.filteredQuestions.map(function (question, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.NavLink, {
-          to: '/questions/' + question.questionId
+          to: '/questions/' + question.questionId,
+          onClick: function onClick(event) {
+            _this2.setState({
+              searchValue: ''
+            });
+            _this2.filteredQuestions = [];
+          }
         }, question.title);
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/questions"
       }, "Questions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/tags"
       }, "Tags"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
-        to: "/users"
-      }, "Users"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/favorites"
       }, "Favorites"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/about"

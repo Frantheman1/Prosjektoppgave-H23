@@ -44,6 +44,10 @@ class TagService {
     });
   }
 
+
+  /**
+   * Creates a Tag with name
+   */
   createTag(name: string) {
     return new Promise<number>((resolve,reject) => {
       pool.query(
