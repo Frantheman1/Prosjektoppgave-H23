@@ -34,6 +34,8 @@ I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørs
 - Listen med tagger må kunne filtreres på navn og sorteres etter popularitet.
 --- 
 
+## Bilder og videoer fra webapplikasjonen
+
 ## Installasjon
 Før vi kan kjøre prosjektet, må vi installere noen avhengigheter. Dette gjøres ved at du kjører følgende kommandoer i terminalen:  
 ```
@@ -86,6 +88,66 @@ process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
 -Babel for å transpilere TypeScript-kode  
 
 ---
+
+## API-calls
+
+### Answers
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/v1/answers/:answerId | Get a specific answer |
+| GET | api/v1/answers/question/:questionId | Get all answers for a specific question |
+| POST | /api/v1/answers | Add a new answer |
+| PUT | /api/v1/answers/:answerId | Update an existing answer |
+| DELETE | /api/v1/answers/:answerId | Delete an existing answer |
+| PUT | /api/v1/answers/:answerId/accept | Toggle the accepted state of a specific answer |
+| GET | /api/v1/answerCounts | Get the count of answers per question |
+
+### Comments
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/v1/comments | Get all comments |
+| GET | /api/v1/comments/:answerId | Get a specific comment |
+| POST | /api/v1/comments | Add a new comment |
+| PUT | /api/v1/comments/:commentId | Update an existing comment |
+| DELETE | /api/v1/comments/:answerId | Delete an existing comment |
+
+### Favorites
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/v1/favorites/:userId | Get all favorites for a specific user |
+| POST | /api/v1/favorites | Add a new favorite answer for a specific user |
+| DELETE | /api/v1/favorites | Remove a favorite answer for a specific user |
+
+### Questions
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/v1/questions | Get all questions |
+| GET | /api/v1/questions/:id | Get a specific question |
+| POST | /api/v1/questions | Add a new question |
+| PUT | /api/v1/questions/:id | Update an existing question |
+| PUT | /api/v1/updateViewCount | Update ViewCount on question view |
+| DELETE | /api/v1/questions/:id | Delete a specific question |
+
+### Tags
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/v1/tags/question/:questionId | Get tags for a specific question |
+| POST | /api/v1/tags/question | Add tags to a question |
+| GET | /api/v1/tags/count | Get all tags with question count |
+
+### Votes
+
+| Method  | Endpoint | Description |
+| --- | --- | --- |
+| POST | /api/v1/votes/:answerId | Add vote to a specific answer |
+
+
+---
 ## Medvirkende
 <a href="https://github.com/ValentinRStoyanov">
   <img src="https://github.com/ValentinRStoyanov.png" alt="ValentinRStoyanov's GitHub Profile" height="200">
@@ -106,3 +168,17 @@ process.env.MYSQL_DATABASE: //Databasenavnet du vil koble til.
 ## Lisens
 
 Dette prosjektet er lisensiert under MIT license - se [LICENSE](https://github.com/Frantheman1/Prosjektoppgave-H23/blob/dev/LICENSE) for detaljer på dette. // TO-DO: Endre sti om vi pusher til main
+
+## Kontakt oss
+
+### Valentin
+- Email: @stud.ntnu.no
+
+### Kine Weiseth
+- Email: kineawe@stud.ntnu.no
+
+### Fraan
+- Email: @stud.ntnu.no
+
+### Ali
+- Email: @stud.ntnu.no
