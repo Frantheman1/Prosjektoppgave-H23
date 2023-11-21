@@ -9,6 +9,7 @@ import { FavoritesList } from './favoriteComponent';
 import { CommentNew, CommentEdit } from './commentComponent';
 import { TagsList } from './tagsComponent';
 import questionService, {Question}  from './services/questionsServices';
+import AboutPage from './about';
 
 
 class Menu extends Component {
@@ -98,6 +99,7 @@ if (root) {
         <Route path='/comment/:id(\d+)/edit/:backId(\d+)' component={CommentEdit}/>
         <Route path="/comments/answer/:id(\d+)/new/:backId(\d+)" component={CommentNew} />
         <Route path="/comments/question/:id(\d+)/new/" component={CommentNew} />
+        <Route path="/about" component={AboutPage} />
         {/* Add other routes for tags, users, about, etc. */}
       </div>
     </HashRouter>

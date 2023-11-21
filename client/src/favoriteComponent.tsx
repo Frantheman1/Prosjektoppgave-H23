@@ -17,39 +17,38 @@ export class FavoritesList extends Component {
   return(
    <>
      <Card title='Favorites'>
-          
-          {this.favorites.map((favAnswer) => (
-           <NavLink to={'/questions/' + favAnswer.questionId}>
-            <Row key={favAnswer.answerId}>
-                   <Row>
-            <Column width={2}>Content:</Column>
-            <Column>{favAnswer.content}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Created at:</Column>
-            <Column>{new Date(favAnswer.createdAt).toDateString()}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Last modified:</Column>
-            <Column>{new Date(favAnswer.modifiedAt).toDateString()}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>isAccepted:</Column>
-            <Column>{favAnswer.isAccepted ? "Yes" : "No"}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>Score:</Column>
-            <Column>{favAnswer.score}</Column>
-          </Row>
-          <Row>
-            <Column width={2}>User:</Column>
-            <Column>{favAnswer.userId}</Column>
-          </Row>             
-            </Row>
-            </NavLink>
-          ))}
+  {this.favorites.map((favAnswer) => (
+    <NavLink key={favAnswer.answerId} to={'/questions/' + favAnswer.questionId} className="question-link">
+      <div className="question-container">
+        <div className="row">
+          <div className="question-title">Content:</div>
+          <div className="question-content">{favAnswer.content}</div>
+        </div>
+        <div className="row">
+          <div className="question-title">Created at:</div>
+          <div className="question-content">{new Date(favAnswer.createdAt).toDateString()}</div>
+        </div>
+        <div className="row">
+          <div className="question-title">Last modified:</div>
+          <div className="question-content">{new Date(favAnswer.modifiedAt).toDateString()}</div>
+        </div>
+        <div className="row">
+          <div className="question-title">isAccepted:</div>
+          <div className="question-content">{favAnswer.isAccepted ? "Yes" : "No"}</div>
+        </div>
+        <div className="row">
+          <div className="question-title">Score:</div>
+          <div className="question-content">{favAnswer.score}</div>
+        </div>
+        <div className="row">
+          <div className="question-title">User:</div>
+          <div className="question-content">{favAnswer.userId}</div>
+        </div>
+      </div>
+    </NavLink>
+  ))}
+</Card>
 
-        </Card>
      </>
   )
  }
