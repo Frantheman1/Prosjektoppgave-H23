@@ -45467,22 +45467,34 @@ var Menu = /*#__PURE__*/function (_Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar, {
         brand: "images/NewLogo4.png",
         brandAlt: "Logo of the Site"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Form.Input, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Form.Input, {
         type: "text",
         value: this.state.searchValue,
-        onChange: function onChange(e) {
+        onChange: function onChange(event) {
+          var newValue = event.target.value;
           _this2.setState({
-            searchValue: e.target.value
+            searchValue: newValue
+          }, function () {
+            if (newValue === '') {
+              _this2.filteredQuestions = [];
+            } else {
+              _this2.search();
+            }
           });
-          _this2.search();
         },
         isSearchBar: true,
         placeholder: "Search"
       }), this.filteredQuestions.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.Row, null, this.filteredQuestions.map(function (question, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_11__.NavLink, {
-          to: '/questions/' + question.questionId
+          to: '/questions/' + question.questionId,
+          onClick: function onClick(event) {
+            _this2.setState({
+              searchValue: ''
+            });
+            _this2.filteredQuestions = [];
+          }
         }, question.title);
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/questions"
       }, "Questions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_widgets__WEBPACK_IMPORTED_MODULE_3__.NavBar.Link, {
         to: "/tags"
