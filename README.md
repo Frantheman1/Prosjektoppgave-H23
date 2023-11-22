@@ -188,7 +188,7 @@ Dette prosjektet er lisensiert under MIT license - se [LICENSE](https://github.c
 ## Kontakt oss
 
 ### Valentin
-- Email: @stud.ntnu.no
+- Email: valeros@stud.ntnu.no
 
 ### Kine Weiseth
 - Email: kineawe@stud.ntnu.no
