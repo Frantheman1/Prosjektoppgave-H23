@@ -204,7 +204,7 @@ Dette prosjektet er lisensiert under MIT license - se [LICENSE](https://github.c
 - Email: kineawe@stud.ntnu.no
 
 ### Fraan
-- Email: @stud.ntnu.no
+- Email: francvi@stud.ntnu.no
 
 ### Ali
-- Email: @stud.ntnu.no
+- Email: alimm@stud.ntnu.no
