@@ -1,50 +1,58 @@
-// CommentService.ts
+// comments-Services.ts
+//
+// Author: Valentin Stoyanov
+// Co-author: Kine Alte Weiseth
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export type Comment = {
   commentId: number;
   userId: number;
-  questionId?: number;
-  answerId?: number;
+  questionId: number | null;
+  answerId: number | null;
   content: string;
   createdAt: Date;
   modifiedAt: Date;
 };
 
 class CommentService {
+
   /**
-   * Get comments by question ID.
+   * Get all comments
    */
-  getCommentsByQuestion(questionId: number): Promise<Comment[]> {
-    return new Promise((resolve, reject) => {
+  getComments(){
+    return new Promise<Comment[]>((resolve, reject) =>
+    {
       pool.query(
-        'SELECT * FROM Comments WHERE QuestionID = ? ORDER BY CreatedAt',
-        [questionId],
+        'SELECT * FROM Comments',
         (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Comment[]);
-        },
-      );
-    });
+          if (error) reject(error);
+          else resolve(results as Comment[]);
+        }
+      )
+    })
   }
 
   /**
-   * Get comments by answer ID.
+   * Get a comment
    */
-  getCommentsByAnswer(answerId: number): Promise<Comment[]> {
-    return new Promise((resolve, reject) => {
+  getComment(commentId: number) {
+    return new Promise<Comment>((resolve,reject) =>
+    {
       pool.query(
-        'SELECT * FROM Comments WHERE AnswerID = ? ORDER BY CreatedAt',
-        [answerId],
+        'SELECT * FROM Comments WHERE commentId = ?',
+        [commentId],
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
-          resolve(results as Comment[]);
+          
+          resolve(results[0] as Comment);
         },
-      );
-    });
+      )
+    })
   }
-
+ 
   /**
    * Add a new comment to a question or answer.
    */
@@ -53,9 +61,10 @@ class CommentService {
     questionId: number | null,
     answerId: number | null,
     content: string,
-  ): Promise<number> {
-    return new Promise((resolve, reject) => {
-      const fields = questionId ? 'UserID, QuestionID, Content' : 'UserID, AnswerID, Content';
+  )  {
+    return new Promise<number>((resolve, reject) => {
+      // Chooses between answerId of questionId
+      const fields = questionId ? 'userId, questionId, content' : 'userId, answerId, content';
       const values = questionId ? [userId, questionId, content] : [userId, answerId, content];
       pool.query(
         `INSERT INTO Comments (${fields}) VALUES (?, ?, ?)`,
@@ -74,7 +83,7 @@ class CommentService {
   updateComment(commentId: number, content: string): Promise<void> {
     return new Promise((resolve, reject) => {
       pool.query(
-        'UPDATE Comments SET Content = ?, ModifiedAt = NOW() WHERE CommentID = ?',
+        'UPDATE Comments SET content = ?, modifiedAt = NOW() WHERE commentId = ?',
         [content, commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -88,10 +97,10 @@ class CommentService {
   /**
    * Delete a comment.
    */
-  deleteComment(commentId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  deleteComment(commentId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM Comments WHERE CommentID = ?',
+        'DELETE FROM Comments WHERE commentId  = ?'
         [commentId],
         (error, results: ResultSetHeader) => {
           if (error) return reject(error);
@@ -101,6 +110,7 @@ class CommentService {
       );
     });
   }
+
 }
 
 const commentService = new CommentService();

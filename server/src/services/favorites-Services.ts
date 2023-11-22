@@ -1,18 +1,47 @@
+// favorites-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { Answer } from './answers-Services';
+
+
+export type Favorite = {
+  favoriteId: number;
+  answerId: number;
+  userId: number;
+}
 
 class FavoriteService {
   /**
-   * Legg til et svar som favoritt for en gitt bruker.
+   * Get all favorite answers for a given user.
    */
-  addFavorite(userId: number, answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  getFavorites(userId: number) {
+    return new Promise<Answer[]>((resolve, reject) => {
       pool.query(
-        'INSERT INTO FavoriteAnswers (UserID, AnswerID) VALUES (?, ?)',
+        'SELECT a.* FROM Answers a JOIN Favorites f ON a.answerId = f.answerId WHERE f.userId = ?', 
+        [userId], (error, results: RowDataPacket[]) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results as Answer[]);
+      });
+    });
+  }
+
+  /**
+   * Add a new answer to the Favorites
+   */
+  addFavorite(userId: number, answerId: number) {
+    return new Promise<void>((resolve, reject) => {
+      pool.query(
+        'INSERT INTO Favorites (userId, answerId) VALUES (?, ?)',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
-            // Håndterer duplikat nøkkel-feil, som betyr at favoritten allerede eksisterer
+            // Handles duplicates
             if (error.code === 'ER_DUP_ENTRY') {
               return reject(new Error('Answer is already marked as favorite.'));
             }
@@ -25,12 +54,12 @@ class FavoriteService {
   }
 
   /**
-   * Fjern et svar fra favorittlisten til en gitt bruker.
+   * Removes the a answer from the favorite
    */
-  removeFavorite(userId: number, answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  removeFavorite(userId: number, answerId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM FavoriteAnswers WHERE UserID = ? AND AnswerID = ?',
+        'DELETE FROM Favorites WHERE userId = ? AND answerId = ?',
         [userId, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {

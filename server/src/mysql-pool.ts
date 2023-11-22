@@ -15,8 +15,15 @@ const pool = mysql.createPool({
   // Reduce load on NTNU MySQL server
   connectionLimit: 1,
   // Convert MySQL boolean values to JavaScript boolean values
-  typeCast: (field, next) =>
-    field.type == 'TINY' && field.length == 1 ? field.string() == '1' : next(),
+  typeCast: (field, next) => {
+    if (field.type === 'TINY' && field.length === 1) {
+      return field.string() === '1';
+    }
+    if (field.type === 'BIT' && field.length === 1) {
+      return field.buffer()[0] === 1;
+    }
+    return next();
+  },
 });
 
 export default pool;

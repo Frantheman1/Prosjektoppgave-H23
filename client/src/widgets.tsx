@@ -2,9 +2,6 @@ import * as React from 'react';
 import { ReactNode, ChangeEvent } from 'react';
 import { Component } from 'react-simplified';
 import { NavLink } from 'react-router-dom';
-import "../public/styles/style.css"
-
-
 
 /**
  * Renders an information card using Bootstrap classes.
@@ -223,6 +220,7 @@ class FormInput extends Component<{
   type: string;
   value: string | number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   isSearchBar?: boolean;
   [prop: string]: any;
   

@@ -1,3 +1,8 @@
+// tags-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
 import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -7,25 +12,13 @@ export type Tag = {
 };
 
 class TagService {
-  /**
-   * Get all tags.
-   */
-  getAllTags(): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM Tags', (error, results: RowDataPacket[]) => {
-        if (error) return reject(error);
-        resolve(results as Tag[]);
-      });
-    });
-  }
-
-  /**
+   /**
    * Get tags for a specific question.
    */
-  getTagsForQuestion(questionId: number): Promise<Tag[]> {
-    return new Promise((resolve, reject) => {
+  getTagsForQuestion(questionId: number) {
+    return new Promise<Tag[]>((resolve, reject) => {
       pool.query(
-        'SELECT Tags.* FROM Tags JOIN Question_Tags ON Tags.tagId = Question_Tags.TagID WHERE Question_Tags.QuestionID = ?',
+        'SELECT T.* FROM Tags T JOIN Question_Tags Q ON T.tagId = Q.tagId WHERE Q.questionId = ?',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) return reject(error);
@@ -38,10 +31,10 @@ class TagService {
   /**
    * Add a tag to a question.
    */
-  addTagToQuestion(tagId: number, questionId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  addTagToQuestion(tagId: number, questionId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'INSERT INTO Question_Tags (QuestionID, TagID) VALUES (?, ?)',
+        'INSERT INTO Question_Tags (questionId, tagId) VALUES (?, ?)',
         [questionId, tagId],
         (error, results) => {
           if (error) return reject(error);
@@ -51,29 +44,37 @@ class TagService {
     });
   }
 
-  /**
-   * Get a list of all unique tags, including the count of questions for each tag.
-   * The list can be optionally filtered by tag name and/or sorted by popularity (i.e., question count).
-   */
-  getTags(filterByName: string = '', sortByPopularity: boolean = false) {
-    const queryParams = filterByName ? [`%${filterByName}%`] : [];
-    const whereClause = filterByName ? 'WHERE t.Name LIKE ?' : '';
-    const orderByClause = sortByPopularity ? 'ORDER BY questionCount DESC' : 'ORDER BY t.Name';
 
-    return new Promise<Array<Tag & { questionCount: number }>>((resolve, reject) => {
+  /**
+   * Creates a Tag with name
+   */
+  createTag(name: string) {
+    return new Promise<number>((resolve,reject) => {
       pool.query(
-        `SELECT t.TagID, t.Name, COUNT(qt.QuestionID) AS questionCount
-        FROM Tags t
-        LEFT JOIN Question_Tags qt ON t.TagID = qt.TagID
-        ${whereClause}
-        GROUP BY t.TagID
-        ${orderByClause}
-        `,
-        queryParams,
-        (error, results: RowDataPacket[]) => {
+        'INSERT INTO Tags (name) VALUES (?)',
+        [name],
+        (error,results: ResultSetHeader) => {
           if (error) return reject(error);
-          resolve(results as Array<Tag & { questionCount: number }>);
-        },
+          resolve(results.insertId)
+        }
+      )
+    })
+  }
+
+
+  getAllTagsWithQuestionCount() {
+    return new Promise((resolve, reject) => {
+      pool.query(
+        'SELECT Tags.name, COUNT(Question_Tags.questionId) as questionCount ' +
+        'FROM Tags ' +
+        'LEFT JOIN Question_Tags ON Tags.tagId = Question_Tags.tagId ' +
+        'GROUP BY Tags.name',
+        (error, results) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(results);
+        }
       );
     });
   }

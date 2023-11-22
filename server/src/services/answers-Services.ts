@@ -1,4 +1,10 @@
-import pool from '../mysql-pool'; // Or wherever your connection pool is exported from
+// answer-Services.ts
+//
+// Author: Valentin Stoyanov
+// Last updated: 20/11/2023 
+
+
+import pool from '../mysql-pool';
 import type { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export type Answer = {
@@ -13,13 +19,32 @@ export type Answer = {
 };
 
 class AnswerService {
+
+  /**
+   * Get answer with id.
+   */
+  getAnswer(id: number) {
+    return new Promise<Answer>((resolve, reject) => {
+      pool.query(
+        'SELECT * FROM Answers WHERE answerId = ?',
+        [id],
+        (error, results: RowDataPacket[]) => {
+          if (error) return reject(error);
+          
+          resolve(results[0] as Answer);
+        },
+      );
+    });
+  }
+
+ 
   /**
    * Get all answers for a given question.
    */
-  getAnswersForQuestion(questionId: number): Promise<Answer[]> {
-    return new Promise((resolve, reject) => {
+  getAnswersForQuestion(questionId: number)  {
+    return new Promise<Answer[]>((resolve, reject) => {
       pool.query(
-        'SELECT * FROM Answers WHERE QuestionID = ?',
+        'SELECT * FROM Answers WHERE questionId = ? ORDER BY CreatedAt',
         [questionId],
         (error, results: RowDataPacket[]) => {
           if (error) reject(error);
@@ -32,14 +57,14 @@ class AnswerService {
   /**
    * Add a new answer to a question.
    */
-  addAnswer(questionId: number, userId: number, content: string): Promise<number> {
-    return new Promise((resolve, reject) => {
+  addAnswer(questionId: number, userId: number, content: string) {
+    return new Promise<number>((resolve, reject) => {
       pool.query(
-        'INSERT INTO Answers (QuestionID, UserID, Content) VALUES (?, ?, ?)',
+        'INSERT INTO Answers (questionId, userId, content) VALUES (?, ?, ?)',
         [questionId, userId, content],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
-          else resolve(results.insertId); // Return the ID of the newly added answer
+          else resolve(results.insertId); // Return the Id of the newly added answer
         },
       );
     });
@@ -48,10 +73,10 @@ class AnswerService {
   /**
    * Update an existing answer.
    */
-  updateAnswer(answerId: number, content: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+  updateAnswer(answerId: number, content: string) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Answers SET Content = ? WHERE AnswerID = ?',
+        'UPDATE Answers SET content = ? WHERE answerId = ?',
         [content, answerId],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
@@ -65,10 +90,10 @@ class AnswerService {
   /**
    * Delete an answer.
    */
-  deleteAnswer(answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  deleteAnswer(answerId: number) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'DELETE FROM Answers WHERE AnswerID = ?',
+        'DELETE FROM Answers WHERE answerId = ?',
         [answerId],
         (error, results: ResultSetHeader) => {
           if (error) reject(error);
@@ -82,10 +107,10 @@ class AnswerService {
   /**
    * Toggles the accepted state of an answer.
    */
-  markAnswerAsAccepted(answerId: number, isAccepted: number): Promise<void> {
-    return new Promise((resolve, reject) => {
+  markAnswerAsAccepted(answerId: number, isAccepted: boolean) {
+    return new Promise<void>((resolve, reject) => {
       pool.query(
-        'UPDATE Answers SET IsAccepted = ? WHERE AnswerID = ?',
+        'UPDATE Answers SET isAccepted = ? WHERE answerId = ?',
         [isAccepted, answerId],
         (error, results: ResultSetHeader) => {
           if (error) {
@@ -100,69 +125,19 @@ class AnswerService {
     });
   }
 
-  getFavoritesByUser(userId: number): Promise<Answer[]> {
-    return new Promise((resolve, reject) => {
-      pool.query(
-        'SELECT Answers.* FROM Answers JOIN FavoriteAnswers ON Answers.AnswerID = FavoriteAnswers.AnswerID WHERE FavoriteAnswers.UserID = ?',
-        [userId],
-        (error, results: RowDataPacket[]) => {
-          if (error) {
-            return reject(error);
-          }
-          resolve(results as Answer[]);
-        },
-      );
-    });
-  }
-
   /**
-   * Get a list of answers for a given question sorted by a specified criterion.
+   * Get the Count of answers a Question with an id has 
    */
-  getAnswersSorted(questionId: number, sortBy: 'score' | 'modified'): Promise<Answer[]> {
-    let orderBy: string;
-    switch (sortBy) {
-      case 'score':
-        orderBy = 'Answers.Score DESC, Answers.CreatedAt DESC';
-        break;
-      case 'modified':
-        orderBy = 'Answers.ModifiedAt DESC, Answers.Score DESC';
-        break;
-      default:
-        orderBy = 'Answers.CreatedAt DESC'; // Default sorting order, if needed
-    }
-
-    return new Promise<Answer[]>((resolve, reject) => {
+  getAnswerCounts() {
+    return new Promise<{ questionId: number, count: number }[]>((resolve, reject) => {
       pool.query(
-        `SELECT 
-        Answers.*
-      FROM 
-        Answers
-      WHERE 
-        Answers.QuestionID = ?
-      ORDER BY 
-        ${orderBy}`,
-        [questionId],
+        'SELECT questionId, COUNT(*) as count FROM Answers GROUP BY questionId',
         (error, results: RowDataPacket[]) => {
-          if (error) return reject(error);
-          resolve(results as Answer[]);
-        },
+          if (error) reject(error);
+          
+          else resolve(results as { questionId: number, count: number }[]);
+        }
       );
-    });
-  }
-
-  updateAnswerScore(answerId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const query = `
-      UPDATE Answers a
-      SET a.Score = GREATEST(0, (
-        SELECT SUM(CASE WHEN v.VoteType = 1 THEN 1 ELSE -1 END) FROM Votes v WHERE v.AnswerID = a.AnswerID
-      ))
-      WHERE a.AnswerID = ?
-    `;
-      pool.query(query, [answerId], (error, results: ResultSetHeader) => {
-        if (error) return reject(error);
-        resolve();
-      });
     });
   }
 }
