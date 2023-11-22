@@ -1,0 +1,451 @@
+#root{ 
+  position: absolute;
+  top: 0;
+  left: 20%;
+  width: 60%;
+}
+
+.card {
+  border-color: #ddd; /* Light grey border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+  margin-bottom: 20px; /* More space below each card */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+}
+
+.card-body {
+  padding: 20px; /* Increased padding for more space inside the card */
+}
+
+.card .row {
+  padding: 8px 12px; 
+  border-bottom: 1px solid #eaecef; 
+}
+
+
+.card .row:first-child {
+  font-weight: bold;
+  font-size: 15px; 
+  color: #7F8CD9; 
+}
+
+.card .row:nth-child(2) {
+  font-weight: bold; 
+  font-size: 15px;
+  color: #7F8CD9;
+}
+
+.card-title {
+  color: #333; /* Darker text color for the title */
+  margin-bottom: 15px; /* More space below the title */
+  font-weight: bold; /* Bold font for the title */
+}
+
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 15px; /* Less space below each card on smaller screens */
+  }
+}
+
+.row {
+  margin-top: 20px; /* More space above each row */
+  margin-bottom: 20px; /* More space below each row */
+  justify-content: space-around; /* Evenly space the children with space around */
+  align-items: center; /* Align items vertically in the center */
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+  }
+}
+
+.btn.btn-success {
+  background-color: #7F8CD9; /* Soft blue background */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.btn.btn-success:hover {
+  background-color: #6f7ccf; /* Slightly darker shade on hover for feedback */
+  box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.btn.btn-success.small {
+  padding: 5px 15px; /* Smaller padding for small variant */
+  font-size: 14px; /* Slightly smaller font size for small variant */
+  border-radius: 6px; /* Slightly less rounded corners */
+}
+
+
+/*.topnav {
+    overflow: hidden;
+    background-color: #e9e9e9;
+  }
+  
+  CSS til linkene i baren 
+  .topnav a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+   Faregn på knappene når vi hovrer over 
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+     Aktiv link 
+  .topnav a.active {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+     Høyre side av baren 
+  .topnav input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    margin-top: 8px;
+    margin-right: 16px;
+    font-size: 17px;
+  }
+  
+ 
+  @media screen and (max-width: 600px) {
+    .topnav a, .topnav input[type=text] {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;
+    }
+  }
+  
+
+.title {
+    color: black;
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+    position:fixed;
+}
+*/
+
+
+/* TAGS CSS */
+
+/* Container for the tags section */
+
+
+
+.tags-container {
+  padding: 20px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+/* Header styles */
+.tags-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tags-header h2 {
+  color: #333;
+  font-size: 24px;
+}
+
+/* Search input styling */
+.tags-search-input {
+  width: 100%;  
+  padding: 10px;  
+  margin-bottom: 20px;  
+  border: 2px solid #ccc;  
+  border-radius: 20px; 
+  box-sizing: border-box;  
+  transition: border-color 0.3s, box-shadow 0.3s;  
+  outline: none; 
+  font-size: 16px; 
+  background-color: #fafafa;  
+}
+
+.tags-search-input:hover {
+  border-color: #bbb; 
+}
+
+.tags-search-input:focus {
+  border-color: #000000;  
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);  
+}
+
+/* Button styles */
+.tags-sort-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.tags-sort-buttons button {
+  padding: 8px 16px;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tags-sort-buttons button:hover {
+  background-color: #3f51b5;
+}
+
+.tags-sort-buttons button.active {
+  background-color: #303f9f;
+}
+
+/* Individual tag item styling */
+.tags-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.tag-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tag-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.tag-item h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.tag-item p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.tag-item span {
+  font-size: 12px;
+  color: #999;
+  display: block;
+  margin-top: 10px;
+}
+
+
+ /*Hoved navbar container*/
+.navbar {
+  display: flex;
+  align-items: center; 
+  background-color: #fff; 
+  padding: 0 20px; 
+  position: sticky;
+  border-bottom: #7F8CD9 2px solid;
+  top: 0;
+  z-index: 1000;
+}
+/*Wrappen for NavLinks*/
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+/*Logo/brand sin style*/
+.navbar-brand {
+  color: #000000;
+  margin-left: 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding-right:50px;
+  border-right: #7F8CD9 2px solid;
+  user-select: none;
+}
+/*Wrappen for alle andre Navlinks etter logoen*/
+.navbar-nav {
+  display: flex;
+  padding: 0.2rem 0;
+  user-select: none;
+  flex-wrap: wrap;
+}
+
+/*Knappene sin style i navbaren*/
+.nav-link {
+  color: #7F8CD9;
+  font-weight: 900;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  text-decoration: none;
+  padding:45px 10px 45px 10px;
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+.nav-link:hover {
+  background-color: #DAE5F4;
+  color: #ffffff;
+}
+/*Searchbar styles*/
+.form-searchbar {
+  padding: 3px 3px 3px 30px;
+  height: 30px;
+  width: 20rem;
+  border: 1px solid #7F8CD9;
+  border-radius: 50px; 
+  margin-right: 40px;
+  margin-top: 33px;
+  font-size: 16px;
+  outline: none; 
+
+  
+
+  background-image: url('../images/search.png');
+  background-repeat: no-repeat;
+  background-position:9px center; 
+  background-size: 20px; 
+}
+
+.form-searchbar:focus {
+  border: 2px solid #7F8CD9;
+}
+
+.form-searchbar::placeholder {
+  color: #A5A5A5;
+  opacity: 1;
+}
+
+/* QUESTIONS CSS */
+/* Container for each question */
+.question-container {
+  background-color: #f8f9fa; /* A light background color for the question */
+  border-radius: 8px; /* Rounded corners */
+  margin-bottom: 16px; /* Spacing between each question */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: box-shadow 0.3s ease; /* Transition for shadow on hover */
+}
+
+/* Hover effect for the question container */
+.question-container:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+/* Styling for the link within each question container */
+.question-link {
+  display: block; /* Block display to fill the container */
+  padding: 20px; /* Padding inside the container */
+  text-decoration: none; /* Remove underline from the link */
+  color: inherit; /* Inherit text color from parent */
+}
+
+/* Styles for the title of the question */
+.question-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Styles for the content of the question */
+.question-content {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+/* Styles for the tags associated with the question */
+.question-tag {
+  background-color: #dee2e6;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: inline-block; /* Inline display for tags */
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+
+/* About  */
+
+/* Style for the main container */
+.about-container {
+  max-width: 800px; /* Limit the width for better readability */
+  margin: auto; /* Center align the container */
+  padding: 20px; /* Padding for spacing */
+  font-family: Arial, sans-serif; /* You can change this to match your site's font */
+}
+
+/* Style for the main heading */
+.about-container h1 {
+  color: #7F8CD9; /* A blue color for the main heading */
+  text-align: center; /* Center-align the heading */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Style for the paragraph text */
+.about-container p {
+  color: #333; /* Dark grey color for text */
+  line-height: 1.6; /* Line height for readability */
+  margin-bottom: 15px; /* Space below each paragraph */
+}
+
+/* Style for the section heading */
+.about-container h2 {
+  color: #333;
+  margin-bottom: 15px; /* Space below the section heading */
+}
+
+/* Style for the founder profiles section */
+.founder-profiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid layout */
+  gap: 20px; /* Space between grid items */
+}
+
+/* Style for each founder's profile */
+.founder {
+  background-color: #f8f9fa; /* Light background color for each profile */
+  padding: 15px; /* Padding inside each profile */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Style for the founder's name (h3 heading) */
+.founder h3 {
+  color: #7F8CD9; /* Blue color for the name */
+  margin-bottom: 10px; /* Space below the name */
+}

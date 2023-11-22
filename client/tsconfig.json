@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",                                
+    "module": "commonjs",
+    "types": ["node", "jest"],
+    "esModuleInterop": true,
+    "jsx": "react",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "paths": {
+      "react-simplified": ["@types/react-simplified.d.ts"]
+    }
+  }
+}
