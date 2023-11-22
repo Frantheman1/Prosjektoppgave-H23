@@ -10,17 +10,14 @@ I denne prosjektoppgaven skal vi lage en Q&A plattform. Prosjektoppgaven er en d
 I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørsmål, dele kunnskap og finne svar.
 
 <p>
-<img src="client/public/images/github2.jpeg" alt="QnA" width=500px />
+<img src="client/public/images/NewLogo4.png" alt="Q&A HUB" width=500px />
 </p>
-
-- “YouKnow” (Bruker vi egt navnet??)  
 
 - NTNU, Webutvikling  
 
-- Q&A  
+- Q&A Hub  
 
 ---
-
 
 ## Krav og betingelser for prosjektet: 
 
@@ -39,8 +36,6 @@ I prosjektet skal vi utvikle en webapplikasjon hvor besøkende kan stille spørs
 - Systemet skal vise en liste over alle unike tagger, inkludert antall spørsmål for hver tag.
 - Listen med tagger må kunne filtreres på navn og sorteres etter popularitet.
 --- 
-
-## Bilder og videoer fra webapplikasjonen
 
 ## Installasjon
 Før vi kan kjøre prosjektet, må vi installere noen avhengigheter. Dette gjøres ved at du kjører følgende kommandoer i terminalen:  
@@ -65,14 +60,9 @@ cd ../client
 npm start  
 ```
 ### Kjøre tester:  
-Du kan her kjøre tester på server
+Du kan her kjøre tester på server siden
 ```sh
 cd server  
-npm test
-```
-Og du kan kjøre tester på klient
-```sh
-cd client  
 npm test
 ```
 ### Sette opp config.ts  
